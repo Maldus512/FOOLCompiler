@@ -1,0 +1,5 @@
+*.asm
+*.class
+*.tokens
+parser/*
+!parser/ExecuteVM.java
