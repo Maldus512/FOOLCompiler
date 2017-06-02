@@ -31,7 +31,7 @@ generated:
 	$(MAKE) -C parser
 
 clean:
-	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class ./parser/*.class ./parser/*.tokens
+	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class *.asm
 	$(MAKE) clean -C parser
 
 run:
