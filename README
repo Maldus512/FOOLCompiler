@@ -1,0 +1,25 @@
+A simple Object Oriented language compiler made with ANTLR4.
+
+
+BUILD
+
+$ make
+
+
+CHECK SYNTAX
+
+$ make test TEST=file.fool
+
+Where file.fool is the fool program to be checked
+
+
+RUN
+Either run
+$ java Test
+After build, or simply run
+$ make run
+This requires a prova.fool file.
+
+
+TROUBLESHOOTING
+$ make clean

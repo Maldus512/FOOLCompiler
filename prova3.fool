@@ -1,0 +1,1 @@
+let int x = 1; int foo(int i) i+1; in print(foo(x));

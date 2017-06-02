@@ -6,9 +6,6 @@ CLASSES = Test.java
 
 ANTLR = antlr4
 
-GEN = {}BaseVisitor.java {}Lexer.java {}Parser.java {}Visitor.java {}BaseVisitor.java
-FOOLGEN = $(subst {},./parser/FOOL, $(GEN))
-SVMGEN = $(subst {},./parser/SVM, $(GEN))
 
 #
 # the default make target entry
@@ -21,7 +18,7 @@ default: classes
 classes: generated $(CLASSES:.java=.class)
 
 
-.PHONY: clean run
+.PHONY: clean run test
 
 
 $(CLASSES:.java=.class):
@@ -36,3 +33,11 @@ clean:
 
 run:
 	java Test
+
+test:
+	$(MAKE) clean -C parser
+	$(MAKE) -C parser PACK=NONE TEST=TRUE
+	cp $(TEST) parser/
+	cd parser && grun FOOL prog $(TEST) -gui
+	rm parser/$(TEST)
+	$(MAKE) clean -C parser
