@@ -1,8 +1,12 @@
 JFLAGS = -g
 JC = javac
 
+ANTLR = java -Xmx500M org.antlr.v4.Tool
 
-ANTLR = antlr4
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)  # Mac OS X
+ANTLR = java -Xmx500M org.antlr.v4.Tool
+endif
 
 GEN = {}Lexer.java {}Parser.java {}Visitor.java {}BaseVisitor.java
 FOOLGEN = $(subst {},FOOL, $(GEN))
@@ -26,10 +30,10 @@ $(CLASSES): $(FOOLGEN) $(SVMGEN) $(VM)
 	$(JC) $?
 
 $(FOOLGEN):  FOOL.g4
-	antlr4 -no-listener FOOL.g4 -visitor $(PACKAGING)
+	$(ANTLR) -no-listener FOOL.g4 -visitor $(PACKAGING)
 
 $(SVMGEN):  SVM.g4
-	antlr4  -no-listener SVM.g4 -visitor $(PACKAGING)
+	$(ANTLR)  -no-listener SVM.g4 -visitor $(PACKAGING)
 
 
 
