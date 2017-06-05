@@ -23,3 +23,7 @@ This requires a prova.fool file.
 
 TROUBLESHOOTING
 $ make clean
+
+
+AUTHORS
+Mattia Maldini, Carlo Stomeo
