@@ -4,3 +4,5 @@
 *.tokens
 parser/*
 !parser/ExecuteVM.java
+!parser/Makefile
+!parser/*.g4
