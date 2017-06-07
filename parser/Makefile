@@ -1,7 +1,7 @@
 JFLAGS = -g
 JC = javac
 
-ANTLR = java -Xmx500M org.antlr.v4.Tool
+ANTLR = antlr4 
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Darwin)  # Mac OS X

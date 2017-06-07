@@ -1,11 +1,11 @@
 JFLAGS = -g
 JC = javac
 
-ANTLR = java -Xmx500M org.antlr.v4.Tool
+GRUN = grun
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Darwin)  # Mac OS X
-ANTLR = java -Xmx500M org.antlr.v4.Tool
+GRUN = java org.antlr.v4.gui.TestRig
 endif
 
 
@@ -37,12 +37,12 @@ clean:
 	$(MAKE) clean -C parser
 
 run:
-	java Test
+	java Test $(filename)
 
 test:
 	$(MAKE) clean -C parser
 	$(MAKE) -C parser PACK=NONE TEST=TRUE
 	cp $(TEST) parser/
-	cd parser && grun FOOL prog $(TEST) -gui
+	cd parser && $(GRUN) FOOL prog $(TEST) -gui
 	rm parser/$(TEST)
 	$(MAKE) clean -C parser

@@ -1,4 +1,1 @@
-class testClass (int x, int y) {
-    int main() print(2);
-};
-testClass.main();
+let int x = 2; in print(x);
