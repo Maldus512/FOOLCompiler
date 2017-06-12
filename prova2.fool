@@ -1,4 +1,4 @@
 class testClass (int x, int y) {
-    int main() print(2);
+    int main() print(x+y);
 };
-testClass.main();
+print(2);

@@ -7,6 +7,7 @@ import java.util.List;
 import parser.*;
 import parser.FOOLParser.BaseExpContext;
 import parser.FOOLParser.BoolValContext;
+import parser.FOOLParser.ClassdecContext;
 import parser.FOOLParser.DecContext;
 import parser.FOOLParser.ExpContext;
 import parser.FOOLParser.FactorContext;
@@ -30,11 +31,33 @@ import util.SemanticError;
 public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 
+    // TODO: override methodexp per gestire le invocazioni di metodo delle classi
+
     @Override
     public Node visitClassExp(ClassExpContext ctx) {
+        ArrayList<Node> classNodeList = new ArrayList<Node>();
 
-        System.out.println("vediamo se ho capito bene");
-        return null;
+        for (ClassdecContext cc : ctx.classdec())
+            classNodeList.add( visit(cc) );
+
+        Node exp = visit( ctx.exp() );
+
+        ProgClassNode c = new ProgClassNode(classNodeList, exp);
+        
+
+        return c;
+    }
+
+    @Override
+    public Node visitClassdec(ClassdecContext ctx) {
+        // ID(0) è il nome della classe, ID(1) (se esiste) è il nome della superclasse
+        ClassNode c = new ClassNode(ctx.ID(0).getText());
+
+        for(VardecContext vc : ctx.vardec())            
+            c.addPar( new ParNode(vc.ID().getText(), visit( vc.type() )) );
+
+        return c;
+
     }
 
     @Override
