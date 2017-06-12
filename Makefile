@@ -37,7 +37,7 @@ clean:
 	$(MAKE) clean -C parser
 
 run:
-	java Test $(filename)
+	java Test $(f)
 
 test:
 	$(MAKE) clean -C parser

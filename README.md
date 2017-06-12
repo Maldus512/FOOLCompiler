@@ -13,7 +13,7 @@ where `file.fool` is the fool program to be checked.
 Either run
 `$ java Test prog.fool`
 after build, or simply run
-`$ make run filename=prog.fool`
+`$ make run f=prog.fool`
 where `prog.fool` is a fool program.
 
 ### Troubleshooting
