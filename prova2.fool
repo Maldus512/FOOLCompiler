@@ -1,4 +1,7 @@
 class testClass (int x, int y) {
-    int main() print(x+y);
+    int main() x;
+}
+class testClass2 (int a, bool b) {
+    int main2() a;
 };
 print(2);

@@ -25,16 +25,16 @@ public class IdNode implements Node {
 	  //create result list
 	  ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 	  
-	  int j=env.nestingLevel;
+	  int j=env.getInstance().getNestLevel();
 	  STentry tmp=null; 
 	  while (j>=0 && tmp==null)
-		  tmp=(env.symTable.get(j--)).get(id);
+		  tmp=(env.getInstance().getST().get(j--)).get(id);
       if (tmp==null)
           res.add(new SemanticError("Id "+id+" not declared"));
       
       else{
     	  entry = tmp;
-    	  nestinglevel = env.nestingLevel;
+    	  nestinglevel = env.getInstance().getNestLevel();
       }
 	  
 	  return res;

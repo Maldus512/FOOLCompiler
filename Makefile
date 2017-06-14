@@ -46,3 +46,9 @@ test:
 	cd parser && $(GRUN) FOOL prog $(TEST) -gui
 	rm parser/$(TEST)
 	$(MAKE) clean -C parser
+
+go:
+	$(MAKE) clean
+	$(MAKE)
+	echo "\n\n\n\n##########################\n## Starting program...\n##########################\n"
+	$(MAKE) run $(f)

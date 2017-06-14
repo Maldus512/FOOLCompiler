@@ -26,8 +26,8 @@ public class VarNode implements Node {
         ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
         //env.offset = -2;
-        HashMap<String,STentry> hm = env.symTable.get(env.nestingLevel);
-        STentry entry = new STentry(env.nestingLevel,type, env.offset--); //separo introducendo "entry"
+        HashMap<String,STentry> hm = env.getInstance().getST().get(env.getInstance().getNestLevel());
+        STentry entry = new STentry(env.getInstance().getNestLevel(),type, env.getInstance().decOffset()); //separo introducendo "entry"
 
         if ( hm.put(id,entry) != null )
             res.add(new SemanticError("Var id "+id+" already declared"));

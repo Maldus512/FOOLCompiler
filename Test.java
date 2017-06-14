@@ -27,7 +27,7 @@ public class Test {
 			fileName = args[0];
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run filename=prog.fool\nwhere prog.fool is a fool program.\n");
+			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run f=prog.fool\nwhere prog.fool is a fool program.\n");
 			System.exit(1);
 		}
 
@@ -54,7 +54,7 @@ public class Test {
 
 			Node ast = visitor.visit(parser.prog()); //generazione AST 
 
-			Environment env = new Environment();
+			Environment env = Environment.getInstance();
 			ArrayList<SemanticError> err = ast.checkSemantics(env);
 
 			if (err.size() > 0 ){

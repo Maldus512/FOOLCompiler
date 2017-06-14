@@ -39,16 +39,16 @@ public class CallNode implements Node {
         //create the result
         ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-        int j=env.nestingLevel;
+        int j=env.getInstance().getNestLevel();
         STentry tmp=null; 
         while (j>=0 && tmp==null)
-            tmp=(env.symTable.get(j--)).get(id);
+            tmp=(env.getInstance().getST().get(j--)).get(id);
         if (tmp==null)
             res.add(new SemanticError("Id "+id+" not declared"));
 
         else{
             this.entry = tmp;
-            this.nestinglevel = env.nestingLevel;
+            this.nestinglevel = env.getInstance().getNestLevel();
 
             for(Node arg : parlist)
                 res.addAll(arg.checkSemantics(env));
