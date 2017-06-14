@@ -66,6 +66,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		// visit all class's methods
 		for(FunContext fc : ctx.fun()) {
+			// System.out.println(fc.ID().getText());
 			c.addMethod( new FunNode(fc.ID().getText(), visit( fc )) );
 		}
 
@@ -128,7 +129,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitFun(FunContext ctx) {
-		
+
 		//initialize @res with the visits to the type and its ID
 		FunNode res = new FunNode(ctx.ID().getText(), visit(ctx.type()));
 

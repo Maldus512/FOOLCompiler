@@ -19,6 +19,14 @@ public class FunNode implements Node {
 		type=t;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public Node getType() {
+		return type;
+	}
+
 	public void addDecBody (ArrayList<Node> d, Node b) {
 		declist=d;
 		body=b;
@@ -26,13 +34,18 @@ public class FunNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
+		return checkSemantics(env,0);
+	}
+
+	// @Override
+	public ArrayList<SemanticError> checkSemantics(Environment env, int offset) {
 
 		//create result list
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		//env.offset = -2;
 		HashMap<String,STentry> hm = env.getInstance().getST().get(env.getInstance().getNestLevel());
-		STentry entry = new STentry(env.getInstance().getNestLevel(),env.getInstance().decOffset()); //separo introducendo "entry"
+		STentry entry = new STentry(env.getInstance().getNestLevel(), offset); //separo introducendo "entry"
 
 		if ( hm.put(id,entry) != null )
 			res.add(new SemanticError("Fun id "+id+" already declared"));

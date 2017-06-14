@@ -11,6 +11,7 @@ public class Environment {
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<HashMap<String,STentry>>();
 	private int nestingLevel = -1;
 	private int offset = 0;
+	private int staticOffset = 0;	// offset for classes
 
 	protected Environment() {}
 
@@ -51,6 +52,22 @@ public class Environment {
 
 	public void setOffset(int n) {
 		offset = n;
+	}
+
+	public int getStaticOffset() {
+		return staticOffset;
+	}
+
+	public int incStaticOffset() {
+		return staticOffset++;
+	}
+
+	public int decStaticOffset() {
+		return staticOffset--;
+	}
+
+	public void setStaticOffset(int n) {
+		staticOffset = n;
 	}
 
 	//livello ambiente con dichiarazioni piu' esterno � 0 (prima posizione ArrayList) invece che 1 (slides)
