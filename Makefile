@@ -1,13 +1,9 @@
 JFLAGS = -g
 JC = javac
 
-GRUN = grun
-
-UNAME = $(shell uname)
-ifeq ($(UNAME), Darwin)  # Mac OS X
 GRUN = java org.antlr.v4.gui.TestRig
-endif
 
+# Maldo: definisci la tua variabile di ambiente
 
 CLASSES = Test.java 
 

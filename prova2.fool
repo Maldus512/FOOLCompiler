@@ -3,7 +3,7 @@ class SUPERCLASS (bool x, int y) {
     bool maina() print (y);
 }
 class SUBCLASS implements SUPERCLASS (int a, bool b) {
-    bool mainb() print(a);
-    int maina() print(a);
+    bool mainb() print(x);
+    int main() print(a);
 };
 print(2);

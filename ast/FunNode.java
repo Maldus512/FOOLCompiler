@@ -14,6 +14,7 @@ public class FunNode implements Node {
 	private ArrayList<Node> declist;
 	private Node body;
 	private ClassNode ownerClass;	// class node where this method is first defined
+	// TODO: ownerClass e callerClass can be simple Strings
 
 	public FunNode (String i, Node t) {
 		id=i;

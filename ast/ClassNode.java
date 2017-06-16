@@ -76,8 +76,6 @@ public class ClassNode implements Node {
 			return res;
 		}
 
-		// System.out.println("Class: " + id + ", off: " + (env.getStaticOffset()+1) + ", nestlevel: " + env.getNestLevel());
-
 		env.incNestLevel();	// nestingLevel is now 1
 
 		// create a new hashmap for fields and methods and add it to the symbol table
@@ -115,6 +113,8 @@ public class ClassNode implements Node {
 
 		}
 
+		// TODO: i campi possono essere sovrascritti
+		
 		// check fields
 		for (Node f:fieldList) {
 			FieldNode field = (FieldNode) f;

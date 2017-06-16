@@ -1,12 +1,9 @@
 JFLAGS = -g
 JC = javac
 
-ANTLR = antlr4 
-
-UNAME = $(shell uname)
-ifeq ($(UNAME), Darwin)  # Mac OS X
 ANTLR = java -Xmx500M org.antlr.v4.Tool
-endif
+
+# Maldo: definisci la tua variabile da ambiente
 
 GEN = {}Lexer.java {}Parser.java {}Visitor.java {}BaseVisitor.java
 FOOLGEN = $(subst {},FOOL, $(GEN))
