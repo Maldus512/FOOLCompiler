@@ -31,6 +31,8 @@ import util.SemanticError;
 public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	// TODO: override visitMethodExp per gestire le invocazioni di metodo delle classi
+	// TODO: override visitNewExp per gestire la creazione di nuovi oggetti
+	// TODO: override visitThisExp per gestire le invocazioni 'this.'
 
 	@Override
 	public Node visitClassExp(ClassExpContext ctx) {
@@ -60,15 +62,16 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		// ID(0) is the class name, ID(1) is the superclass name (if any)
 		ClassNode c = new ClassNode(ctx.ID(0).getText());
 
+		if (ctx.ID(1) != null)
+			c.setSuperClass(ctx.ID(1).getText());
+
 		// visit all class's fields
 		for(VardecContext vc : ctx.vardec())
 			c.addField( new FieldNode(vc.ID().getText(), visit( vc.type() )) );
 
 		// visit all class's methods
-		for(FunContext fc : ctx.fun()) {
-			// System.out.println(fc.ID().getText());
-			c.addMethod( new FunNode(fc.ID().getText(), visit( fc )) );
-		}
+		for(FunContext fc : ctx.fun())
+			c.addMethod( visit( fc ) );
 
 		return c;
 
@@ -129,9 +132,8 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitFun(FunContext ctx) {
-
 		//initialize @res with the visits to the type and its ID
-		FunNode res = new FunNode(ctx.ID().getText(), visit(ctx.type()));
+		FunNode res = new FunNode(ctx.ID().getText(), visit(ctx.type()) );
 
 		//add argument declarations
 		//we are getting a shortcut here by constructing directly the ParNode

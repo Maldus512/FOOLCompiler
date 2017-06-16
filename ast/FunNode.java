@@ -13,6 +13,7 @@ public class FunNode implements Node {
 	private ArrayList<Node> parlist = new ArrayList<Node>();
 	private ArrayList<Node> declist;
 	private Node body;
+	private ClassNode ownerClass;	// class node where this method is first defined
 
 	public FunNode (String i, Node t) {
 		id=i;
@@ -28,62 +29,78 @@ public class FunNode implements Node {
 	}
 
 	public void addDecBody (ArrayList<Node> d, Node b) {
-		declist=d;
-		body=b;
+		declist = d;
+		body = b;
 	}
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		return checkSemantics(env,0);
+		return checkSemantics(env, 0, null);
 	}
 
 	// @Override
-	public ArrayList<SemanticError> checkSemantics(Environment env, int offset) {
+	public ArrayList<SemanticError> checkSemantics(Environment env, int offset, ClassNode callerClass) {
+		// callerClass is the class from where the semantic check has been called
 
-		//create result list
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		//env.offset = -2;
-		HashMap<String,STentry> hm = env.getInstance().getST().get(env.getInstance().getNestLevel());
-		STentry entry = new STentry(env.getInstance().getNestLevel(), offset); //separo introducendo "entry"
+		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		STentry entry = new STentry(env.getNestLevel(), offset, ownerClass);
 
-		if ( hm.put(id,entry) != null )
-			res.add(new SemanticError("Fun id "+id+" already declared"));
-		else {
-			//creare una nuova hashmap per la symTable
-			env.getInstance().incNestLevel();
-			HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
-			env.getInstance().getST().add(hmn);
+		STentry prevEntry = hm.put( id, entry );
+		if ( prevEntry != null) {
+			
+			// if the previous entry's class is the same of the calling one, the method has been redefined within the same class
+			if (prevEntry.getClassNode().getId().equals( callerClass.getId() ) ) {
+				
+				res.add( new SemanticError("Method name '" + id + "' for class '" + callerClass.getId() + "' has already been used.") );
+				return res;
 
-			ArrayList<Node> parTypes = new ArrayList<Node>();
-			int paroffset=1;
-
-			//check args
-			for(Node a:parlist) {
-				ParNode arg = (ParNode) a;
-				parTypes.add(arg.getType());
-				if ( hmn.put(arg.getId(),new STentry(env.getInstance().getNestLevel(),arg.getType(),paroffset++)) != null  )
-					System.out.println("Parameter id "+arg.getId()+" already declared");
+			} else if (callerClass == null) { // if callerClass is null there are no class calling, thus we are not inside a class.
+				res.add( new SemanticError("Function name '" + id + "' has already been used.") );
+				return res;
 			}
-
-			//set func type
-			entry.addType( new ArrowTypeNode(parTypes, type) );
-
-			//check semantics in the dec list
-			if(declist.size() > 0) {
-				env.getInstance().setOffset(-2);
-				//if there are children then check semantics for every child and save the results
-				for(Node n:declist)
-					res.addAll(n.checkSemantics(env));
-			}
-
-			//check body
-			res.addAll(body.checkSemantics(env));
-
-			//close scope
-			env.getInstance().getST().remove(env.getInstance().decNestLevel());
-		  
 		}
+
+		// A new function has just been added to the symbol table (see above code). If it was owned by a class, then set ownerClass for both method and ST's entry
+		if (ownerClass == null && callerClass != null) {
+			ownerClass = callerClass;
+			entry.setClassNode(ownerClass);
+		}
+
+		env.incNestLevel();
+		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
+		env.getST().add(hmn);
+
+		ArrayList<Node> parTypes = new ArrayList<Node>();
+		int paroffset=1;
+
+		//check args
+		for(Node a:parlist) {
+			ParNode arg = (ParNode) a;
+			parTypes.add(arg.getType());
+
+			if ( hmn.put( arg.getId(), new STentry(env.getNestLevel(), arg.getType(), paroffset++) ) != null  ) {
+				res.add( new SemanticError("Parameter name " + arg.getId() + " of method " + id + " has already been used.") );
+				return res;
+			}
+		}
+
+		//set method type
+		entry.addType( new ArrowTypeNode(parTypes, type) );
+
+		//check semantics in the dec list
+		if(declist.size() > 0) {
+			env.setOffset(-2);
+			for(Node n:declist)
+				res.addAll(n.checkSemantics(env));
+		}
+
+		//check body
+		res.addAll(body.checkSemantics(env));
+
+		//close scope
+		env.getST().remove(env.decNestLevel());
 
 		return res;
 	}
@@ -115,8 +132,9 @@ public class FunNode implements Node {
 		if (declist!=null) 
 			for (Node dec:declist)
 				dec.typeCheck();
+		
 		if ( !(FOOLlib.isSubtype(body.typeCheck(),type)) ){
-			System.out.println("Wrong return type for function "+id);
+			System.out.println("Wrong return type for function " + id);
 			System.exit(0);
 		}
 	return null;

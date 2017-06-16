@@ -32,11 +32,11 @@ public class ProgClassNode implements Node {
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
-		env.getInstance().incNestLevel();	// nestingLevel is now 0
+		env.incNestLevel();	// nestingLevel is now 0
 
 		// create a new hashmap and add it to the symbol table
 		HashMap<String,STentry> hm = new HashMap<String,STentry> ();
-		env.getInstance().getST().add(hm);
+		env.getST().add(hm);
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
@@ -46,7 +46,7 @@ public class ProgClassNode implements Node {
 
 		// if there are lets
 		if (decList.size() > 0) {
-			env.getInstance().setOffset(-2);
+			env.setOffset(-2);
 
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
@@ -56,7 +56,7 @@ public class ProgClassNode implements Node {
 		res.addAll(exp.checkSemantics(env));
 
 		// leave the class scope
-		env.getInstance().getST().remove(env.getInstance().decNestLevel());
+		env.getST().remove(env.decNestLevel());
 
 		return res;
 	}

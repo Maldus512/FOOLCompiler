@@ -20,16 +20,16 @@ import ast.Node;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		String fileName = "";
+		String fileName = "prova2.fool";
 		FileInputStream is = null;
 
-		try {
-			fileName = args[0];
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run f=prog.fool\nwhere prog.fool is a fool program.\n");
-			System.exit(1);
-		}
+//		try {
+//			fileName = args[0];
+//		}
+//		catch (ArrayIndexOutOfBoundsException e) {
+//			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run f=prog.fool\nwhere prog.fool is a fool program.\n");
+//			System.exit(1);
+//		}
 
 		try {
 			is = new FileInputStream(fileName);
@@ -54,11 +54,11 @@ public class Test {
 
 			Node ast = visitor.visit(parser.prog()); //generazione AST 
 
-			Environment env = Environment.getInstance();
+			Environment env = new Environment();
 			ArrayList<SemanticError> err = ast.checkSemantics(env);
 
 			if (err.size() > 0 ){
-				System.out.println("You had: " +err.size()+" errors:");
+				System.out.println("You had: " +err.size()+" error(s):");
 				for(SemanticError e : err)
 					System.out.println("\t" + e);
 			} else {
@@ -84,7 +84,7 @@ public class Test {
 
 				parserASM.assembly();
 
-				System.out.println("You had: "+lexerASM.lexicalErrors+" lexical errors and "+parserASM.getNumberOfSyntaxErrors()+" syntax errors.");
+				System.out.println("You had: "+lexerASM.lexicalErrors+" lexical error(s) and "+parserASM.getNumberOfSyntaxErrors()+" syntax error(s).");
 				if (lexerASM.lexicalErrors>0 || parserASM.getNumberOfSyntaxErrors()>0) System.exit(1);
 
 				System.out.println("Starting Virtual Machine...");

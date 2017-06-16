@@ -12,32 +12,39 @@ public class ClassNode implements Node {
 
 	private String id;
 	private ArrayList<Node> fieldList;
-	private ArrayList<FunNode> methodList;
+	private ArrayList<Node> methodList;
+	private String superClassId;
 	
 	public ClassNode (String name) {
 		id = name;
 		fieldList = new ArrayList<Node>();
-		methodList = new ArrayList<FunNode>();
+		methodList = new ArrayList<Node>();
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String toPrint(String s) {
 		String  fieldstr = "",
-				methodstr = "";
+				methodstr = "",
+				superstr = "";
 
 		for (Node n:fieldList) {
 			fieldstr += n.toPrint(s+"  ");
 		}
 
-		// Printing functions declarations requires a working
-		// semantic check to calculate nesting levels.
-		
 		for (Node method:methodList) {
 			methodstr+=method.toPrint(s+"  ");
 		}
 
+		if (superClassId != null)
+			superstr += s + "  " + "Implements:" + superClassId + "\n";
+
 		return s + "Class:" + id + "\n"
-		+ fieldstr
-		+ methodstr
+			+ superstr
+			+ fieldstr
+			+ methodstr
 		;
 	}
 
@@ -45,66 +52,92 @@ public class ClassNode implements Node {
 		fieldList.add(f);
 	}
 
-	public void addMethod (FunNode m) {
+	public void addMethod (Node m) {
 		methodList.add(m);
+	}
+
+	public void setSuperClass(String id) {
+		superClassId = id;
 	}
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 		
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
-		// // res.add(new SemanticError("############ PROVA ###########"));
-
-		//env.offset = -2;
-
-		// get symtablet at nestingLevel, which is now 0
-		HashMap<String,STentry> hm = env.getInstance().getST().get(env.getInstance().getNestLevel());
+		
+		// get symtable at nestingLevel, which is now 0
+		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
 		// add entry with current nestingLevel at offset 0, and decrement offset
-		STentry entry = new STentry(env.getInstance().getNestLevel(), env.getInstance().decStaticOffset());
+		STentry entry = new STentry(env.getNestLevel(), env.decStaticOffset(), this);
 
 		// check if the class has already been declared
 		if ( hm.put( id, entry ) != null ) {
 			res.add( new SemanticError("Class name '" + id + "' has already been used.") );
 			return res;
 		}
-		
-		env.getInstance().incNestLevel();	// nestingLevel is now 1
 
-		// create a new hashmap and add it to the symbol table
+		// System.out.println("Class: " + id + ", off: " + (env.getStaticOffset()+1) + ", nestlevel: " + env.getNestLevel());
+
+		env.incNestLevel();	// nestingLevel is now 1
+
+		// create a new hashmap for fields and methods and add it to the symbol table
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
-		env.getInstance().getST().add(hmn);
+		env.getST().add(hmn);
 
 		ArrayList<Node> fieldTypes = new ArrayList<Node>();
-		int fieldOffset = 0;
+
+		int fieldOffset = 0;	// offset for class's fields
+		int methodOffset = 0;	// offset for class's methods
+
+		if (superClassId != null) {
+			// check if super class has been declared
+			STentry superClassEntry = hm.get( superClassId );
+
+			if (superClassEntry == null) {
+				res.add( new SemanticError("Superclass '" + superClassId + "' for class '" + id + "' has not been declared."));
+				return res;
+			}
+			
+			// add to the subclass's symbol table every field of its superclass
+			for (Node f:superClassEntry.getClassNode().fieldList) {
+				FieldNode field = (FieldNode) f;
+				fieldTypes.add(field.getType());
+
+				// add fields with nesting level set to superclass fields' nesting level
+				hmn.put( field.getId(), new STentry(superClassEntry.getNestLevel()+1, field.getType(), fieldOffset++ ) );
+			}
+
+			// add to the subclass's symbol table every method of its superclass
+			for(Node n:superClassEntry.getClassNode().methodList) {
+				FunNode f = (FunNode) n;
+				res.addAll( f.checkSemantics(env, methodOffset++, this) );
+			}
+
+		}
 
 		// check fields
 		for (Node f:fieldList) {
 			FieldNode field = (FieldNode) f;
 			fieldTypes.add(field.getType());
 
-			if ( hmn.put( field.getId(), new STentry(env.getInstance().getNestLevel(), field.getType(), fieldOffset++ ) ) != null  ) {
+			// Assumption: cannot redefine fields of subclasses
+			if ( hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), fieldOffset++ ) ) != null  ) {
 				res.add( new SemanticError("Field name '" + field.getId() + "' for class '" + id + "' has already been used."));
 				return res;
 			}
 		}
 
-		// TODO: must define a ClassTypeNode, similar to ArrowTypeNode
+		// TODO: define a ClassTypeNode, similar to ArrowTypeNode
 		// entry.addType( new ClassTypeNode(fieldTypes, type) );
 
-		int methodOffset = 0;
-		
 		// check semantics of class's methods
-		for(FunNode n:methodList) {
-			// if ( hmn.put( n.getId(), new STentry(env.getInstance().getNestLevel(), n.getType(), methodOffset++ ) ) != null  ) {
-			// 	res.add( new SemanticError("Method name '" + n.getId() + "' for class '" + id + "' has already been used.") );
-			// 	return res;
-			// }
-
-			res.addAll(n.checkSemantics(env, methodOffset++));
+		for(Node n:methodList) {
+			FunNode f = (FunNode) n;
+			res.addAll( f.checkSemantics(env, methodOffset++, this) );
 		}
 
 		//close scope
-		env.getInstance().getST().remove(env.getInstance().decNestLevel());
+		env.getST().remove(env.decNestLevel());
 
 		return res;
 	}

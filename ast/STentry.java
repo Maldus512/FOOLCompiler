@@ -4,20 +4,27 @@ public class STentry {
 	private int nl;
 	private Node type;
 	private int offset;
+	private ClassNode classInfo;	// needed for inheritance
 
 	public STentry (int n, int os) {
-		nl=n;
-		offset=os;
+		nl = n;
+		offset = os;
 	}
 
 	public STentry (int n, Node t, int os) {
-		nl=n;
-		type=t;
-		offset=os;
+		nl = n;
+		type = t;
+		offset = os;
+	}
+
+	public STentry (int n, int os, ClassNode c) {
+		nl = n;
+		classInfo = c;
+		offset = os;
 	}
 
 	public void addType (Node t) {
-		type=t;
+		type = t;
 	}
 
 	public Node getType () {
@@ -28,8 +35,16 @@ public class STentry {
 		return offset;
 	}
 
-	public int getNestinglevel () {
+	public int getNestLevel () {
 		return nl;
+	}
+
+	public ClassNode getClassNode() {
+		return classInfo;
+	}
+
+	public void setClassNode(ClassNode c) {
+		classInfo = c;
 	}
 
 	public String toPrint(String s) {

@@ -1,7 +1,9 @@
-class testClass (int x, int y) {
-    int main() x;
+class SUPERCLASS (bool x, int y) {
+    int main() print(x);
+    bool maina() print (y);
 }
-class testClass2 (int a, bool b) {
-    int main2() a;
+class SUBCLASS implements SUPERCLASS (int a, bool b) {
+    bool mainb() print(a);
+    int maina() print(a);
 };
 print(2);

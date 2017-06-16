@@ -7,19 +7,15 @@ import ast.STentry;
 
 public class Environment {
 
-	private static Environment instance = null;
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<HashMap<String,STentry>>();
-	private int nestingLevel = -1;
-	private int offset = 0;
-	private int staticOffset = 0;	// offset for classes
+	private int nestingLevel;
+	private int offset;
+	private int staticOffset;	// offset for classes
 
-	protected Environment() {}
-
-	public static Environment getInstance() {
-		if (instance == null) {
-			instance = new Environment();
-		}
-		return instance;
+	public Environment() {
+		nestingLevel = -1;
+		offset = 0;
+		staticOffset = 0;
 	}
 
 	public ArrayList<HashMap<String,STentry>> getST() {

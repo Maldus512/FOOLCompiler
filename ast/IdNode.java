@@ -25,16 +25,16 @@ public class IdNode implements Node {
 	  //create result list
 	  ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 	  
-	  int j=env.getInstance().getNestLevel();
+	  int j=env.getNestLevel();
 	  STentry tmp=null; 
 	  while (j>=0 && tmp==null)
-		  tmp=(env.getInstance().getST().get(j--)).get(id);
+		  tmp=(env.getST().get(j--)).get(id);
       if (tmp==null)
           res.add(new SemanticError("Id "+id+" not declared"));
       
       else{
     	  entry = tmp;
-    	  nestinglevel = env.getInstance().getNestLevel();
+    	  nestinglevel = env.getNestLevel();
       }
 	  
 	  return res;
@@ -50,7 +50,7 @@ public class IdNode implements Node {
   
   public String codeGeneration() {
       String getAR="";
-	  for (int i=0; i<nestinglevel-entry.getNestinglevel(); i++) 
+	  for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
 	    	 getAR+="lw\n";
 	    return "push "+entry.getOffset()+"\n"+ //metto offset sullo stack
 		       "lfp\n"+getAR+ //risalgo la catena statica

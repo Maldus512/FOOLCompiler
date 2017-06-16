@@ -39,16 +39,16 @@ public class CallNode implements Node {
         //create the result
         ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-        int j=env.getInstance().getNestLevel();
+        int j=env.getNestLevel();
         STentry tmp=null; 
         while (j>=0 && tmp==null)
-            tmp=(env.getInstance().getST().get(j--)).get(id);
+            tmp=(env.getST().get(j--)).get(id);
         if (tmp==null)
-            res.add(new SemanticError("Id "+id+" not declared"));
+            res.add(new SemanticError("Id '" + id + "' not declared."));
 
         else{
             this.entry = tmp;
-            this.nestinglevel = env.getInstance().getNestLevel();
+            this.nestinglevel = env.getNestLevel();
 
             for(Node arg : parlist)
                 res.addAll(arg.checkSemantics(env));
@@ -82,7 +82,7 @@ public class CallNode implements Node {
             parCode+=parlist.get(i).codeGeneration();
 
         String getAR="";
-        for (int i=0; i<nestinglevel-entry.getNestinglevel(); i++) 
+        for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
             getAR+="lw\n";
 
         return "lfp\n"+ //CL
