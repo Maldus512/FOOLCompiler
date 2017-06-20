@@ -1,11 +1,13 @@
 JFLAGS = -g
 JC = javac
 
+ifndef GRUN
 GRUN = java org.antlr.v4.gui.TestRig
+endif
 
-# Maldo: definisci la tua variabile di ambiente
+DIR := ${CURDIR}
 
-CLASSES = Test.java 
+CLASSES = Fcc.java Test.java
 
 
 #
@@ -29,19 +31,14 @@ generated:
 	$(MAKE) -C parser
 
 clean:
-	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class *.asm
+	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class *.asm ./test/*.class ./test/*.asm
 	$(MAKE) clean -C parser
 
-run:
-	java Test $(f)
+run: classes
+	java Fcc -f $(f)
 
-test:
-	$(MAKE) clean -C parser
-	$(MAKE) -C parser PACK=NONE TEST=TRUE
-	cp $(TEST) parser/
-	cd parser && $(GRUN) FOOL prog $(TEST) -gui
-	rm parser/$(TEST)
-	$(MAKE) clean -C parser
+test: classes
+	cd test && python test_suite.py "java -classpath $(DIR):$(CLASSPATH) Fcc"
 
 go:
 	$(MAKE) clean

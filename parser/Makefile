@@ -1,9 +1,10 @@
 JFLAGS = -g
 JC = javac
 
+ifndef ANTLR
 ANTLR = java -Xmx500M org.antlr.v4.Tool
+endif
 
-# Maldo: definisci la tua variabile da ambiente
 
 GEN = {}Lexer.java {}Parser.java {}Visitor.java {}BaseVisitor.java
 FOOLGEN = $(subst {},FOOL, $(GEN))
