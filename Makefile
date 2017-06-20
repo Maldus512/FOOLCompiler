@@ -1,4 +1,5 @@
 JFLAGS = -g
+# JC = javac -classpath "./lib/commons-cli-1.4.jar:."
 JC = javac
 
 ifndef GRUN
@@ -7,7 +8,8 @@ endif
 
 DIR := ${CURDIR}
 
-CLASSES = Fcc.java Test.java
+# CLASSES = Fcc.java Test.java
+CLASSES = Test.java
 
 
 #
@@ -34,8 +36,10 @@ clean:
 	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class *.asm ./test/*.class ./test/*.asm
 	$(MAKE) clean -C parser
 
+# run: classes
+	# java Fcc -f $(f)
 run: classes
-	java Fcc -f $(f)
+	java Test $(f)
 
 test: classes
 	cd test && python test_suite.py "java -classpath $(DIR):$(CLASSPATH) Fcc"

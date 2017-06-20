@@ -10,4 +10,4 @@ parser/*
 TEMP
 .classpath
 .project
-
+.vscode

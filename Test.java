@@ -20,16 +20,16 @@ import ast.Node;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		String fileName = "prova2.fool";
+		String fileName = "";
 		FileInputStream is = null;
 
-//		try {
-//			fileName = args[0];
-//		}
-//		catch (ArrayIndexOutOfBoundsException e) {
-//			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run f=prog.fool\nwhere prog.fool is a fool program.\n");
-//			System.exit(1);
-//		}
+		try {
+			fileName = args[0];
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("\nERROR. You must provide a fool program.\nEither use:\n$ java Test prog.fool\n$ make run f=prog.fool\nwhere prog.fool is a fool program.\n");
+			System.exit(1);
+		}
 
 		try {
 			is = new FileInputStream(fileName);
