@@ -6,29 +6,45 @@ import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
 
-public class FunNode implements Node {
+public class MethodNode implements Node {
 
 	private String id;
 	private Node type; 
 	private ArrowTypeNode arrowType;
-	private ArrayList<Node> parList = new ArrayList<Node>();
+	private ArrayList<Node> parList;
 	private ArrayList<Node> decList;
 	private Node body;
+	private ClassNode ownerClass;	// class node where this method is first defined
+	private int curMethodOffset;		// offset in callerClass
+	
+	public MethodNode (String i, Node t) {
+		id=i;
+		type=t;
+	}
 
-	public FunNode (String i, Node t) {
-		id = i;
-		type = t;
+	public MethodNode (String _id, Node _type, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
+		id = _id;
+		type = _type;
+		parList = _parList;
+		decList = _decList;
+		body = _body;
 	}
 
 	public String getId() { return id; }
 
 	public Node getType() { return type; }
 
+	public ArrowTypeNode getArrowType() { return arrowType; }
+
 	public ArrayList<Node> getParList() { return parList; }
 
 	public ArrayList<Node> getDecList() { return decList; }
 
 	public Node getBody() { return body; }
+
+	public String getOwnerClassId() { return ownerClass.getId(); }
+
+	public int getOffset() { return curMethodOffset; }
 
 	public void addDecBody (ArrayList<Node> d, Node b) {
 		decList = d;
@@ -37,15 +53,48 @@ public class FunNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
+		return checkSemantics(env, 0, null);
+		// return checkSemantics(env, 0, -1, null);
+	}
+
+	public ArrayList<SemanticError> checkSemantics(Environment env, int offset, ClassNode callerClass) {
+		// callerClass is the class from where the semantic check has been called
+		curMethodOffset = offset + 1;
+
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
-		STentry entry = new STentry(env.getNestLevel(), env.decOffset());
+		STentry entry = new STentry(env.getNestLevel(), offset, ownerClass);
 
-		
-		if (hm.put( id, entry ) != null) {
-			res.add( new SemanticError("Function name '" + id + "' has already been used.") );
-			return res;
+		STentry prevEntry = hm.put( id, entry );
+		if ( prevEntry != null) {
+
+			if (callerClass == null) { // if callerClass is null there are no class calling, thus we are not inside a class.
+				res.add( new SemanticError("Function name '" + id + "' has already been used.") );
+				return res;
+			}
+
+			// if the previous entry's class is the same of the calling one, the method has been redefined within the same class
+			if (prevEntry.getClassNode().getId().equals( callerClass.getId() ) ) {
+				
+				res.add( new SemanticError("Method name '" + id + "' for class '" + callerClass.getId() + "' has already been used.") );
+				return res;
+
+			}
+
+			// if we are here we are overriding a method, thus we must update offsets accordingly
+			hm.put( id, new STentry( env.getNestLevel(), prevEntry.getOffset(), ownerClass) );
+
+			// if (prevEntry.getOffset() > curMethodOffset)
+			// 	curMethodOffset = prevEntry.getOffset();
+			// else
+				curMethodOffset--;
+		}
+
+		// if this method is defined for the first time, update ownerClass for both method and ST's entry
+		if (ownerClass == null && callerClass != null) {
+			ownerClass = callerClass;
+			hm.get(id).setClassNode(ownerClass);
 		}
 
 		env.incNestLevel();
@@ -55,8 +104,8 @@ public class FunNode implements Node {
 		ArrayList<Node> parTypes = new ArrayList<Node>();
 		int paroffset = 0;
 
-		// check parameters
-		for (Node a:parList) {
+		//check args
+		for(Node a:parList) {
 			ParNode arg = (ParNode) a;
 			parTypes.add(arg.getType());
 
@@ -66,12 +115,12 @@ public class FunNode implements Node {
 			}
 		}
 
-		// set function type
+		//set method type
 		arrowType = new ArrowTypeNode(parTypes, type);
 		entry.addType( arrowType );
 
-		// check dec list
-		if (decList.size() > 0) {
+		//check semantics in the dec list
+		if(decList.size() > 0) {
 			env.setOffset(-2);
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));

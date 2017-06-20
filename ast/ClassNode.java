@@ -52,7 +52,8 @@ public class ClassNode implements Node {
 		fieldList.add(f);
 	}
 
-	public void addMethod (Node m) {
+	public void addMethod (FunNode f) {
+		MethodNode m = new MethodNode(f.getId(), f.getType(), f.getParList(), f.getDecList(), f.getBody());
 		methodList.add(m);
 	}
 
@@ -83,6 +84,7 @@ public class ClassNode implements Node {
 		env.getST().add(hmn);
 
 		ArrayList<Node> fieldTypes = new ArrayList<Node>();
+		ArrayList<ArrowTypeNode> methodTypes = new ArrayList<ArrowTypeNode>();
 
 		int fieldOffset = 0;	// offset for class's fields
 		int methodOffset = 0;	// offset for class's methods
@@ -107,33 +109,59 @@ public class ClassNode implements Node {
 
 			// add to the subclass's symbol table every method of its superclass
 			for(Node n:superClassEntry.getClassNode().methodList) {
-				FunNode f = (FunNode) n;
+				MethodNode f = (MethodNode) n;
+
 				res.addAll( f.checkSemantics(env, methodOffset++, this) );
+
+				methodTypes.add(f.getArrowType());
 			}
 
 		}
 
-		// TODO: i campi possono essere sovrascritti
-		
+		/*
+			Overriding of fields is handled by using a temporary hash table where to insert already declared fields, only for the subclass: if a double entry is found then the field has already been defined for that class.
+		*/
+
 		// check fields
+		HashMap<String,STentry> temp = new HashMap<String,STentry> ();
+
 		for (Node f:fieldList) {
+
 			FieldNode field = (FieldNode) f;
 			fieldTypes.add(field.getType());
 
-			// Assumption: cannot redefine fields of subclasses
-			if ( hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), fieldOffset++ ) ) != null  ) {
-				res.add( new SemanticError("Field name '" + field.getId() + "' for class '" + id + "' has already been used."));
-				return res;
+			STentry prevEntry = hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), fieldOffset++ ) );
+			if ( prevEntry != null) {
+
+				if (temp.put( field.getId(), null) != null) {	// field has been redeclared twice within the same class
+					res.add( new SemanticError("Field name '" + field.getId() + "' for class '" + id + "' has already been used."));
+					return res;
+				}
+
+				// if we are here, we are overriding a field, thus we must update its offset accordingly
+				hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), prevEntry.getOffset()) );
+				fieldOffset--;
 			}
 		}
 
-		// TODO: define a ClassTypeNode, similar to ArrowTypeNode
-		// entry.addType( new ClassTypeNode(fieldTypes, type) );
+		entry.addType( new ClassTypeNode(fieldTypes, methodTypes) );
+
+
+		/*
+			Overriding of methods is handled by setting, for each method, an "owner class", corresponding to the first class which declares such method: if a class defines a method but an entry is already present, the owner class is checked: if the owner is the class itself, the method has been redefined within the same class.
+			Note: this could be done in the same way as for fields, but this is more metal. \m/_
+		*/
 
 		// check semantics of class's methods
 		for(Node n:methodList) {
-			FunNode f = (FunNode) n;
+			MethodNode f = (MethodNode) n;
+			
 			res.addAll( f.checkSemantics(env, methodOffset++, this) );
+
+			methodTypes.add(f.getArrowType());
+
+			// adjust methodOffset to correct offset
+			methodOffset = f.getOffset();
 		}
 
 		//close scope

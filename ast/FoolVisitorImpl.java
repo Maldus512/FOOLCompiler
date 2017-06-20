@@ -70,8 +70,10 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 			c.addField( new FieldNode(vc.ID().getText(), visit( vc.type() )) );
 
 		// visit all class's methods
-		for(FunContext fc : ctx.fun())
-			c.addMethod( visit( fc ) );
+		for(FunContext fc : ctx.fun()) {
+			FunNode f = (FunNode)visit(fc);
+			c.addMethod( f );
+		}
 
 		return c;
 
@@ -129,6 +131,19 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//build the varNode
 		return new VarNode(ctx.vardec().ID().getText(), typeNode, expNode);
 	}
+
+	// public Node visitMethod(FunContext fc) {
+	// 	FunNode f = (FunNode)visit( fc );
+
+	// 	if (f.getId() == null || f.getType() == null || f.getParList() == null || f.getDecList() == null || f.getBody() == null)
+	// 		System.out.println("############### NULL ###############");
+	// 	else
+	// 		System.out.println("############### OK ###############");
+
+	// 	MethodNode m = new MethodNode(f.getId(), f.getType(), f.getParList(), f.getDecList(), f.getBody());
+
+	// 	return m;
+	// }
 
 	@Override
 	public Node visitFun(FunContext ctx) {

@@ -2,8 +2,11 @@ class SUPERCLASS (bool x, int y) {
     int main() print(x);
     bool maina() print (y);
 }
-class SUBCLASS implements SUPERCLASS (int a, bool b) {
-    bool mainb() print(x);
-    int main() print(a);
+class SUBCLASS implements SUPERCLASS (int x, bool a) {
+    int maind() print(a);
+    int mainb() print(y);
+    int main(int c) print(c);
+    bool maina() print(x);
+    int maine() print(y);
 };
 print(2);
