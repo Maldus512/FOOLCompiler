@@ -149,7 +149,7 @@ public class ClassNode implements Node {
 			}
 		}
 
-		classType = new ClassTypeNode(fieldTypes, methodTypes);
+		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
 		entry.addType( classType );
 
 

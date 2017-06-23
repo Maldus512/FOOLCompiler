@@ -182,9 +182,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		else if(ctx.getText().equals("bool"))
 			return new BoolTypeNode();
 
-		// TODO: da pensare a come fare
-		return null;
-
+		return new ClassTypeNode(ctx.getText(), null, null);
 	}
 
 	@Override

@@ -6,12 +6,18 @@ import util.SemanticError;
 
 public class ClassTypeNode implements Node {
 
+    private String id;
     private ArrayList<Node> fieldTypeList;
     private ArrayList<ArrowTypeNode> methodTypeList;
 
-    public ClassTypeNode (ArrayList<Node> f, ArrayList<ArrowTypeNode> m) {
+    public ClassTypeNode (String i, ArrayList<Node> f, ArrayList<ArrowTypeNode> m) {
+        id = i;
         fieldTypeList = f;
         methodTypeList = m;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String toPrint(String s) { //
