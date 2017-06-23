@@ -38,22 +38,19 @@ public class VarNode implements Node {
 				if (e.getType() instanceof ClassTypeNode) {
 					if ( t.getId().equals( ((ClassTypeNode)e.getType()).getId() ) ) {
 						classDefined = true;
+						type = e.getType();
+						break;
 					}
 				}
 			}
-
-					
 
 			if (!classDefined) {
 				res.add( new SemanticError("Class " + t.getId() + " has not been defined."));
 				return res;
 			}
-		}
 
-		// if ( ((NewNode)exp).getClassId() != type.getId() ) {
-		// 	res.add( new SemanticError("KDSBASKNFBKDSANFKDASNFK"));
-		// 	return res;
-		// }
+
+		}
 
 		if ( hm.put(id,entry) != null )
 			res.add(new SemanticError("Var id "+id+" already declared"));

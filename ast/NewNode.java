@@ -7,7 +7,6 @@ import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
-/* Class representing a variable declaration and assignment */
 public class NewNode implements Node {
 
 	private String classId;
@@ -26,9 +25,14 @@ public class NewNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		// return s+"Var:" + id +"\n"
-		// +type.toPrint(s+"  ")
-		return "ciao";
+		String parstr = "";
+
+		for (Node par : parList) {
+			parstr += par.toPrint("  ");
+		}
+		
+		return s + "Par:\n"
+				+ parstr;
 	}
 
 	@Override

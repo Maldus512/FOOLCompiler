@@ -24,10 +24,10 @@ public class ProgClassNode implements Node {
 		String 	fieldstr = "",
 				decstr = "";
 
-		// if (decList.size() > 0) {
-		// 	for (Node d : decList)
-		// 		decstr += d.toPrint(s+"  ");
-		// }
+		if (decList.size() > 0) {
+			for (Node d : decList)
+				decstr += d.toPrint(s+"  ");
+		}
 
 		for (Node c : classList)
 			fieldstr += c.toPrint(s+"  ");
