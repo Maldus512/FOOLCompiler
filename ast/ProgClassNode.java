@@ -21,12 +21,21 @@ public class ProgClassNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		String fieldstr="";
+		String 	fieldstr = "",
+				decstr = "";
 
-		for (Node c:classList)
-			fieldstr+=c.toPrint(s+"  ");
+		// if (decList.size() > 0) {
+		// 	for (Node d : decList)
+		// 		decstr += d.toPrint(s+"  ");
+		// }
+
+		for (Node c : classList)
+			fieldstr += c.toPrint(s+"  ");
 		
-		return s+"ProgClass\n" + fieldstr + exp.toPrint(s+"  ") ;
+		return 	s + "ProgClass\n"
+				+ fieldstr
+				+ decstr
+				+ exp.toPrint(s+"  ");
 	}
 
 	@Override

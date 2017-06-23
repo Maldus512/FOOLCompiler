@@ -14,6 +14,7 @@ public class ClassNode implements Node {
 	private ArrayList<Node> fieldList;
 	private ArrayList<Node> methodList;
 	private String superClassId;
+	private ClassTypeNode classType;
 	
 	public ClassNode (String name) {
 		id = name;
@@ -59,6 +60,10 @@ public class ClassNode implements Node {
 
 	public void setSuperClass(String id) {
 		superClassId = id;
+	}
+
+	public ClassTypeNode getClassType() {
+		return classType;
 	}
 
 	@Override
@@ -144,7 +149,8 @@ public class ClassNode implements Node {
 			}
 		}
 
-		entry.addType( new ClassTypeNode(fieldTypes, methodTypes) );
+		classType = new ClassTypeNode(fieldTypes, methodTypes);
+		entry.addType( classType );
 
 
 		/*

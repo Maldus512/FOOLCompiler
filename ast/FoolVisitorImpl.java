@@ -8,6 +8,7 @@ import parser.*;
 import parser.FOOLParser.BaseExpContext;
 import parser.FOOLParser.BoolValContext;
 import parser.FOOLParser.ClassdecContext;
+import parser.FOOLParser.ClassExpContext;
 import parser.FOOLParser.DecContext;
 import parser.FOOLParser.ExpContext;
 import parser.FOOLParser.FactorContext;
@@ -16,13 +17,13 @@ import parser.FOOLParser.FunExpContext;
 import parser.FOOLParser.IfExpContext;
 import parser.FOOLParser.IntValContext;
 import parser.FOOLParser.LetInExpContext;
+import parser.FOOLParser.NewExpContext;
 import parser.FOOLParser.SingleExpContext;
 import parser.FOOLParser.TermContext;
 import parser.FOOLParser.TypeContext;
 import parser.FOOLParser.VarExpContext;
 import parser.FOOLParser.VarasmContext;
 import parser.FOOLParser.VardecContext;
-import parser.FOOLParser.ClassExpContext;
 import util.SemanticError;
 
 
@@ -33,6 +34,16 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	// TODO: override visitMethodExp per gestire le invocazioni di metodo delle classi
 	// TODO: override visitNewExp per gestire la creazione di nuovi oggetti
 	// TODO: override visitThisExp per gestire le invocazioni 'this.'
+
+	@Override
+	public Node visitNewExp(NewExpContext ctx) {
+		NewNode n = new NewNode(ctx.ID().getText());
+
+		for (ExpContext par : ctx.exp())
+			n.addPar( visit(par) );
+
+		return n;
+	}
 
 	@Override
 	public Node visitClassExp(ClassExpContext ctx) {
@@ -132,19 +143,6 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		return new VarNode(ctx.vardec().ID().getText(), typeNode, expNode);
 	}
 
-	// public Node visitMethod(FunContext fc) {
-	// 	FunNode f = (FunNode)visit( fc );
-
-	// 	if (f.getId() == null || f.getType() == null || f.getParList() == null || f.getDecList() == null || f.getBody() == null)
-	// 		System.out.println("############### NULL ###############");
-	// 	else
-	// 		System.out.println("############### OK ###############");
-
-	// 	MethodNode m = new MethodNode(f.getId(), f.getType(), f.getParList(), f.getDecList(), f.getBody());
-
-	// 	return m;
-	// }
-
 	@Override
 	public Node visitFun(FunContext ctx) {
 		//initialize @res with the visits to the type and its ID
@@ -184,7 +182,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		else if(ctx.getText().equals("bool"))
 			return new BoolTypeNode();
 
-		//this will never happen thanks to the parser
+		// TODO: da pensare a come fare
 		return null;
 
 	}
