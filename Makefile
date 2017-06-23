@@ -1,6 +1,6 @@
 JFLAGS = -g
-# JC = javac -classpath "./lib/commons-cli-1.4.jar:."
-JC = javac
+JC = javac -classpath "./lib/commons-cli.jar:$(CLASSPATH)"
+#JC = javac
 
 ifndef GRUN
 GRUN = java org.antlr.v4.gui.TestRig
