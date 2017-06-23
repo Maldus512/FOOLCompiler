@@ -17,6 +17,7 @@ import parser.FOOLParser.FunExpContext;
 import parser.FOOLParser.IfExpContext;
 import parser.FOOLParser.IntValContext;
 import parser.FOOLParser.LetInExpContext;
+import parser.FOOLParser.MethodExpContext;
 import parser.FOOLParser.NewExpContext;
 import parser.FOOLParser.SingleExpContext;
 import parser.FOOLParser.TermContext;
@@ -24,6 +25,7 @@ import parser.FOOLParser.TypeContext;
 import parser.FOOLParser.VarExpContext;
 import parser.FOOLParser.VarasmContext;
 import parser.FOOLParser.VardecContext;
+
 import util.SemanticError;
 
 
@@ -37,7 +39,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitNewExp(NewExpContext ctx) {
-		NewNode n = new NewNode(ctx.ID().getText());
+		ConstructorNode n = new ConstructorNode(ctx.ID().getText());
 
 		for (ExpContext par : ctx.exp())
 			n.addPar( visit(par) );
@@ -286,6 +288,20 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		//this corresponds to a variable access
 		return new IdNode(ctx.ID().getText());
+
+	}
+
+	@Override
+	public Node visitMethodExp(MethodExpContext ctx) {
+
+		ArrayList<Node> args = new ArrayList<Node>();
+
+		for(ExpContext exp : ctx.exp())
+			args.add(visit(exp));
+
+
+		MethodCallNode m = new MethodCallNode(ctx.ID(1).getText(), args, ctx.ID(0).getText());
+		return m;
 
 	}
 

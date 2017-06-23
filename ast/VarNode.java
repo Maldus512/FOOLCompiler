@@ -63,7 +63,7 @@ public class VarNode implements Node {
 	public String toPrint(String s) {
 		return s+"Var:" + id +"\n"
 			+type.toPrint(s+"  ")
-			+exp.toPrint(s+"  ");
+			+exp.toPrint(s);
 	}
 
 	//valore di ritorno non utilizzato

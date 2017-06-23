@@ -7,12 +7,13 @@ import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
-public class NewNode implements Node {
+public class ConstructorNode implements Node {
 
 	private String classId;
 	private ArrayList<Node> parList = new ArrayList<Node>();
-	
-	public NewNode (String i) {
+	private ClassNode classRef;
+
+	public ConstructorNode (String i) {
 		classId = i;
 	}
 
@@ -28,10 +29,10 @@ public class NewNode implements Node {
 		String parstr = "";
 
 		for (Node par : parList) {
-			parstr += par.toPrint("  ");
+			parstr += par.toPrint(s+"  ");
 		}
 		
-		return s + "Par:\n"
+		return s + "New: " + classId +"\n"
 				+ parstr;
 	}
 
@@ -40,6 +41,28 @@ public class NewNode implements Node {
 		
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
+		boolean classDefined = false;
+		// if ( ! ( (type instanceof IntTypeNode) || (type instanceof BoolTypeNode) ) ) {
+		
+		HashMap<String,STentry> level_zero = env.getST().get(0);
+		for (STentry e : level_zero.values()) {
+			if (e.getType() instanceof ClassTypeNode) {
+				if ( classId.equals( ((ClassTypeNode)e.getType()).getId() ) ) {
+					classDefined = true;
+					classRef = e.getClassNode();
+					break;
+				}
+			}
+		}
+
+		if (!classDefined) {
+			res.add( new SemanticError("Class " + classId + " has not been defined."));
+			return res;
+		}
+
+		for (Node par : parList){
+			res.addAll(par.checkSemantics(env));
+		}
 		return res;
 	}
 
