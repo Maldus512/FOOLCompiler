@@ -28,9 +28,8 @@ public class VarNode implements Node {
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
 		STentry entry = new STentry(env.getNestLevel(),type, env.decOffset());
 
-		boolean classDefined = false;
-		// if ( ! ( (type instanceof IntTypeNode) || (type instanceof BoolTypeNode) ) ) {
 		if ( type instanceof ClassTypeNode ) {
+			boolean classDefined = false;
 			ClassTypeNode t = (ClassTypeNode)type;
 
 			HashMap<String,STentry> level_zero = env.getST().get(0);
@@ -49,13 +48,15 @@ public class VarNode implements Node {
 				return res;
 			}
 
-
 		}
 
 		if ( hm.put(id,entry) != null )
 			res.add(new SemanticError("Var id "+id+" already declared"));
 
 		res.addAll(exp.checkSemantics(env));
+
+		if ( type instanceof ClassTypeNode )
+			entry.setActualClassNode( ((ConstructorNode)exp).getClassRef() );
 
 		return res;
 	}

@@ -22,10 +22,6 @@ public class ClassNode implements Node {
 		methodList = new ArrayList<Node>();
 	}
 
-	public String getId() {
-		return id;
-	}
-
 	public String toPrint(String s) {
 		String  fieldstr = "",
 				methodstr = "",
@@ -49,22 +45,20 @@ public class ClassNode implements Node {
 		;
 	}
 
-	public void addField (Node f) {
-		fieldList.add(f);
-	}
+	public String getId() { return id; }
+
+	public void addField (Node f) { fieldList.add(f); }
 
 	public void addMethod (FunNode f) {
 		MethodNode m = new MethodNode(f.getId(), f.getType(), f.getParList(), f.getDecList(), f.getBody());
 		methodList.add(m);
 	}
 
-	public void setSuperClass(String id) {
-		superClassId = id;
-	}
+	public void setSuperClass(String id) { superClassId = id; }
 
-	public ClassTypeNode getClassType() {
-		return classType;
-	}
+	public ClassTypeNode getClassType() { return classType; }
+
+	public ArrayList<Node> getMethodList() { return methodList; }
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
@@ -118,7 +112,7 @@ public class ClassNode implements Node {
 
 				res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
-				methodTypes.add(f.getArrowType());
+				methodTypes.add( (ArrowTypeNode)(f.getEntry().getType()) );
 			}
 
 		}
@@ -149,10 +143,6 @@ public class ClassNode implements Node {
 			}
 		}
 
-		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
-		entry.addType( classType );
-
-
 		/*
 			Overriding of methods is handled by setting, for each method, an "owner class", corresponding to the first class which declares such method: if a class defines a method but an entry is already present, the owner class is checked: if the owner is the class itself, the method has been redefined within the same class.
 			Note: this could be done in the same way as for fields, but this is more metal. \m/_
@@ -164,11 +154,31 @@ public class ClassNode implements Node {
 			
 			res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
-			methodTypes.add(f.getArrowType());
+			// methodTypes.add(f.getArrowType());
+			methodTypes.add( (ArrowTypeNode)(f.getEntry().getType()) );
 
 			// adjust methodOffset to correct offset
 			methodOffset = f.getOffset();
 		}
+
+		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
+		entry.addType( classType );
+
+
+		// // DEBUG
+		// System.out.println("\n###############");
+		// System.out.println("Class:  " + id);
+		// System.out.println("\tFields:");
+		// for (Node n : fieldList) {
+		// 	FieldNode f = (FieldNode)n;
+		// 	System.out.println( "\t\tId: " + f.getId() + ", NestLevel: " + hmn.get(f.getId()).getNestLevel() + ", Offset: " + hmn.get(f.getId()).getOffset() );
+		// }
+		// System.out.println("\tMethods:");
+		// for (Node n : methodList) {
+		// 	MethodNode m = (MethodNode)n;
+		// 	System.out.println( "\t\tId: " + m.getId() + ", NestLevel: " + hmn.get(m.getId()).getNestLevel() + ", Offset: " + hmn.get(m.getId()).getOffset() );
+		// }
+		// System.out.println("###############\n");
 
 		//close scope
 		env.getST().remove(env.decNestLevel());
