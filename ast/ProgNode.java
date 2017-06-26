@@ -24,8 +24,8 @@ public class ProgNode implements Node {
 		return exp.checkSemantics(env);
 	}
   
-  public Node typeCheck() {
-    return exp.typeCheck();
+  public Node typeCheck(Environment env) {
+    return exp.typeCheck(env);
   }  
   
   public String codeGeneration() {

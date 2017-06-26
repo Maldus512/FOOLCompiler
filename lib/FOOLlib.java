@@ -16,8 +16,9 @@ public class FOOLlib {
     	   ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ); //
   } 
   
+  /* probabilmente non servirà mai a nulla, nel caso la cencellerò
   // S <: T, means that any term of type S can be safely used in a context where a term of type T is expected
-  public static boolean isSubclass (ClassNode s, ClassNode t){
+  public static boolean isSubclass (ClassNode s, ClassNode t, Environment env){
     if (s.superClassId == null){ // se s non ha superclasse allora non è sottotipo
       return false;
     }
@@ -30,7 +31,7 @@ public class FOOLlib {
       return isSubclass( superClassEntry.getClassNode() , t);  //non sono sicuro sia giusto
     }
   }
-
+*/
   public static String freshLabel() { 
 	return "label"+(labCount++);
   } 

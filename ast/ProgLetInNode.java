@@ -54,10 +54,10 @@ public class ProgLetInNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		for (Node dec:declist)
-			dec.typeCheck();
-		return exp.typeCheck();
+			dec.typeCheck(env);
+		return exp.typeCheck(env);
 	}
 
 	public String codeGeneration() {

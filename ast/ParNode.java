@@ -35,7 +35,7 @@ public class ParNode implements Node {
   }
   
   //non utilizzato
-  public Node typeCheck () {
+  public Node typeCheck(Environment env) {
      return null;
   }
   

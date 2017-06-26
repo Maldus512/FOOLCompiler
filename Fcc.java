@@ -80,7 +80,7 @@ public class Fcc {
 				System.out.println("Visualizing AST...");
 				System.out.println(ast.toPrint(""));
 
-				Node type = ast.typeCheck(); //type-checking bottom-up 
+				Node type = ast.typeCheck(env); //type-checking bottom-up 
 				System.out.println(type.toPrint("Type checking ok! Type of the program is: "));
 
 				if (commandArgs.codeGen) {

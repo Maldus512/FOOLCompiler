@@ -104,7 +104,7 @@ public class MethodCallNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		ArrowTypeNode t=null;
 		if (methodEntry.getType() instanceof ArrowTypeNode) {
 			t = (ArrowTypeNode)methodEntry.getType(); 
@@ -118,7 +118,7 @@ public class MethodCallNode implements Node {
 			System.exit(0);
 		} 
 		for (int i=0; i<parList.size(); i++)
-			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(), p.get(i)) ) ) {
+			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
 				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
 				System.exit(0);
 			} 

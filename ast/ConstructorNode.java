@@ -73,8 +73,8 @@ public class ConstructorNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck () {
-		// if (! (FOOLlib.isSubtype(exp.typeCheck(),type)) ){      
+	public Node typeCheck(Environment env) {
+		// if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ){      
 		//     System.out.println("incompatible value for variable "+id);
 		//     System.exit(0);
 		// }     

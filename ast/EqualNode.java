@@ -34,9 +34,9 @@ public class EqualNode implements Node {
         return res;
     }
 
-    public Node typeCheck() {
-        Node l = left.typeCheck();
-        Node r = right.typeCheck();
+    public Node typeCheck(Environment env) {
+        Node l = left.typeCheck(env);
+        Node r = right.typeCheck(env);
         if (! ( FOOLlib.isSubtype(l,r) || FOOLlib.isSubtype(r,l) ) ) {
             System.out.println("Incompatible types in equal");
             System.exit(0);
