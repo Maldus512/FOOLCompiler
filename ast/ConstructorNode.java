@@ -11,7 +11,7 @@ public class ConstructorNode implements Node {
 
 	private String classId;
 	private ArrayList<Node> parList = new ArrayList<Node>();
-	private ClassNode classRef;
+	// private ClassNode classRef;
 
 	public ConstructorNode (String i) {
 		classId = i;
@@ -25,9 +25,9 @@ public class ConstructorNode implements Node {
 		return classId;
 	}
 
-	public ClassNode getClassRef() {
-		return classRef;
-	}
+	// public ClassNode getClassRef() {
+		// return classRef;
+	// }
 
 	public String toPrint(String s) {
 		String parstr = "";
@@ -55,7 +55,7 @@ public class ConstructorNode implements Node {
 				// In the symbol table, objects have the same type of their classes, thus they would be included in this search. We exclude them by checking whether they have methods or not.
 				if ( classId.equals( c.getId() ) && c.getMethodList().size() > 0 ) {	
 					classDefined = true;
-					classRef = c;
+					// classRef = c;
 					break;
 				}
 			}

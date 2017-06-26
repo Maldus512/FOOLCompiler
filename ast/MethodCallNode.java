@@ -51,7 +51,7 @@ public class MethodCallNode implements Node {
 		}
 
 		// get actual instance of the object calling the method
-		String ownerClass = ((ClassNode)(varTmp.getActualClassNode())).getId();
+		String ownerClass = ((ClassNode)(varTmp.getClassNode())).getId();
 
 		// seek for method definition
 		HashMap<String,STentry> level_zero = env.getST().get(0);
