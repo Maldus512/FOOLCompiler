@@ -1,12 +1,8 @@
 JFLAGS = -g
-<<<<<<< HEAD
 DIR := ${CURDIR}
 CP = $(DIR):$(DIR)/lib/commons-cli.jar:$(CLASSPATH)
 JC = javac -classpath $(CP)
 JAVA = java -classpath $(CP)
-=======
- JC = javac -classpath "./lib/commons-cli.jar:$(CLASSPATH)"
->>>>>>> a0d64f655c864f3cd01ef979a402527dd013a822
 #JC = javac
 
 ifndef GRUN
@@ -14,14 +10,9 @@ GRUN = java org.antlr.v4.gui.TestRig
 endif
 
 
-<<<<<<< HEAD
 # CLASSES = Fcc.java Test.java
 SOURCES = $(wildcard ast/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Test.java
 CLASSES = $(SOURCES:.java=.class)
-=======
-CLASSES = Fcc.java Test.java
-#CLASSES = Test.java
->>>>>>> a0d64f655c864f3cd01ef979a402527dd013a822
 
 
 #
