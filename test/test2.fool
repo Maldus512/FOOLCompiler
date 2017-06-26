@@ -9,4 +9,4 @@ class SUBCLASS implements SUPERCLASS (int x, bool a) {
     int maina() print(x);
     int maine() print(y);
 };
-let bool s = true; SUPERCLASS test = new SUBCLASS(1, true, x); in test.main(x);
+let bool x = true; SUPERCLASS test = new SUBCLASS(1, true, x); in test.main();
