@@ -50,12 +50,12 @@ public class IdNode implements Node {
   
   public String codeGeneration() {
       String getAR="";
-	  for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
-	    	 getAR+="lw\n";
-	    return "push "+entry.getOffset()+"\n"+ //metto offset sullo stack
-		       "lfp\n"+getAR+ //risalgo la catena statica
-			   "add\n"+ 
-               "lw\n"; //carico sullo stack il valore all'indirizzo ottenuto
+      for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
+          getAR+="lw\n";
+      return "push "+entry.getOffset()+"\n"+ //metto offset sullo stack
+          "lfp\n"+getAR+ //risalgo la catena statica
+          "add\n"+ 
+          "lw\n"; //carico sullo stack il valore all'indirizzo ottenuto
 
   }
 }  
