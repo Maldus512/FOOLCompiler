@@ -187,10 +187,16 @@ public class ClassNode implements Node {
 	}
 
 	public Node typeCheck(Environment env) {
-		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		if (superClassId != null) {
+		HashMap<String,STentry> hm = env.getST().get(0);
       	STentry superClassEntry = hm.get( superClassId );
-      	Node superNode = superClassEntry.getClassNode();
-		return null;
+
+      	ClassNode superNode = superClassEntry.getClassNode();
+      	if (!FOOLlib.isSubtype(classType, superNode.getClassType())) {
+      		System.out.println("Error: "+id+" is not a subclass of "+superNode.getId());
+      	}
+      }
+      	return null;
 	}
 
 	public String codeGeneration() {

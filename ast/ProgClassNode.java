@@ -68,7 +68,8 @@ public class ProgClassNode implements Node {
 		res.addAll(exp.checkSemantics(env));
 
 		// leave the class scope
-		env.getST().remove(env.decNestLevel());
+		//env.getST().remove(env.decNestLevel());
+		env.decNestLevel();
 
 		return res;
 	}
