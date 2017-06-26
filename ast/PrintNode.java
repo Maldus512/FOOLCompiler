@@ -17,8 +17,8 @@ public class PrintNode implements Node {
     return s+"Print\n" + val.toPrint(s+"  ") ;
   }
   
-  public Node typeCheck() {
-    return val.typeCheck();
+  public Node typeCheck(Environment env) {
+    return val.typeCheck(env);
   }  
   
   @Override

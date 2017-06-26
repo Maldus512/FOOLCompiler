@@ -1,33 +1,47 @@
 package ast;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
 
 public class ClassTypeNode implements Node {
 
-    private ArrayList<Node> fieldTypeList;
-    private ArrayList<ArrowTypeNode> methodTypeList;
+    private String id;
+    private HashMap<String,Node> fieldTypeList;
+    private HashMap<String,ArrowTypeNode> methodTypeList;
 
-    public ClassTypeNode (ArrayList<Node> f, ArrayList<ArrowTypeNode> m) {
+    public ClassTypeNode (String i, HashMap<String,Node> f, HashMap<String,ArrowTypeNode> m) {
+        id = i;
         fieldTypeList = f;
         methodTypeList = m;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String toPrint(String s) { //
         String  fieldstr = "",
                 methodstr = "";
 
-        for (Node field : fieldTypeList)
+        for (Node field : fieldTypeList.values())
             fieldstr += field.toPrint(s + "  ");
 
-        for (ArrowTypeNode method : methodTypeList)
+        for (ArrowTypeNode method : methodTypeList.values())
             methodstr += method.toPrint(s + "  ");
 
         return s + "ClassType\n"
                 + fieldstr
                 + methodstr
             ; 
+    }
+
+    public HashMap<String,Node> getFields(){
+        return fieldTypeList;
+    }
+    public HashMap<String,ArrowTypeNode> getMethods(){
+        return methodTypeList;
     }
 
     @Override
@@ -37,7 +51,7 @@ public class ClassTypeNode implements Node {
     }
 
     //non utilizzato
-    public Node typeCheck () {
+    public Node typeCheck(Environment env) {
         return null;
     }
 

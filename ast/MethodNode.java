@@ -10,7 +10,8 @@ public class MethodNode implements Node {
 
 	private String id;
 	private Node type; 
-	private ArrowTypeNode arrowType;
+	private STentry methodEntry;
+	// private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList;
 	private ArrayList<Node> decList;
 	private Node body;
@@ -34,7 +35,8 @@ public class MethodNode implements Node {
 
 	public Node getType() { return type; }
 
-	public ArrowTypeNode getArrowType() { return arrowType; }
+	// public ArrowTypeNode getArrowType() { return arrowType; }
+	public STentry getEntry() { return methodEntry; }
 
 	public ArrayList<Node> getParList() { return parList; }
 
@@ -83,12 +85,9 @@ public class MethodNode implements Node {
 			}
 
 			// if we are here we are overriding a method, thus we must update offsets accordingly
-			hm.put( id, new STentry( env.getNestLevel(), prevEntry.getOffset(), ownerClass) );
+			entry = new STentry( env.getNestLevel(), prevEntry.getOffset(), ownerClass );
 
-			// if (prevEntry.getOffset() > curMethodOffset)
-			// 	curMethodOffset = prevEntry.getOffset();
-			// else
-				curMethodOffset--;
+			curMethodOffset--;
 		}
 
 		// if this method is defined for the first time, update ownerClass for both method and ST's entry
@@ -116,8 +115,12 @@ public class MethodNode implements Node {
 		}
 
 		//set method type
-		arrowType = new ArrowTypeNode(parTypes, type);
-		entry.addType( arrowType );
+		// arrowType = new ArrowTypeNode(parTypes, type);
+		// entry.addType( arrowType );
+		entry.addType( new ArrowTypeNode(parTypes, type) );
+
+		methodEntry = entry;
+		hm.put( id, entry );
 
 		//check semantics in the dec list
 		if(decList.size() > 0) {
@@ -158,12 +161,12 @@ public class MethodNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		if (decList!=null) 
 			for (Node dec:decList)
-				dec.typeCheck();
+				dec.typeCheck(env);
 		
-		if ( !(FOOLlib.isSubtype(body.typeCheck(),type)) ){
+		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
 			System.out.println("Wrong return type for function " + id);
 			System.exit(0);
 		}

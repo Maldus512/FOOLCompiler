@@ -18,7 +18,7 @@ public class BoolNode implements Node {
         else return s+"Bool:false\n";  
     }
 
-    public Node typeCheck() {
+    public Node typeCheck(Environment env) {
         return new BoolTypeNode();
     }    
 

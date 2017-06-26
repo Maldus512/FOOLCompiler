@@ -28,6 +28,30 @@ public class VarNode implements Node {
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
 		STentry entry = new STentry(env.getNestLevel(),type, env.decOffset());
 
+		if ( type instanceof ClassTypeNode ) {
+			boolean classDefined = false;
+			ClassTypeNode t = (ClassTypeNode)type;
+
+			HashMap<String,STentry> level_zero = env.getST().get(0);
+			for (STentry e : level_zero.values()) {
+				ClassNode c = (ClassNode)(e.getClassNode());
+				if (c != null) {
+					if ( t.getId().equals( c.getId() ) ) {
+						classDefined = true;
+						type = c.getClassType();
+						entry.setClassNode(c);
+						break;
+					}
+				}
+			}
+
+			if (!classDefined) {
+				res.add( new SemanticError("Class " + t.getId() + " has not been defined."));
+				return res;
+			}
+
+		}
+
 		if ( hm.put(id,entry) != null )
 			res.add(new SemanticError("Var id "+id+" already declared"));
 
@@ -39,17 +63,17 @@ public class VarNode implements Node {
 	public String toPrint(String s) {
 		return s+"Var:" + id +"\n"
 			+type.toPrint(s+"  ")
-			+exp.toPrint(s+"  ");
+			+exp.toPrint(s);
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 
 		// TODO: bisogna controllare che il tipo dichiarato per la variabile sia lo stesso utilizzato per l'istanziazione dell'oggetto, o che sia un suo sottotipo.
 		// l'id della classe istanziata lo si può ottenere con:
 		// String newType = ((NewNode)exp).getClassId();
 
-		if (! (FOOLlib.isSubtype(exp.typeCheck(),type)) ) {
+		if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ) {
 			System.out.println("incompatible value for variable "+id);
 			System.exit(0);
 		}

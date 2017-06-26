@@ -24,10 +24,10 @@ public class ProgClassNode implements Node {
 		String 	fieldstr = "",
 				decstr = "";
 
-		// if (decList.size() > 0) {
-		// 	for (Node d : decList)
-		// 		decstr += d.toPrint(s+"  ");
-		// }
+		if (decList.size() > 0) {
+			for (Node d : decList)
+				decstr += d.toPrint(s+"  ");
+		}
 
 		for (Node c : classList)
 			fieldstr += c.toPrint(s+"  ");
@@ -61,20 +61,24 @@ public class ProgClassNode implements Node {
 				res.addAll(n.checkSemantics(env));
 		}
 
+		if (res.size() > 0)
+			return res;
+
 		//check semantics in the exp node
 		res.addAll(exp.checkSemantics(env));
 
 		// leave the class scope
-		env.getST().remove(env.decNestLevel());
+		//env.getST().remove(env.decNestLevel());
+		env.decNestLevel();
 
 		return res;
 	}
 
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		for (Node c:classList)
-			c.typeCheck();
+			c.typeCheck(env);
 
-		return exp.typeCheck();
+		return exp.typeCheck(env);
 	}
 
 	public String codeGeneration() {
