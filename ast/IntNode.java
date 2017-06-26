@@ -17,7 +17,7 @@ public class IntNode implements Node {
     return s+"Int:" + Integer.toString(val) +"\n";  
   }
   
-  public Node typeCheck() {
+  public Node typeCheck(Environment env) {
     return new IntTypeNode();
   } 
   

@@ -73,11 +73,11 @@ public class ProgClassNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		for (Node c:classList)
-			c.typeCheck();
+			c.typeCheck(env);
 
-		return exp.typeCheck();
+		return exp.typeCheck(env);
 	}
 
 	public String codeGeneration() {

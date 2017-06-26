@@ -31,17 +31,16 @@ public class ParNode implements Node {
 	
 	public String toPrint(String s) {
 		return s+"Par:" + id +"\n"
-			 +type.toPrint(s+"  ") ; 
+			 +type.toPrint(s+"  ") ;
 	}
-	
+
 	//non utilizzato
-	public Node typeCheck () {
-		 return null;
+	public Node typeCheck(Environment env) {
+		return null;
 	}
-	
+
 	//non utilizzato
 	public String codeGeneration() {
 		return "";
-	}
-		
+	}		
 }  

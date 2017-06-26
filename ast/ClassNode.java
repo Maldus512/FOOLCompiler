@@ -186,7 +186,7 @@ public class ClassNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 		// not used
 		return null;
 	}

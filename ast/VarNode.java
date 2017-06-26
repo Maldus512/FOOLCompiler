@@ -67,13 +67,13 @@ public class VarNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck () {
+	public Node typeCheck(Environment env) {
 
 		// TODO: bisogna controllare che il tipo dichiarato per la variabile sia lo stesso utilizzato per l'istanziazione dell'oggetto, o che sia un suo sottotipo.
 		// l'id della classe istanziata lo si può ottenere con:
 		// String newType = ((NewNode)exp).getClassId();
 
-		if (! (FOOLlib.isSubtype(exp.typeCheck(),type)) ) {
+		if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ) {
 			System.out.println("incompatible value for variable "+id);
 			System.exit(0);
 		}

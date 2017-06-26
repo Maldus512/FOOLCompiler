@@ -56,7 +56,7 @@ public class CallNode implements Node {
         return res;
     }
 
-    public Node typeCheck () {  //                           
+    public Node typeCheck(Environment env) {  //                           
         ArrowTypeNode t=null;
         if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
         else {
@@ -69,7 +69,7 @@ public class CallNode implements Node {
             System.exit(0);
         } 
         for (int i=0; i<parlist.size(); i++) 
-            if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)) ) ) {
+            if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(env), p.get(i)) ) ) {
                 System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
                 System.exit(0);
             } 
