@@ -4,7 +4,8 @@ public class STentry {
 	private int nl;
 	private Node type;
 	private int offset;
-	private ClassNode classInfo;	// needed for inheritance
+	private ClassNode classInfo;		// needed for inheritance
+	private ClassNode actualClassInfo;	// actual class used to instantiate an object - can be classInfo or one of its subclasses
 
 	public STentry (int n, int os) {
 		nl = n;
@@ -45,6 +46,14 @@ public class STentry {
 
 	public void setClassNode(ClassNode c) {
 		classInfo = c;
+	}
+
+	public void setActualClassNode(ClassNode c) {
+		actualClassInfo = c;
+	}
+
+	public ClassNode getActualClassNode() {
+		return actualClassInfo;
 	}
 
 	public String toPrint(String s) {

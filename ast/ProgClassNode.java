@@ -61,6 +61,9 @@ public class ProgClassNode implements Node {
 				res.addAll(n.checkSemantics(env));
 		}
 
+		if (res.size() > 0)
+			return res;
+
 		//check semantics in the exp node
 		res.addAll(exp.checkSemantics(env));
 

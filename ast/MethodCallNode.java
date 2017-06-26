@@ -1,5 +1,6 @@
 package ast;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
@@ -7,93 +8,142 @@ import lib.FOOLlib;
 
 public class MethodCallNode implements Node {
 
-    private String id;
-    private STentry entry; 
-    private ArrayList<Node> parlist; 
-    private int nestinglevel;
-    private VarNode self;
-    private String selfName;
+	private String id;
+	private STentry methodEntry;
+	private ArrayList<Node> parList;
+	private int nestLevel;
+	private String selfId;
 
-    public void addSelf(VarNode ie){
-        self=ie;
-    }
+	public MethodCallNode(String text, ArrayList<Node> args, String sn) {
+		id = text;
+		parList = args;
+		selfId = sn;
+	}
 
-    public MethodCallNode(String text, ArrayList<Node> args, String sn) {
-        id=text;
-        parlist = args;
-        selfName = sn;
-    }
+	public String toPrint(String s) {
+		String parlstr = "";
 
-    public String toPrint(String s) {  //
-        String parlstr="";
-        for (Node par:parlist)
-            parlstr+=par.toPrint(s+"  ");		
-        return s+"Call:" + id + " at nestlev " + nestinglevel +"\n" 
-            +entry.toPrint(s+"  ")
-            +parlstr;        
-    }
+		for (Node par:parList)
+			parlstr += par.toPrint(s+"  ");
 
-    @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        //create the result
-        ArrayList<SemanticError> res = new ArrayList<SemanticError>();
+		return s + "Call:" + id + " at nestlev " + nestLevel + "\n" 
+			+ methodEntry.toPrint(s+"  ")
+			+ parlstr;
+	}
 
-        int j=env.getNestLevel();
-        STentry tmp=null; 
-        while (j>=0 && tmp==null)
-            tmp=(env.getST().get(j--)).get(id);
-        if (tmp==null)
-            res.add(new SemanticError("Id '" + id + "' not declared."));
+	@Override
+	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
-        else{
-            this.entry = tmp;
-            this.nestinglevel = env.getNestLevel();
+		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-            for(Node arg : parlist)
-                res.addAll(arg.checkSemantics(env));
-        }
-        return res;
-    }
+		int j = env.getNestLevel();
+		STentry varTmp = null;
+		STentry methodTmp = null;
+		
 
-    public Node typeCheck () {  //                           
-        ArrowTypeNode t=null;
-        if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
-        else {
-            System.out.println("Invocation of a non-function "+id);
-            System.exit(0);
-        }
-        ArrayList<Node> p = t.getParList();
-        if ( !(p.size() == parlist.size()) ) {
-            System.out.println("Wrong number of parameters in the invocation of "+id);
-            System.exit(0);
-        } 
-        for (int i=0; i<parlist.size(); i++) 
-            if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)) ) ) {
-                System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
-                System.exit(0);
-            } 
-        return t.getRet();
-    }
+		// seek for var (a.k.a. selfName) id
+		while (j>=0 && varTmp==null)
+			varTmp = (env.getST().get(j--)).get(selfId);
 
-    public String codeGeneration() {
-        String parCode="";
-        for (int i=parlist.size()-1; i>=0; i--)
-            parCode+=parlist.get(i).codeGeneration();
+		if (varTmp == null) {
+			res.add( new SemanticError("Object id '" + selfId + "' has not been declared.") );
+			return res;
+		}
 
-        String getAR="";
-        for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
-            getAR+="lw\n";
+		// get actual instance of the object calling the method
+		String ownerClass = ((ClassNode)(varTmp.getActualClassNode())).getId();
 
-        return "lfp\n"+ //CL
-            parCode+
-            "lfp\n"+getAR+ //setto AL risalendo la catena statica
-            // ora recupero l'indirizzo a cui saltare e lo metto sullo stack
-            "push "+entry.getOffset()+"\n"+ //metto offset sullo stack
-            "lfp\n"+getAR+ //risalgo la catena statica
-            "add\n"+ 
-            "lw\n"+ //carico sullo stack il valore all'indirizzo ottenuto
-            "js\n";
-    }
+		// seek for method definition
+		HashMap<String,STentry> level_zero = env.getST().get(0);
+
+		/*// DEBUG
+		System.out.println();
+		for (String s : level_zero.keySet()) {
+			
+			STentry e = level_zero.get(s);
+			System.out.println( "Key: " + s + ", Type: " + e.getType() + ", NestLevel: " + e.getNestLevel() + ", Offset: " + e.getOffset() );
+
+			if (e.getClassNode() instanceof ClassNode) {
+				for (Node n : e.getClassNode().getMethodList()) {
+					MethodNode m = (MethodNode)n;
+
+					System.out.println("\tClass: " + e.getClassNode().getId() + ", Id: " + m.getId() + ", NestLevel: " + m.getEntry().getNestLevel() + ", Offset: " + m.getEntry().getOffset() + ", ParList: " + ((ArrowTypeNode)(m.getEntry().getType())).getParList().size() );
+				}
+			}
+
+		}
+		System.out.println();*/
+
+
+		for (STentry e : level_zero.values()) {
+			
+			if ( (e.getClassNode() instanceof ClassNode) && (e.getClassNode().getId().equals(ownerClass)) ) {
+
+				for (Node n : e.getClassNode().getMethodList()) {
+					MethodNode m = (MethodNode)n;
+
+					if (m.getId().equals(id)) {
+						methodTmp = m.getEntry();
+						break;
+					}
+				}
+			}
+		}
+
+		if (methodTmp == null) {
+			res.add( new SemanticError("Method id '" + id + "' has not been declared for class " + ownerClass + ".") );
+			return res;
+		}
+
+		this.methodEntry = methodTmp;
+		this.nestLevel = env.getNestLevel();
+
+		for(Node arg : parList)
+			res.addAll(arg.checkSemantics(env));
+
+		return res;
+	}
+
+	public Node typeCheck () {
+		ArrowTypeNode t=null;
+		if (methodEntry.getType() instanceof ArrowTypeNode) {
+			t = (ArrowTypeNode)methodEntry.getType(); 
+		} else {
+			System.out.println("Invocation of a non-function "+id);
+			System.exit(0);
+		}
+		ArrayList<Node> p = t.getParList();
+		if ( !(p.size() == parList.size()) ) {
+			System.out.println("Wrong number of parameters in the invocation of "+id);
+			System.exit(0);
+		} 
+		for (int i=0; i<parList.size(); i++)
+			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(), p.get(i)) ) ) {
+				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+				System.exit(0);
+			} 
+		return t.getRet();
+	}
+
+	public String codeGeneration() {
+		String parCode="";
+		for (int i=parList.size()-1; i>=0; i--)
+			parCode+=parList.get(i).codeGeneration();
+
+		String getAR="";
+		for (int i=0; i<nestLevel-methodEntry.getNestLevel(); i++)
+			getAR+="lw\n";
+
+		return "lfp\n"+ //CL
+			parCode+
+			"lfp\n"+getAR+ //setto AL risalendo la catena statica
+			// ora recupero l'indirizzo a cui saltare e lo metto sullo stack
+			"push "+methodEntry.getOffset()+"\n"+ //metto offset sullo stack
+			"lfp\n"+getAR+ //risalgo la catena statica
+			"add\n"+ 
+			"lw\n"+ //carico sullo stack il valore all'indirizzo ottenuto
+			"js\n";
+	}
 
 
 }  

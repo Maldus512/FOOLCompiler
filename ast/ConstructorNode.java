@@ -25,6 +25,10 @@ public class ConstructorNode implements Node {
 		return classId;
 	}
 
+	public ClassNode getClassRef() {
+		return classRef;
+	}
+
 	public String toPrint(String s) {
 		String parstr = "";
 
@@ -32,7 +36,7 @@ public class ConstructorNode implements Node {
 			parstr += par.toPrint(s+"  ");
 		}
 		
-		return s + "New: " + classId +"\n"
+		return s + "New:" + classId +"\n"
 				+ parstr;
 	}
 
@@ -42,21 +46,23 @@ public class ConstructorNode implements Node {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		boolean classDefined = false;
-		// if ( ! ( (type instanceof IntTypeNode) || (type instanceof BoolTypeNode) ) ) {
-		
 		HashMap<String,STentry> level_zero = env.getST().get(0);
+
 		for (STentry e : level_zero.values()) {
-			if (e.getType() instanceof ClassTypeNode) {
-				if ( classId.equals( ((ClassTypeNode)e.getType()).getId() ) ) {
+			if (e.getClassNode() instanceof ClassNode) {
+				ClassNode c = (ClassNode)(e.getClassNode());
+
+				// In the symbol table, objects have the same type of their classes, thus they would be included in this search. We exclude them by checking whether they have methods or not.
+				if ( classId.equals( c.getId() ) && c.getMethodList().size() > 0 ) {	
 					classDefined = true;
-					classRef = e.getClassNode();
+					classRef = c;
 					break;
 				}
 			}
 		}
 
 		if (!classDefined) {
-			res.add( new SemanticError("Class " + classId + " has not been defined."));
+			res.add( new SemanticError("Class " + classId + " has not been defined.") );
 			return res;
 		}
 
