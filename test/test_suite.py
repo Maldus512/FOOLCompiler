@@ -2,6 +2,7 @@
 import sys
 import os
 from subprocess import Popen
+import re
 
 def main():
     if len(sys.argv) < 2:
@@ -9,8 +10,20 @@ def main():
         exit(1)
 
     comp = sys.argv[1]
+    tmp = comp.split("'")
+    res = []
 
-    comp = comp.split(' ')
+    for piece in tmp[0].split(" "):
+        if piece:
+            res.append(piece)
+
+    res.append(tmp[1])
+
+    for piece in tmp[2].split(" "):
+        if piece:
+            res.append(piece)
+
+    comp = res
 
     for fil in sorted(os.listdir('.')):
         if os.path.isfile(fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil:

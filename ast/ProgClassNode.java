@@ -82,9 +82,19 @@ public class ProgClassNode implements Node {
 	}
 
 	public String codeGeneration() {
-
-		// TODO
-		
-		return  "halt\n";
+		String classes = "";
+		String declCode="";
+		for (Node dec:decList)
+			declCode+=dec.codeGeneration();
+		for (Node c : classList) {
+			classes += c.codeGeneration();
+		}
+		return "push 0\n" 
+			+ "# .DATA\n"
+			+ classes
+			+ declCode
+			+ "##\n"
+			+ "halt\n"
+			+ FOOLlib.getCode(); 
 	} 
 }  

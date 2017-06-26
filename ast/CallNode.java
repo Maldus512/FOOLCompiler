@@ -85,16 +85,30 @@ public class CallNode implements Node {
         for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
             getAR+="lw\n";
 
-        return "lfp\n"+ //CL
-            parCode+
-            "lfp\n"+getAR+ //setto AL risalendo la catena statica
+        return "lfp\n"+ //Load frame pointer on stack - needed to go back
+                        //CL 
+            parCode+    //generate all the parameters
+            "lfp\n"+getAR+ // load words from stack (starting from the current 
+                           // frame pointer) until you find the reference of
+                           //the function. Works in the same way of a normal
+                           //variable. Jumps from frame pointer to frame pointer
+                           //over the linking chain.
+                            //setto AL risalendo la catena statica (put AL on the stack)
             // ora recupero l'indirizzo a cui saltare e lo metto sullo stack
-            "push "+entry.getOffset()+"\n"+ //metto offset sullo stack
+            // Mettere questo AL serve? nella funzione poi ne fa il pop senza usarlo.
+            // Probabilmente serve a fare riferimenti  di variabili.
+            "push "+entry.getOffset()+"\n"+ //pushing the offset on the stack
+                            // to add it to the frame pointer obtained following
+                            // the linking chain.
             "lfp\n"+getAR+ //risalgo la catena statica
             "add\n"+ 
             "lw\n"+ //carico sullo stack il valore all'indirizzo ottenuto
             "js\n";
     }
-
+//NOTE: AL = Access Link; CL = Control Link
+//A control link from record A points to the previous record on the stack. 
+//The chain of control links traces the dynamic execution of the program.
+//An access link from record A points to the record of the closest enclosing 
+//block in the program. The chain of access links traces the static structure (think: scopes) of the program.
 
 }  

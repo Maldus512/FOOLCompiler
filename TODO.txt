@@ -1,0 +1,5 @@
+Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene fare perche' cosi' come sono sono una cacca.
+
+- Passare come parametro alla funzione toPrint un intero e non una stringa
+- Mettere da qualche parte che non faccia schifo la generazione di codice delle funzioni (in realta' discretamente importante, fa veramente molto schifo messa com'e')
+- Definire method come sottoclasse di fun

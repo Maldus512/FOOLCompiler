@@ -200,7 +200,10 @@ public class ClassNode implements Node {
 	}
 
 	public String codeGeneration() {
-		
-		return  "halt\n";
+		String methods ="";
+		for(Node m : methodList) {
+			methods += m.codeGeneration();
+		}
+		return methods;
 	} 
 }  

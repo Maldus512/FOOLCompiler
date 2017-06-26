@@ -137,7 +137,7 @@ public class FunNode implements Node {
 		
 		String funl=FOOLlib.freshFunLabel(); 
 		FOOLlib.putCode(funl+":\n"+
-				"cfp\n"+ //setta $fp a $sp				
+				"cfp\n"+ //setta $fp a $sp; this is the Access Link				
 				"lra\n"+ //inserimento return address
 				declCode+ //inserimento dichiarazioni locali
 				body.codeGeneration()+
@@ -146,7 +146,7 @@ public class FunNode implements Node {
 				"sra\n"+ // pop del return address
 				"pop\n"+ // pop di AL
 				popParl+
-				"sfp\n"+  // setto $fp a valore del CL
+				"sfp\n"+  // setto $fp a valore del CL; this is the control link
 				"lrv\n"+ // risultato della funzione sullo stack
 				"lra\n"+"js\n" // salta a $ra
 				);

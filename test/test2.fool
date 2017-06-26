@@ -5,8 +5,8 @@ class SUPERCLASS (bool x, int y) {
 class SUBCLASS implements SUPERCLASS (bool x, bool a) {
     int maind() print(a);
     int mainb() print(y);
-    int main(bool c) print(c);
-    int maina(bool c) print(x);
+    int main(int c) print(c);
+    bool maina(bool c) print(x);
     int maine() print(y);
 };
 let

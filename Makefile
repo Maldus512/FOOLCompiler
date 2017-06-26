@@ -1,7 +1,7 @@
 JFLAGS = -g
 DIR := ${CURDIR}
-CP = $(DIR):$(DIR)/lib/commons-cli.jar:$(CLASSPATH)
-JC = javac -classpath $(CP)
+CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(CLASSPATH)'
+JC = javac -g -classpath $(CP)
 JAVA = java -classpath $(CP)
 #JC = javac
 
@@ -25,7 +25,7 @@ default: classes
 
 classes: generated $(CLASSES)
 
-.PHONY: clean run test
+.PHONY: clean run test debug
 
 $(CLASSES): $(SOURCES)
 	$(JC) $(SOURCES)
@@ -50,3 +50,6 @@ go:
 	$(MAKE)
 	echo "\n\n\n\n##########################\n## Starting program...\n##########################\n"
 	$(MAKE) run $(f)
+
+debug:
+	jdb -classpath $(CP) Fcc
