@@ -1,6 +1,6 @@
 class SUPERCLASS (bool x, int y) {
     int main() print(x);
-    bool maina(bool cacca) print (y);
+    bool maina(bool cacca) y;
 }
 class SUBCLASS implements SUPERCLASS (int x, bool a) {
     int maind() print(a);
@@ -15,12 +15,12 @@ let
 	SUPERCLASS test = new SUBCLASS(true, 0);
 	int f1(int f1p1) f1p1;
 	int z = f1(false);
-	//int f2(SUPERCLASS p1) print( p1.maina(x) );
-	//int w = f2(test);
+	int f2(SUPERCLASS p1) p1.maina(x);
+	int w = f2(test);
 	
 	int foolfammerda1() print(x);
 	int foolfammerda2() print(y);
 	int foolfammerda3() print(z);
-	//int foolfammerda4() print(w);
+	int foolfammerda4() print(w);
 in
 	foolfammerda1();

@@ -57,18 +57,42 @@ public class FunNode implements Node {
 
 		// check parameters
 		for (Node a:parList) {
-			ParNode arg = (ParNode) a;
-			parTypes.add(arg.getType());
+			ParNode par = (ParNode) a;
 
-			if ( hmn.put( arg.getId(), new STentry(env.getNestLevel(), arg.getType(), paroffset++) ) != null  ) {
-				res.add( new SemanticError("Parameter name " + arg.getId() + " of method " + id + " has already been used.") );
+			STentry parEntry = new STentry(env.getNestLevel(), par.getType(), paroffset++);
+
+			if (par.getType() instanceof ClassTypeNode) {
+				boolean classDefined = false;
+				HashMap<String,STentry> level_zero = env.getST().get(0);
+				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
+
+				for (STentry e : level_zero.values()) {
+					if ( (e.getClassNode() instanceof ClassNode) && (e.getClassNode().getId().equals( parId )) ) {
+						ClassNode c = (ClassNode)(e.getClassNode());
+						parEntry.setClassNode( c );
+						parEntry.setType( c.getClassType() );
+						par.setType( c.getClassType() );
+						classDefined = true;
+					}
+				}
+
+				if (!classDefined) {
+					res.add( new SemanticError("Class " + parId + " has not been defined."));
+					return res;
+				}
+			}
+
+			parTypes.add(par.getType());
+
+			if ( hmn.put( par.getId(), parEntry ) != null  ) {
+				res.add( new SemanticError("Parameter name " + par.getId() + " of method " + id + " has already been used.") );
 				return res;
 			}
 		}
 
 		// set function type
 		arrowType = new ArrowTypeNode(parTypes, type);
-		entry.addType( arrowType );
+		entry.setType( arrowType );
 
 		// check dec list
 		if (decList.size() > 0) {
