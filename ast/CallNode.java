@@ -60,45 +60,58 @@ public class CallNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
-		ArrowTypeNode t=null;
-		if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
-		else {
-			System.out.println("Invocation of a non-function "+id);
-			System.exit(0);
-		}
-		ArrayList<Node> p = t.getParList();
-		if ( !(p.size() == parList.size()) ) {
-			System.out.println("Wrong number of parameters in the invocation of "+id);
-			System.exit(0);
-		} 
-		for (int i=0; i<parList.size(); i++) 
-			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
-				System.exit(0);
-			} 
-		return t.getRet();
-	}
+    public Node typeCheck(Environment env) {  //                           
+        ArrowTypeNode t=null;
+        if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
+        else {
+            System.out.println("Invocation of a non-function "+id);
+            System.exit(0);
+        }
+        ArrayList<Node> p = t.getParList();
+        if ( !(p.size() == parList.size()) ) {
+            System.out.println("Wrong number of parameters in the invocation of "+id);
+            System.exit(0);
+        } 
+        for (int i=0; i<parList.size(); i++) 
+            if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
+                System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+                System.exit(0);
+            } 
+        return t.getRet();
+    }
 
-	public String codeGeneration() {
-		String parCode="";
-		for (int i=parList.size()-1; i>=0; i--)
-			parCode+=parList.get(i).codeGeneration();
+    public String codeGeneration() {
+        String parCode="";
+        for (int i=parList.size()-1; i>=0; i--)
+            parCode+=parList.get(i).codeGeneration();
 
-		String getAR="";
-		for (int i=0; i<nestingLevel-entry.getNestLevel(); i++) 
-			getAR+="lw\n";
+        String getAR="";
+        for (int i=0; i<nestingLevel-entry.getNestLevel(); i++) 
+            getAR+="lw\n";
 
-		return "lfp\n"+ //CL
-			parCode+
-			"lfp\n"+getAR+ //setto AL risalendo la catena statica
-			// ora recupero l'indirizzo a cui saltare e lo metto sullo stack
-			"push "+entry.getOffset()+"\n"+ //metto offset sullo stack
-			"lfp\n"+getAR+ //risalgo la catena statica
-			"add\n"+ 
-			"lw\n"+ //carico sullo stack il valore all'indirizzo ottenuto
-			"js\n";
-	}
-
-
+        return "lfp\n"+ //Load frame pointer on stack - needed to go back
+                        //CL 
+            parCode+    //generate all the parameters
+            "lfp\n"+getAR+ // load words from stack (starting from the current 
+                           // frame pointer) until you find the reference of
+                           //the function. Works in the same way of a normal
+                           //variable. Jumps from frame pointer to frame pointer
+                           //over the linking chain.
+                            //setto AL risalendo la catena statica (put AL on the stack)
+            // ora recupero l'indirizzo a cui saltare e lo metto sullo stack
+            // Mettere questo AL serve? nella funzione poi ne fa il pop senza usarlo.
+            // Probabilmente serve a fare riferimenti  di variabili.
+            "push "+entry.getOffset()+"\n"+ //pushing the offset on the stack
+                            // to add it to the frame pointer obtained following
+                            // the linking chain.
+            "lfp\n"+getAR+ //risalgo la catena statica
+            "add\n"+ 
+            "lw\n"+ //carico sullo stack il valore all'indirizzo ottenuto
+            "js\n";
+    }
+//NOTE: AL = Access Link; CL = Control Link
+//A control link from record A points to the previous record on the stack. 
+//The chain of control links traces the dynamic execution of the program.
+//An access link from record A points to the record of the closest enclosing 
+//block in the program. The chain of access links traces the static structure (think: scopes) of the program.
 }  

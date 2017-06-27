@@ -1,6 +1,10 @@
 package lib;
 
 import ast.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class FOOLlib {
   
@@ -12,8 +16,67 @@ public class FOOLlib {
 
   //valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
   public static boolean isSubtype (Node a, Node b) {
-    return a.getClass().equals(b.getClass()) ||
-    	   ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ); //
+    if ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ){
+      return true;
+    }
+    else if (/* a.getClass().equals(b.getClass())*/(a instanceof IntTypeNode) && (b instanceof IntTypeNode) ){
+      return true;
+    } 
+    else if (/* a.getClass().equals(b.getClass())*/(a instanceof BoolTypeNode) && (b instanceof BoolTypeNode) ){
+      return true;
+    } 
+    else if ( (a instanceof ClassTypeNode) && (b instanceof ClassTypeNode) ){
+      HashMap<String,Node> fieldA = ((ClassTypeNode)a).getFields();
+      HashMap<String,Node> fieldB = ((ClassTypeNode)b).getFields();;
+      HashMap<String,ArrowTypeNode> methodsA = ((ClassTypeNode)a).getMethods();;
+      HashMap<String,ArrowTypeNode> methodsB = ((ClassTypeNode)b).getMethods();;
+      
+      if( fieldA.keySet().size() < fieldB.keySet().size() || methodsA.keySet().size() < methodsB.keySet().size()){
+        System.out.println("Fatal error: subclass cannot have fewer fields/methods than superclass");
+        return false;
+      } 
+      
+
+      for (Map.Entry<String, Node> entry : fieldB.entrySet()){
+        if ( fieldA.get(entry.getKey()) == null ){
+          System.out.println("Fatal error: field "+entry.getKey()+" not found in superclass");
+          return false;
+        }
+        else if (! isSubtype(fieldA.get(entry.getKey()),entry.getValue()) ){
+          System.out.println("Error: field "+entry.getKey()+" in subclass is not a subtype");
+          return false;
+        }
+      }
+
+      for (Map.Entry<String, ArrowTypeNode> entry : methodsB.entrySet()){
+        if ( methodsA.get(entry.getKey()) == null ){
+          System.out.println("Fatal error: method "+entry.getKey()+" not found in superclass");
+          return false;
+        }
+        else if (! isSubtype(methodsA.get(entry.getKey()), entry.getValue()) ){
+          System.out.println("Error: method "+entry.getKey()+" in subclass is not a subtype");
+          return false;
+        }
+      }
+      return true;
+    }
+    else if ( (a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode) ){
+      
+      ArrayList<Node> parlistA = ((ArrowTypeNode)a).getParList(); 
+      ArrayList<Node> parlistB = ((ArrowTypeNode)b).getParList();
+      if(parlistA.size() != parlistB.size() ){
+        return false;
+      }
+      for( int i=0; i<parlistA.size(); i++){
+        if (!isSubtype(parlistB.get(i), parlistA.get(i)) ){
+          return false;
+        }
+      } 
+      return ( isSubtype(((ArrowTypeNode)a).getRet(), ((ArrowTypeNode)b).getRet() ));
+    }
+    else{
+      return false;
+    }
   } 
   
   /* probabilmente non servirà mai a nulla, nel caso la cencellerò

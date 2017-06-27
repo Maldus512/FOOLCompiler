@@ -82,8 +82,8 @@ public class ClassNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		ArrayList<Node> fieldTypes = new ArrayList<Node>();
-		ArrayList<ArrowTypeNode> methodTypes = new ArrayList<ArrowTypeNode>();
+		HashMap<String,Node> fieldTypes = new HashMap<String,Node>();
+		HashMap<String,ArrowTypeNode> methodTypes = new HashMap<String,ArrowTypeNode>();
 
 		int fieldOffset = 0;	// offset for class's fields
 		int methodOffset = 0;	// offset for class's methods
@@ -100,7 +100,7 @@ public class ClassNode implements Node {
 			// add to the subclass's symbol table every field of its superclass
 			for (Node f:superClassEntry.getClassNode().fieldList) {
 				FieldNode field = (FieldNode) f;
-				fieldTypes.add(field.getType());
+				fieldTypes.put(field.getId(), field.getType());
 
 				// add fields with nesting level set to superclass fields' nesting level
 				hmn.put( field.getId(), new STentry(superClassEntry.getNestLevel()+1, field.getType(), fieldOffset++ ) );
@@ -112,7 +112,7 @@ public class ClassNode implements Node {
 
 				res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
-				methodTypes.add( (ArrowTypeNode)(f.getEntry().getType()) );
+				methodTypes.put(f.getId(), (ArrowTypeNode)(f.getEntry().getType()) );
 			}
 
 		}
@@ -127,7 +127,7 @@ public class ClassNode implements Node {
 		for (Node f:fieldList) {
 
 			FieldNode field = (FieldNode) f;
-			fieldTypes.add(field.getType());
+			fieldTypes.put(field.getId(),field.getType());
 
 			STentry prevEntry = hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), fieldOffset++ ) );
 			if ( prevEntry != null) {
@@ -155,7 +155,7 @@ public class ClassNode implements Node {
 			res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
 			// methodTypes.add(f.getArrowType());
-			methodTypes.add( (ArrowTypeNode)(f.getEntry().getType()) );
+			methodTypes.put(f.getId(), (ArrowTypeNode)(f.getEntry().getType()) );
 
 			// adjust methodOffset to correct offset
 			methodOffset = f.getOffset();
@@ -187,12 +187,23 @@ public class ClassNode implements Node {
 	}
 
 	public Node typeCheck(Environment env) {
-		// not used
-		return null;
+		if (superClassId != null) {
+		HashMap<String,STentry> hm = env.getST().get(0);
+      	STentry superClassEntry = hm.get( superClassId );
+
+      	ClassNode superNode = superClassEntry.getClassNode();
+      	if (!FOOLlib.isSubtype(classType, superNode.getClassType())) {
+      		System.out.println("Error: "+id+" is not a subclass of "+superNode.getId());
+      	}
+      }
+      	return null;
 	}
 
 	public String codeGeneration() {
-		
-		return  "halt\n";
+		String methods ="";
+		for(Node m : methodList) {
+			methods += m.codeGeneration();
+		}
+		return methods;
 	} 
 }  

@@ -1,15 +1,18 @@
 JFLAGS = -g
- JC = javac -classpath "./lib/commons-cli.jar:$(CLASSPATH)"
+DIR := ${CURDIR}
+CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(CLASSPATH)'
+JC = javac -g -classpath $(CP)
+JAVA = java -classpath $(CP)
 #JC = javac
 
 ifndef GRUN
 GRUN = java org.antlr.v4.gui.TestRig
 endif
 
-DIR := ${CURDIR}
 
-CLASSES = Fcc.java Test.java
-#CLASSES = Test.java
+# CLASSES = Fcc.java Test.java
+SOURCES = $(wildcard ast/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Test.java
+CLASSES = $(SOURCES:.java=.class)
 
 
 #
@@ -20,14 +23,12 @@ CLASSES = Fcc.java Test.java
 default: classes
 
 
-classes: generated $(CLASSES:.java=.class)
+classes: generated $(CLASSES)
 
+.PHONY: clean run test debug
 
-.PHONY: clean run test
-
-
-$(CLASSES:.java=.class):
-	$(JC) $(CLASSES)
+$(CLASSES): $(SOURCES)
+	$(JC) $(SOURCES)
 
 generated:
 	$(MAKE) -C parser
@@ -42,10 +43,13 @@ run: classes
 #	java Test $(f)
 
 test: classes
-	cd test && python test_suite.py "java -classpath '$(DIR)':$(CLASSPATH) Fcc"
+	cd test && python test_suite.py "$(JAVA) Fcc"
 
 go:
 	$(MAKE) clean
 	$(MAKE)
 	echo "\n\n\n\n##########################\n## Starting program...\n##########################\n"
 	$(MAKE) run $(f)
+
+debug:
+	jdb -classpath $(CP) Fcc
