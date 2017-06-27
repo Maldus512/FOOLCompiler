@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+
+import ast.types.*;
 
 public class MethodCallNode implements Node {
 
@@ -50,30 +53,31 @@ public class MethodCallNode implements Node {
 			return res;
 		}
 
+		// // DEBUG
+		// HashMap<String,STentry> level_zero = env.getST().get(0);
+		// System.out.println();
+		// for (String s : level_zero.keySet()) {
+			
+		// 	STentry e = level_zero.get(s);
+		// 	System.out.println( "Key: " + s + ", Type: " + e.getType() + ", NestLevel: " + e.getNestLevel() + ", Offset: " + e.getOffset() );
+
+		// 	if (e.getClassNode() instanceof ClassNode) {
+		// 		for (Node n : e.getClassNode().getMethodList()) {
+		// 			MethodNode m = (MethodNode)n;
+
+		// 			System.out.println("\tClass: " + e.getClassNode().getId() + ", Id: " + m.getId() + ", NestLevel: " + m.getEntry().getNestLevel() + ", Offset: " + m.getEntry().getOffset() + ", ParList: " + ((ArrowTypeNode)(m.getEntry().getType())).getParList().size() );
+		// 		}
+		// 	}
+
+		// }
+		// System.out.println();
+
+
 		// get actual instance of the object calling the method
 		String ownerClass = ((ClassNode)(varTmp.getClassNode())).getId();
 
 		// seek for method definition
 		HashMap<String,STentry> level_zero = env.getST().get(0);
-
-		/*// DEBUG
-		System.out.println();
-		for (String s : level_zero.keySet()) {
-			
-			STentry e = level_zero.get(s);
-			System.out.println( "Key: " + s + ", Type: " + e.getType() + ", NestLevel: " + e.getNestLevel() + ", Offset: " + e.getOffset() );
-
-			if (e.getClassNode() instanceof ClassNode) {
-				for (Node n : e.getClassNode().getMethodList()) {
-					MethodNode m = (MethodNode)n;
-
-					System.out.println("\tClass: " + e.getClassNode().getId() + ", Id: " + m.getId() + ", NestLevel: " + m.getEntry().getNestLevel() + ", Offset: " + m.getEntry().getOffset() + ", ParList: " + ((ArrowTypeNode)(m.getEntry().getType())).getParList().size() );
-				}
-			}
-
-		}
-		System.out.println();*/
-
 
 		for (STentry e : level_zero.values()) {
 			
@@ -104,7 +108,7 @@ public class MethodCallNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		ArrowTypeNode t=null;
 		if (methodEntry.getType() instanceof ArrowTypeNode) {
 			t = (ArrowTypeNode)methodEntry.getType(); 
@@ -112,7 +116,7 @@ public class MethodCallNode implements Node {
 			System.out.println("Invocation of a non-function "+id);
 			System.exit(0);
 		}
-		ArrayList<Node> p = t.getParList();
+		ArrayList<TypeNode> p = t.getParList();
 		if ( !(p.size() == parList.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);

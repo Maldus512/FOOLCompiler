@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 
+import ast.types.*;
+
 public class IntNode implements Node {
 
   private Integer val;
@@ -17,7 +19,7 @@ public class IntNode implements Node {
     return s+"Int:" + Integer.toString(val) +"\n";  
   }
   
-  public Node typeCheck(Environment env) {
+  public TypeNode typeCheck(Environment env) {
     return new IntTypeNode();
   } 
   

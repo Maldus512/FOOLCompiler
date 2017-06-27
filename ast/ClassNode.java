@@ -1,10 +1,12 @@
 package ast;
 import java.util.ArrayList;
 import java.util.HashMap;
+import util.STentry;
 
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import ast.types.*;
 
 
 /* Class representing a Classdec instruction node */
@@ -82,7 +84,7 @@ public class ClassNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		HashMap<String,Node> fieldTypes = new HashMap<String,Node>();
+		HashMap<String,TypeNode> fieldTypes = new HashMap<String,TypeNode>();
 		HashMap<String,ArrowTypeNode> methodTypes = new HashMap<String,ArrowTypeNode>();
 
 		int fieldOffset = 0;	// offset for class's fields
@@ -162,7 +164,7 @@ public class ClassNode implements Node {
 		}
 
 		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
-		entry.addType( classType );
+		entry.setType( classType );
 
 
 		// // DEBUG
@@ -186,7 +188,7 @@ public class ClassNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		if (superClassId != null) {
 		HashMap<String,STentry> hm = env.getST().get(0);
       	STentry superClassEntry = hm.get( superClassId );
@@ -196,7 +198,7 @@ public class ClassNode implements Node {
       		System.out.println("Error: "+id+" is not a subclass of "+superNode.getId());
       	}
       }
-      	return null;
+      	return classType;
 	}
 
 	public String codeGeneration() {

@@ -1,4 +1,4 @@
-package test;
+package util;
 
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
@@ -10,12 +10,15 @@ import org.apache.commons.cli.ParseException;
 public class Cli {
     public boolean codeGen = true;
     public String inputFile = null;
+    public boolean verbose = false;
     private Options options;
 
     public void parse(String[] args) {
         options = new Options();
         options.addOption("h", "help", false, "show help.");
         options.addOption("c", "check", false, "only perform semantic and type check");
+        options.addOption("d", "debug", false, "verbose output (parse tree)");
+        options.addOption("v", "version", false, "compiler version");
         options.addOption("f", "input-file", true, "input file to be compilated");
         CommandLineParser parser = new DefaultParser();
 
@@ -31,6 +34,11 @@ public class Cli {
 
             if (cmd.hasOption("c")) {
                 codeGen = false;
+                option = true;
+            }
+
+            if (cmd.hasOption("d")) {
+                verbose = true;
                 option = true;
             }
 

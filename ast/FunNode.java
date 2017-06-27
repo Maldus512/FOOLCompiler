@@ -5,24 +5,27 @@ import java.util.HashMap;
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
+
+import ast.types.*;
 
 public class FunNode implements Node {
 
 	private String id;
-	private Node type; 
+	private TypeNode type; 
 	private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList = new ArrayList<Node>();
 	private ArrayList<Node> decList;
 	private Node body;
 
-	public FunNode (String i, Node t) {
+	public FunNode (String i, TypeNode t) {
 		id = i;
 		type = t;
 	}
 
 	public String getId() { return id; }
 
-	public Node getType() { return type; }
+	public TypeNode getType() { return type; }
 
 	public ArrayList<Node> getParList() { return parList; }
 
@@ -52,23 +55,47 @@ public class FunNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		ArrayList<Node> parTypes = new ArrayList<Node>();
+		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
 		int paroffset = 0;
 
 		// check parameters
 		for (Node a:parList) {
-			ParNode arg = (ParNode) a;
-			parTypes.add(arg.getType());
+			ParNode par = (ParNode) a;
 
-			if ( hmn.put( arg.getId(), new STentry(env.getNestLevel(), arg.getType(), paroffset++) ) != null  ) {
-				res.add( new SemanticError("Parameter name " + arg.getId() + " of method " + id + " has already been used.") );
+			STentry parEntry = new STentry(env.getNestLevel(), par.getType(), paroffset++);
+
+			if (par.getType() instanceof ClassTypeNode) {
+				boolean classDefined = false;
+				HashMap<String,STentry> level_zero = env.getST().get(0);
+				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
+
+				for (STentry e : level_zero.values()) {
+					if ( (e.getClassNode() instanceof ClassNode) && (e.getClassNode().getId().equals( parId )) ) {
+						ClassNode c = (ClassNode)(e.getClassNode());
+						parEntry.setClassNode( c );
+						parEntry.setType( c.getClassType() );
+						par.setType( c.getClassType() );
+						classDefined = true;
+					}
+				}
+
+				if (!classDefined) {
+					res.add( new SemanticError("Class " + parId + " has not been defined."));
+					return res;
+				}
+			}
+
+			parTypes.add(par.getType());
+
+			if ( hmn.put( par.getId(), parEntry ) != null  ) {
+				res.add( new SemanticError("Parameter name " + par.getId() + " of method " + id + " has already been used.") );
 				return res;
 			}
 		}
 
 		// set function type
 		arrowType = new ArrowTypeNode(parTypes, type);
-		entry.addType( arrowType );
+		entry.setType( arrowType );
 
 		// check dec list
 		if (decList.size() > 0) {
@@ -109,7 +136,7 @@ public class FunNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		if (decList!=null) 
 			for (Node dec:decList)
 				dec.typeCheck(env);

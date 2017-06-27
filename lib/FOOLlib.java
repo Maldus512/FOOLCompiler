@@ -1,6 +1,7 @@
 package lib;
 
 import ast.*;
+import ast.types.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class FOOLlib {
   private static String funCode=""; 
 
   //valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
-  public static boolean isSubtype (Node a, Node b) {
+  public static boolean isSubtype (TypeNode a, TypeNode b) {
     if ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ){
       return true;
     }
@@ -26,8 +27,8 @@ public class FOOLlib {
       return true;
     } 
     else if ( (a instanceof ClassTypeNode) && (b instanceof ClassTypeNode) ){
-      HashMap<String,Node> fieldA = ((ClassTypeNode)a).getFields();
-      HashMap<String,Node> fieldB = ((ClassTypeNode)b).getFields();;
+      HashMap<String,TypeNode> fieldA = ((ClassTypeNode)a).getFields();
+      HashMap<String,TypeNode> fieldB = ((ClassTypeNode)b).getFields();;
       HashMap<String,ArrowTypeNode> methodsA = ((ClassTypeNode)a).getMethods();;
       HashMap<String,ArrowTypeNode> methodsB = ((ClassTypeNode)b).getMethods();;
       
@@ -37,7 +38,7 @@ public class FOOLlib {
       } 
       
 
-      for (Map.Entry<String, Node> entry : fieldB.entrySet()){
+      for (Map.Entry<String, TypeNode> entry : fieldB.entrySet()){
         if ( fieldA.get(entry.getKey()) == null ){
           System.out.println("Fatal error: field "+entry.getKey()+" not found in superclass");
           return false;
@@ -62,8 +63,8 @@ public class FOOLlib {
     }
     else if ( (a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode) ){
       
-      ArrayList<Node> parlistA = ((ArrowTypeNode)a).getParList(); 
-      ArrayList<Node> parlistB = ((ArrowTypeNode)b).getParList();
+      ArrayList<TypeNode> parlistA = ((ArrowTypeNode)a).getParList(); 
+      ArrayList<TypeNode> parlistB = ((ArrowTypeNode)b).getParList();
       if(parlistA.size() != parlistB.size() ){
         return false;
       }

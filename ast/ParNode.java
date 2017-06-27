@@ -5,23 +5,27 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 
+import ast.types.*;
+
 public class ParNode implements Node {
 
 	private String id;
-	private Node type;
+	private TypeNode type;
 	
-	public ParNode (String i, Node t) {
+	public ParNode (String i, TypeNode t) {
 		id=i;
 		type=t;
 	}
 	
-	public String getId(){
-		return id;
-	}
+	public String getId(){ return id; }
 	
-	public Node getType(){
-		return type;
-	}
+	public TypeNode getType(){ return type; }
+
+	public void setType(TypeNode t){ type = t; }
+
+	// public Node getClassNode(){ return classNode; }
+
+	// public void setClassNode(ClassNode c){ classNode = c; }
 	
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
@@ -30,12 +34,12 @@ public class ParNode implements Node {
 	}
 	
 	public String toPrint(String s) {
-		return s+"Par:" + id +"\n"
-			 +type.toPrint(s+"  ") ;
+		return s + "Par:" + id + "\n"
+			 	 + type.toPrint(s+"  ") ;
 	}
 
 	//non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		return null;
 	}
 

@@ -6,6 +6,8 @@ import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
+import ast.types.*;
+
 public class IfNode implements Node {
 
   private Node cond;
@@ -41,13 +43,13 @@ public class IfNode implements Node {
 	}
   
   
-  public Node typeCheck(Environment env) {
+  public TypeNode typeCheck(Environment env) {
     if (!(FOOLlib.isSubtype(cond.typeCheck(env),new BoolTypeNode()))) {
       System.out.println("non boolean condition in if");
       System.exit(0);
     }
-    Node t = th.typeCheck(env);
-    Node e = el.typeCheck(env);
+    TypeNode t = th.typeCheck(env);
+    TypeNode e = el.typeCheck(env);
     if (FOOLlib.isSubtype(t,e)) 
       return e;
     if (FOOLlib.isSubtype(e,t))

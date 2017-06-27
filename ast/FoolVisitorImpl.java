@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ast.types.*;
+
 import parser.*;
 import parser.FOOLParser.BaseExpContext;
 import parser.FOOLParser.BoolValContext;
@@ -49,12 +51,12 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitClassExp(ClassExpContext ctx) {
-		ArrayList<Node>	classNodeList = new ArrayList<Node>();
+		ArrayList<ClassNode>	classNodeList = new ArrayList<ClassNode>();
 		ArrayList<Node>	decList = new ArrayList<Node>();
 
 		// visit all class nodes
 		for (ClassdecContext cc : ctx.classdec())
-			classNodeList.add( visit(cc) );
+			classNodeList.add( (ClassNode)visit(cc) );
 
 		// if there are lets visit them
 		if (ctx.let() != null) {
@@ -80,7 +82,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		// visit all class's fields
 		for(VardecContext vc : ctx.vardec())
-			c.addField( new FieldNode(vc.ID().getText(), visit( vc.type() )) );
+			c.addField( new FieldNode(vc.ID().getText(),(TypeNode) visit( vc.type() )) );
 
 		// visit all class's methods
 		for(FunContext fc : ctx.fun()) {
@@ -135,7 +137,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		VarNode result;
 
 		//visit the type
-		Node typeNode = visit(ctx.vardec().type());
+		TypeNode typeNode = (TypeNode) visit(ctx.vardec().type());
 
 		//visit the exp
 		Node expNode = visit(ctx.exp());
@@ -147,13 +149,13 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitFun(FunContext ctx) {
 		//initialize @res with the visits to the type and its ID
-		FunNode res = new FunNode(ctx.ID().getText(), visit(ctx.type()) );
+		FunNode res = new FunNode(ctx.ID().getText(), (TypeNode) visit(ctx.type()) );
 
 		//add argument declarations
 		//we are getting a shortcut here by constructing directly the ParNode
 		//this could be done differently by visiting instead the VardecContext
 		for(VardecContext vc : ctx.vardec())
-			res.addPar( new ParNode(vc.ID().getText(), visit( vc.type() )) );
+			res.addPar( new ParNode(vc.ID().getText(),(TypeNode) visit( vc.type() )) );
 
 		//add body
 		//create a list for the nested declarations

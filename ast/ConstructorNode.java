@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+import ast.types.*;
 
 public class ConstructorNode implements Node {
 
@@ -73,6 +75,7 @@ public class ConstructorNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
+
 	public Node typeCheck(Environment env) {
 
 		if (classId != null) {
@@ -104,7 +107,7 @@ public class ConstructorNode implements Node {
 	        return  (ClassTypeNode)entry.getType() ;
     	}
     	return null ;	
-	}
+
 
 	public String codeGeneration() {
 		return "";
