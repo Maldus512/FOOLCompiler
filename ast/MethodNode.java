@@ -167,7 +167,7 @@ public class MethodNode implements Node {
 				dec.typeCheck(env);
 		
 		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
-			System.out.println("Wrong return type for function " + id);
+			System.out.println("Wrong return type for method " + id);
 			System.exit(0);
 		}
 	return null;

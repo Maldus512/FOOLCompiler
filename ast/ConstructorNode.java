@@ -74,11 +74,36 @@ public class ConstructorNode implements Node {
 
 	//valore di ritorno non utilizzato
 	public Node typeCheck(Environment env) {
-		// if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ){      
-		//     System.out.println("incompatible value for variable "+id);
-		//     System.exit(0);
-		// }     
-		return null;
+
+		if (classId != null) {
+			HashMap<String,STentry> hm = env.getST().get(0);
+	      	STentry entry = hm.get( classId );
+
+			ClassTypeNode t=null;
+	        if (entry.getType() instanceof ClassTypeNode) t=(ClassTypeNode) entry.getType(); 
+	        else {
+	            System.out.println("Invocation of a non-class constructor "+classId);  //<----- NON SONO SICURO ABBIA SENSO METTERE QUESTO CONTROLLO, E L'ERRORE VA CAMBIATO
+	            System.exit(0);
+	        }
+	        HashMap<String,Node> p = t.getFields();
+	        System.out.println("parametri dichiarati = "+ p.keySet() + " paramatri ricevuti = " + parList.size());
+	        if ( !(p.keySet().size() == parList.size()) ) {
+	            System.out.println("Wrong number of parameters in the invocation of the constructor "+classId);
+	            System.exit(0);
+	        } 
+	        for (int i=0; i<parList.size(); i++) {
+	        	System.out.println("il parametro analizzato è "+i);
+	        	System.out.println("il tipo aspettato è  "+(parList.get(i)).typeCheck(env));
+	        	System.out.println("il tipo ricevuto è  "+(p.get(i)) );
+
+	            if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) { //TO DO : ADATTARE CON IL VALORE DELLA HM, COSÌ NON LO POSSO FARE
+	                System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+classId);
+	                System.exit(0);
+	            } 
+	        }
+	        return  (ClassTypeNode)entry.getType() ;
+    	}
+    	return null ;	
 	}
 
 	public String codeGeneration() {

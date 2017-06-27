@@ -75,6 +75,10 @@ public class ProgClassNode implements Node {
 	}
 
 	public Node typeCheck(Environment env) {
+		for (Node d:decList)
+			d.typeCheck(env);
+
+
 		for (Node c:classList)
 			c.typeCheck(env);
 
