@@ -119,8 +119,8 @@ public class MethodNode implements Node {
 
 		//set method type
 		// arrowType = new ArrowTypeNode(parTypes, type);
-		// entry.addType( arrowType );
-		entry.addType( new ArrowTypeNode(parTypes, type) );
+		// entry.setType( arrowType );
+		entry.setType( new ArrowTypeNode(parTypes, type) );
 
 		methodEntry = entry;
 		hm.put( id, entry );

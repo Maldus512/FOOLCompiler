@@ -20,7 +20,7 @@ public class IdNode implements Node {
 
 	public String toPrint(String s) {
 		return s + "Id:" + id + " at nestlev " + nestinglevel + "\n"
-				+ entry.toPrint(s+"  ") ;  
+				+ entry.toPrint(s+"  ") ;
 	}
 
 	@Override
@@ -32,15 +32,16 @@ public class IdNode implements Node {
 		STentry tmp = null; 
 		
 		while (j>=0 && tmp==null)
-			tmp=(env.getST().get(j--)).get(id);
+			tmp = (env.getST().get(j--)).get(id);
 		
-		if (tmp==null) {
-			res.add(new SemanticError("Id "+id+" not declared"));
-		} else {
-			entry = tmp;
-			nestinglevel = env.getNestLevel();
+		if (tmp == null) {
+			res.add( new SemanticError("Id "+id+" not declared") );
+			return res;
 		}
 
+		entry = tmp;
+		nestinglevel = env.getNestLevel();
+		
 		return res;
 	}
 

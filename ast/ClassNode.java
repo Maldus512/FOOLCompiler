@@ -164,7 +164,7 @@ public class ClassNode implements Node {
 		}
 
 		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
-		entry.addType( classType );
+		entry.setType( classType );
 
 
 		// // DEBUG

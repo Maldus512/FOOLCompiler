@@ -9,58 +9,58 @@ import ast.types.*;
 
 public class CallNode implements Node {
 
-    private String id;
-    private STentry entry; 
-    private ArrayList<Node> parlist; 
-    private int nestinglevel;
+	private String id;
+	private STentry entry; 
+	private ArrayList<Node> parList;
+	private int nestingLevel;
 
 
-    public CallNode (String i, STentry e, ArrayList<Node> p, int nl) {
-        id=i;
-        entry=e;
-        parlist = p;
-        nestinglevel=nl;
-    }
+	public CallNode (String i, STentry e, ArrayList<Node> p, int nl) {
+		id = i;
+		entry = e;
+		parList = p;
+		nestingLevel = nl;
+	}
 
-    public CallNode(String text, ArrayList<Node> args) {
-        id=text;
-        parlist = args;
-    }
+	public CallNode(String text, ArrayList<Node> args) {
+		id = text;
+		parList = args;
+	}
 
-    public String toPrint(String s) {  //
-        String parlstr="";
-        for (Node par:parlist)
-            parlstr+=par.toPrint(s+"  ");		
-        return s+"Call:" + id + " at nestlev " + nestinglevel +"\n" 
-            +entry.toPrint(s+"  ")
-            +parlstr;        
-    }
+	public String toPrint(String s) {
+		String parlstr = "";
+		for (Node par : parList)
+			parlstr += par.toPrint(s+"  ");
 
-    /**
-     * Check if the function which is called has been declared.
-     * Then call recursively on actual parameters.
-     */
-    @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        //create the result
-        ArrayList<SemanticError> res = new ArrayList<SemanticError>();
+		return s + "Call:" + id + " at nestlev " + nestingLevel + "\n" 
+				+ entry.toPrint(s+"  ")
+				+ parlstr;
+	}
 
-        int j=env.getNestLevel();
-        STentry tmp=null; 
-        while (j>=0 && tmp==null)
-            tmp=(env.getST().get(j--)).get(id);
-        if (tmp==null)
-            res.add(new SemanticError("Id '" + id + "' not declared."));
+	@Override
+	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
-        else{
-            this.entry = tmp;
-            this.nestinglevel = env.getNestLevel();
+		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-            for(Node arg : parlist)
-                res.addAll(arg.checkSemantics(env));
-        }
-        return res;
-    }
+		int j = env.getNestLevel();
+		STentry tmp = null; 
+		
+		while (j>=0 && tmp==null)
+			tmp = (env.getST().get(j--)).get(id);
+		
+		if (tmp == null) {
+			res.add(new SemanticError("Id '" + id + "' not declared."));
+			return res;
+		}
+
+		this.entry = tmp;
+		this.nestingLevel = env.getNestLevel();
+
+		for(Node par : parList)
+			res.addAll(par.checkSemantics(env));
+
+		return res;
+	}
 
     public TypeNode typeCheck(Environment env) {  //                           
         ArrowTypeNode t=null;
@@ -70,12 +70,12 @@ public class CallNode implements Node {
             System.exit(0);
         }
         ArrayList<TypeNode> p = t.getParList();
-        if ( !(p.size() == parlist.size()) ) {
+        if ( !(p.size() == parList.size()) ) {
             System.out.println("Wrong number of parameters in the invocation of "+id);
             System.exit(0);
         } 
-        for (int i=0; i<parlist.size(); i++) 
-            if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(env), p.get(i)) ) ) {
+        for (int i=0; i<parList.size(); i++) 
+            if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
                 System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
                 System.exit(0);
             } 
@@ -84,11 +84,11 @@ public class CallNode implements Node {
 
     public String codeGeneration() {
         String parCode="";
-        for (int i=parlist.size()-1; i>=0; i--)
-            parCode+=parlist.get(i).codeGeneration();
+        for (int i=parList.size()-1; i>=0; i--)
+            parCode+=parList.get(i).codeGeneration();
 
         String getAR="";
-        for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
+        for (int i=0; i<nestingLevel-entry.getNestLevel(); i++) 
             getAR+="lw\n";
 
         return "lfp\n"+ //Load frame pointer on stack - needed to go back
@@ -116,5 +116,4 @@ public class CallNode implements Node {
 //The chain of control links traces the dynamic execution of the program.
 //An access link from record A points to the record of the closest enclosing 
 //block in the program. The chain of access links traces the static structure (think: scopes) of the program.
-
 }  

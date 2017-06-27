@@ -27,7 +27,7 @@ public class STentry {
 		offset = os;
 	}
 
-	public void addType (TypeNode t) {
+	public void setType (TypeNode t) {
 		type = t;
 	}
 

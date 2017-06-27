@@ -17,13 +17,15 @@ public class ParNode implements Node {
 		type=t;
 	}
 	
-	public String getId(){
-		return id;
-	}
+	public String getId(){ return id; }
 	
-	public TypeNode getType(){
-		return type;
-	}
+	public TypeNode getType(){ return type; }
+
+	public void setType(TypeNode t){ type = t; }
+
+	// public Node getClassNode(){ return classNode; }
+
+	// public void setClassNode(ClassNode c){ classNode = c; }
 	
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
@@ -32,8 +34,8 @@ public class ParNode implements Node {
 	}
 	
 	public String toPrint(String s) {
-		return s+"Par:" + id +"\n"
-			 +type.toPrint(s+"  ") ;
+		return s + "Par:" + id + "\n"
+			 	 + type.toPrint(s+"  ") ;
 	}
 
 	//non utilizzato

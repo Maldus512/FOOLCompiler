@@ -29,20 +29,21 @@ public class VarNode implements Node {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
-		STentry entry = new STentry(env.getNestLevel(),type, env.decOffset());
+		STentry entry = new STentry(env.getNestLevel(), type, env.decOffset());
 
-		if ( type instanceof ClassTypeNode ) {
+		if ( type instanceof ClassTypeNode ) {	// if we are instantiating an object
 			boolean classDefined = false;
 			ClassTypeNode t = (ClassTypeNode)type;
 
 			HashMap<String,STentry> level_zero = env.getST().get(0);
-			for (STentry e : level_zero.values()) {
+			for (STentry e : level_zero.values()) {	// iterate over definition of classes
 				ClassNode c = (ClassNode)(e.getClassNode());
 				if (c != null) {
 					if ( t.getId().equals( c.getId() ) ) {
 						classDefined = true;
 						type = c.getClassType();
 						entry.setClassNode(c);
+						entry.setType(type);
 						break;
 					}
 				}
@@ -60,13 +61,22 @@ public class VarNode implements Node {
 
 		res.addAll(exp.checkSemantics(env));
 
+		// if (id.equals("test")) {
+		// 	System.out.println("Visiting id: " + id);
+		// 	STentry e = hm.get(id);
+		// 	Node t = e.getType();
+		// 	if (t instanceof ClassTypeNode) {
+
+		// 	}
+		// }
+
 		return res;
 	}
 
 	public String toPrint(String s) {
-		return s+"Var:" + id +"\n"
-			+type.toPrint(s+"  ")
-			+exp.toPrint(s);
+		return s + "Var:" + id + "\n"
+				+ type.toPrint(s+"  ")
+				+ exp.toPrint(s);
 	}
 
 	//valore di ritorno non utilizzato
