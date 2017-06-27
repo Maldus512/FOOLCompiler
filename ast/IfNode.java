@@ -2,11 +2,13 @@ package ast;
 
 import java.util.ArrayList;
 
+import ast.types.BottomTypeNode;
+import ast.types.TypeNode;
+import ast.types.BoolTypeNode;
 import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
-import ast.types.*;
 
 public class IfNode implements Node {
 
@@ -46,7 +48,7 @@ public class IfNode implements Node {
   public TypeNode typeCheck(Environment env) {
     if (!(FOOLlib.isSubtype(cond.typeCheck(env),new BoolTypeNode()))) {
       System.out.println("non boolean condition in if");
-      System.exit(0);
+      return new BottomTypeNode();
     }
     TypeNode t = th.typeCheck(env);
     TypeNode e = el.typeCheck(env);
@@ -55,8 +57,7 @@ public class IfNode implements Node {
     if (FOOLlib.isSubtype(e,t))
       return t;
     System.out.println("Incompatible types in then else branches");
-    System.exit(0);
-    return null;
+    return new BottomTypeNode();
   }
   
   public String codeGeneration() {

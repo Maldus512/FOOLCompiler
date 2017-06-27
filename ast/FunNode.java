@@ -137,15 +137,19 @@ public class FunNode implements Node {
 
 	//valore di ritorno non utilizzato
 	public TypeNode typeCheck(Environment env) {
-		if (decList!=null) 
-			for (Node dec:decList)
-				dec.typeCheck(env);
+		if (decList!=null) {
+			for (Node dec:decList) {
+				if (dec.typeCheck(env) instanceof BottomTypeNode) {
+					return new BottomTypeNode();
+				}
+			}
+		}
 		
 		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
 			System.out.println("Wrong return type for function " + id);
-			System.exit(0);
+			return new BottomTypeNode();
 		}
-	return null;
+		return new VoidTypeNode();
 	}
 
 	public String codeGeneration() {

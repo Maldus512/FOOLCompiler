@@ -58,8 +58,11 @@ public class ProgLetInNode implements Node {
 	}
 
 	public TypeNode typeCheck(Environment env) {
-		for (Node dec:declist)
-			dec.typeCheck(env);
+		for (Node dec:declist) {
+			if (dec.typeCheck(env) instanceof BottomTypeNode) {
+				return new BottomTypeNode();
+			}
+		}
 		return exp.typeCheck(env);
 	}
 

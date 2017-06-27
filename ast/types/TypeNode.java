@@ -19,7 +19,7 @@ public class TypeNode implements Node {
     //  per una espressione, il suo tipo (oggetto BoolTypeNode o IntTypeNode)
     //  per una dichiarazione, "null"
     public TypeNode typeCheck(Environment env) {
-        return null;
+        return this;
     }
 
     public String codeGeneration() {

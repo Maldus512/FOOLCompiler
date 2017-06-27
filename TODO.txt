@@ -6,5 +6,5 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - Cambiare i meccanismi di type e semantic checking in maniera uniforme: se ho bisogno di un riferimento a un'altro nodo forse sarebbe meglio salvarsi la STEntry, e non il nodo direttamente
 - Il type checking dovrebbe ritornare una lista di errori come il semantic check; poi il tipo del programma lo ottengo dal nodo
 - Aggiungere il jar di antlr alla cartella lib, che sicuro LaNeve non ce l'ha installato a riga di comando
-- Aggiungere void ai tipi
 - Rivedere la funzione toPrint (Certe cose non mi sono molto chiare nella stampa)
+- Aggiungere il tipo void alla sintassi

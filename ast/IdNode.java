@@ -48,7 +48,7 @@ public class IdNode implements Node {
 	public TypeNode typeCheck(Environment env) {
 		if (entry.getType() instanceof ArrowTypeNode) {
 			System.out.println("Wrong usage of function identifier");
-			System.exit(0);
+			return new BottomTypeNode();
 		}
 		return entry.getType();
 	}
