@@ -1,17 +1,18 @@
-package ast;
+package ast.types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import ast.Node;
 
 import util.Environment;
 import util.SemanticError;
 
-public class ClassTypeNode implements Node {
+public class ClassTypeNode extends TypeNode {
 
     private String id;
-    private HashMap<String,Node> fieldTypeList;
+    private HashMap<String,TypeNode> fieldTypeList;
     private HashMap<String,ArrowTypeNode> methodTypeList;
 
-    public ClassTypeNode (String i, HashMap<String,Node> f, HashMap<String,ArrowTypeNode> m) {
+    public ClassTypeNode (String i, HashMap<String,TypeNode> f, HashMap<String,ArrowTypeNode> m) {
         id = i;
         fieldTypeList = f;
         methodTypeList = m;
@@ -21,6 +22,7 @@ public class ClassTypeNode implements Node {
         return id;
     }
 
+    @Override
     public String toPrint(String s) { //
         String  fieldstr = "",
                 methodstr = "";
@@ -37,27 +39,10 @@ public class ClassTypeNode implements Node {
             ; 
     }
 
-    public HashMap<String,Node> getFields(){
+    public HashMap<String,TypeNode> getFields(){
         return fieldTypeList;
     }
     public HashMap<String,ArrowTypeNode> getMethods(){
         return methodTypeList;
     }
-
-    @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        // TODO Auto-generated method stub
-        return new ArrayList<SemanticError>();
-    }
-
-    //non utilizzato
-    public Node typeCheck(Environment env) {
-        return null;
-    }
-
-    //non utilizzato
-    public String codeGeneration() {
-        return "";
-    }
-
 }  

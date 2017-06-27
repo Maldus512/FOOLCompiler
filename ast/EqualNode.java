@@ -6,6 +6,7 @@ import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
+import ast.types.*;
 public class EqualNode implements Node {
 
     private Node left;
@@ -34,9 +35,9 @@ public class EqualNode implements Node {
         return res;
     }
 
-    public Node typeCheck(Environment env) {
-        Node l = left.typeCheck(env);
-        Node r = right.typeCheck(env);
+    public TypeNode typeCheck(Environment env) {
+        TypeNode l = left.typeCheck(env);
+        TypeNode r = right.typeCheck(env);
         if (! ( FOOLlib.isSubtype(l,r) || FOOLlib.isSubtype(r,l) ) ) {
             System.out.println("Incompatible types in equal");
             System.exit(0);

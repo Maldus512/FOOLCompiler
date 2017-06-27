@@ -1,4 +1,4 @@
-import test.Cli;
+import util.Cli;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -17,6 +17,7 @@ import parser.SVMLexer;
 import parser.SVMParser;
 import util.Environment;
 import util.SemanticError;
+import util.SyntaxErrorListener;
 import ast.FoolVisitorImpl;
 import ast.Node;
 
@@ -39,8 +40,7 @@ public class Fcc {
 
 		try {
 			is = new FileInputStream(fileName);
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.out.println("\nERROR. No file found with the given name.\n");
 			System.exit(2);
 		}
@@ -55,50 +55,52 @@ public class Fcc {
 		FOOLLexer lexer = new FOOLLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-		//SIMPLISTIC BUT WRONG CHECK OF THE LEXER ERRORS
-		if (lexer.lexicalErrors > 0) {
+		SyntaxErrorListener errorListener = new SyntaxErrorListener();
+		FOOLParser parser = new FOOLParser(tokens);
+		parser.removeErrorListeners();
+		parser.addErrorListener(errorListener);
+
+		FoolVisitorImpl visitor = new FoolVisitorImpl();
+
+		Node ast = visitor.visit(parser.prog()); //generazione AST 
+		if (errorListener.errors > 0) {
 			System.out.println("The program was not in the right format. Exiting the compilation process now");
 			System.exit(1);
-		} else {
+		}
 
-			FOOLParser parser = new FOOLParser(tokens);
 
-			FoolVisitorImpl visitor = new FoolVisitorImpl();
+		Environment env = new Environment();
+		ArrayList<SemanticError> err = ast.checkSemantics(env);
 
-			Node ast = visitor.visit(parser.prog()); //generazione AST 
+		if (err.size() > 0 ){
+			System.out.println("You had: " +err.size()+" error(s):");
+			for(SemanticError e : err)
+				System.out.println("\t" + e);
 
-			Environment env = new Environment();
-			ArrayList<SemanticError> err = ast.checkSemantics(env);
+			System.exit(1);
+		}
 
-			if (err.size() > 0 ){
-				System.out.println("You had: " +err.size()+" error(s):");
-				for(SemanticError e : err)
-					System.out.println("\t" + e);
+		Node type = ast.typeCheck(env); //type-checking bottom-up 
 
-				System.exit(1);
-			} else {
-				System.out.println("Visualizing AST...");
-				System.out.println(ast.toPrint(""));
+		if (commandArgs.verbose) {
+			System.out.println("Visualizing AST...");
+			System.out.println(ast.toPrint(""));
+			System.out.println(type.toPrint("Type checking ok! Type of the program is: "));
+		}
 
-				Node type = ast.typeCheck(env); //type-checking bottom-up 
-				System.out.println(type.toPrint("Type checking ok! Type of the program is: "));
+		if (commandArgs.codeGen) {
 
-				if (commandArgs.codeGen) {
-
-					try {
-						// CODE GENERATION  prova.fool.asm
-						String code=ast.codeGeneration(); 
-						BufferedWriter out = new BufferedWriter(new FileWriter(fileName+".asm")); 
-						out.write(code);
-						out.close(); 
-					} catch (IOException e) {
-						System.out.println(e.toString());
-						System.exit(2);
-					}
-					System.out.println("Code generated! Assembling and running generated code.");
-				}
-
+			try {
+				// CODE GENERATION  prova.fool.asm
+				String code=ast.codeGeneration(); 
+				BufferedWriter out = new BufferedWriter(new FileWriter(fileName+".asm")); 
+				out.write(code);
+				out.close(); 
+			} catch (IOException e) {
+				System.out.println(e.toString());
+				System.exit(2);
 			}
+			System.out.println("Code generated! Assembling and running generated code.");
 		}
 		System.exit(0);
 	}

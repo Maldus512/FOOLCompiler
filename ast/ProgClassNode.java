@@ -5,16 +5,18 @@ import java.util.HashMap;
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 
+import ast.types.*;
 
 /* Class representing a Classexp instruction node */
 public class ProgClassNode implements Node {
 
-	private ArrayList<Node> classList;
+	private ArrayList<ClassNode> classList;
 	private ArrayList<Node> decList;
 	private Node exp;
 
-	public ProgClassNode (ArrayList<Node> l, ArrayList<Node> d, Node e) {
+	public ProgClassNode (ArrayList<ClassNode> l, ArrayList<Node> d, Node e) {
 		classList = l;
 		decList = d;
 		exp = e;
@@ -29,7 +31,7 @@ public class ProgClassNode implements Node {
 				decstr += d.toPrint(s+"  ");
 		}
 
-		for (Node c : classList)
+		for (ClassNode c : classList)
 			fieldstr += c.toPrint(s+"  ");
 		
 		return 	s + "ProgClass\n"
@@ -50,7 +52,7 @@ public class ProgClassNode implements Node {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		// check semantics for every class declaration
-		for(Node n:classList)
+		for(ClassNode n:classList)
 			res.addAll(n.checkSemantics(env));
 
 		// if there are lets
@@ -74,8 +76,8 @@ public class ProgClassNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
-		for (Node c:classList)
+	public TypeNode typeCheck(Environment env) {
+		for (ClassNode c:classList)
 			c.typeCheck(env);
 
 		return exp.typeCheck(env);
@@ -86,7 +88,7 @@ public class ProgClassNode implements Node {
 		String declCode="";
 		for (Node dec:decList)
 			declCode+=dec.codeGeneration();
-		for (Node c : classList) {
+		for (ClassNode c : classList) {
 			classes += c.codeGeneration();
 		}
 		return "push 0\n" 
@@ -94,6 +96,7 @@ public class ProgClassNode implements Node {
 			+ classes
 			+ declCode
 			+ "##\n"
+			+ exp.codeGeneration()
 			+ "halt\n"
 			+ FOOLlib.getCode(); 
 	} 

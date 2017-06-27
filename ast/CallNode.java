@@ -3,7 +3,9 @@ import java.util.ArrayList;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+import ast.types.*;
 
 public class CallNode implements Node {
 
@@ -34,6 +36,10 @@ public class CallNode implements Node {
             +parlstr;        
     }
 
+    /**
+     * Check if the function which is called has been declared.
+     * Then call recursively on actual parameters.
+     */
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         //create the result
@@ -56,14 +62,14 @@ public class CallNode implements Node {
         return res;
     }
 
-    public Node typeCheck(Environment env) {  //                           
+    public TypeNode typeCheck(Environment env) {  //                           
         ArrowTypeNode t=null;
         if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
         else {
             System.out.println("Invocation of a non-function "+id);
             System.exit(0);
         }
-        ArrayList<Node> p = t.getParList();
+        ArrayList<TypeNode> p = t.getParList();
         if ( !(p.size() == parlist.size()) ) {
             System.out.println("Wrong number of parameters in the invocation of "+id);
             System.exit(0);

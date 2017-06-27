@@ -1,8 +1,11 @@
-package ast;
+package util;
+
+import ast.types.*;
+import ast.*;
 public class STentry {
  
 	private int nl;
-	private Node type;
+	private TypeNode type;
 	private int offset;
 	private ClassNode classInfo;		// needed for inheritance
 	// private ClassNode actualClassInfo;	// actual class used to instantiate an object - can be classInfo or one of its subclasses
@@ -12,7 +15,7 @@ public class STentry {
 		offset = os;
 	}
 
-	public STentry (int n, Node t, int os) {
+	public STentry (int n, TypeNode t, int os) {
 		nl = n;
 		type = t;
 		offset = os;
@@ -24,11 +27,11 @@ public class STentry {
 		offset = os;
 	}
 
-	public void addType (Node t) {
+	public void addType (TypeNode t) {
 		type = t;
 	}
 
-	public Node getType () {
+	public TypeNode getType () {
 		return type;
 	}
 

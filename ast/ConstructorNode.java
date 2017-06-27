@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+import ast.types.*;
 
 public class ConstructorNode implements Node {
 
@@ -73,7 +75,7 @@ public class ConstructorNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		// if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ){      
 		//     System.out.println("incompatible value for variable "+id);
 		//     System.exit(0);

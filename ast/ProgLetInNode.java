@@ -5,6 +5,9 @@ import java.util.HashMap;
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
+
+import ast.types.*;
 
 
 /* Class representing a Let in instruction node */
@@ -54,7 +57,7 @@ public class ProgLetInNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		for (Node dec:declist)
 			dec.typeCheck(env);
 		return exp.typeCheck(env);

@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+
+import ast.types.*;
 
 public class MethodCallNode implements Node {
 
@@ -104,7 +107,7 @@ public class MethodCallNode implements Node {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		ArrowTypeNode t=null;
 		if (methodEntry.getType() instanceof ArrowTypeNode) {
 			t = (ArrowTypeNode)methodEntry.getType(); 
@@ -112,7 +115,7 @@ public class MethodCallNode implements Node {
 			System.out.println("Invocation of a non-function "+id);
 			System.exit(0);
 		}
-		ArrayList<Node> p = t.getParList();
+		ArrayList<TypeNode> p = t.getParList();
 		if ( !(p.size() == parList.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);

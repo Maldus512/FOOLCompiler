@@ -5,16 +5,8 @@ A simple Object Oriented language compiler made with ANTLR4.
 ### Build
 `$ make`
 
-### Check Syntax
-`$ make test TEST=file.fool`
-where `file.fool` is the fool program to be checked.
-
-### Run
-Either run
-`$ java Test prog.fool`
-after build, or simply run
-`$ make run f=prog.fool`
-where `prog.fool` is a fool program.
+### Usage
+`./fcc -h`
 
 ### Troubleshooting
 `$ make clean`

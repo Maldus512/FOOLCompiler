@@ -11,7 +11,7 @@ endif
 
 
 # CLASSES = Fcc.java Test.java
-SOURCES = $(wildcard ast/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Test.java
+SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Test.java
 CLASSES = $(SOURCES:.java=.class)
 
 
@@ -34,7 +34,7 @@ generated:
 	$(MAKE) -C parser
 
 clean:
-	$(RM) *.class ./parser/*.class ./ast/*.class ./lib/*.class ./util/*.class *.asm ./test/*.class ./test/*.asm
+	$(RM)  $(CLASSES) ./test/*.asm
 	$(MAKE) clean -C parser
 
 run: classes

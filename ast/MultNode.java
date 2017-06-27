@@ -6,6 +6,8 @@ import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
 
+import ast.types.*;
+
 public class MultNode implements Node {
 
   private Node left;
@@ -34,7 +36,7 @@ public class MultNode implements Node {
                       + right.toPrint(s+"  ") ; 
   }
   
-  public Node typeCheck(Environment env) {
+  public TypeNode typeCheck(Environment env) {
     if (! ( FOOLlib.isSubtype(left.typeCheck(env),new IntTypeNode()) &&
             FOOLlib.isSubtype(right.typeCheck(env),new IntTypeNode()) ) ) {
       System.out.println("Non integers in multiplication");

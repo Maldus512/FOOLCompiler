@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 
+import ast.types.*;
+
 public class ProgNode implements Node {
 
   private Node exp;
@@ -24,7 +26,7 @@ public class ProgNode implements Node {
 		return exp.checkSemantics(env);
 	}
   
-  public Node typeCheck(Environment env) {
+  public TypeNode typeCheck(Environment env) {
     return exp.typeCheck(env);
   }  
   

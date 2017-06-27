@@ -5,24 +5,27 @@ import java.util.HashMap;
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
+
+import ast.types.*;
 
 public class FunNode implements Node {
 
 	private String id;
-	private Node type; 
+	private TypeNode type; 
 	private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList = new ArrayList<Node>();
 	private ArrayList<Node> decList;
 	private Node body;
 
-	public FunNode (String i, Node t) {
+	public FunNode (String i, TypeNode t) {
 		id = i;
 		type = t;
 	}
 
 	public String getId() { return id; }
 
-	public Node getType() { return type; }
+	public TypeNode getType() { return type; }
 
 	public ArrayList<Node> getParList() { return parList; }
 
@@ -52,7 +55,7 @@ public class FunNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		ArrayList<Node> parTypes = new ArrayList<Node>();
+		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
 		int paroffset = 0;
 
 		// check parameters
@@ -109,7 +112,7 @@ public class FunNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		if (decList!=null) 
 			for (Node dec:decList)
 				dec.typeCheck(env);

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 
+import ast.types.*;
+
 public class PrintNode implements Node {
 
   private Node val;
@@ -17,7 +19,7 @@ public class PrintNode implements Node {
     return s+"Print\n" + val.toPrint(s+"  ") ;
   }
   
-  public Node typeCheck(Environment env) {
+  public TypeNode typeCheck(Environment env) {
     return val.typeCheck(env);
   }  
   

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import util.Environment;
 import util.SemanticError;
+import ast.types.*;
 
 public class FieldNode implements Node {
 
 	private String id;
-	private Node type;
+	private TypeNode type;
 
-	public FieldNode (String i, Node t) {
+	public FieldNode (String i, TypeNode t) {
 		id=i;
 		type=t;
 	}
@@ -19,7 +20,7 @@ public class FieldNode implements Node {
 		return id;
 	}
 
-	public Node getType(){
+	public TypeNode getType(){
 		return type;
 	}
 
@@ -33,7 +34,7 @@ public class FieldNode implements Node {
 	}
 
 	//non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		return null;
 	}
 

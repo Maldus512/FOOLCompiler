@@ -5,11 +5,14 @@ import java.util.HashMap;
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
+
+import ast.types.*;
 
 public class MethodNode implements Node {
 
 	private String id;
-	private Node type; 
+	private TypeNode type; 
 	private STentry methodEntry;
 	// private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList;
@@ -18,12 +21,12 @@ public class MethodNode implements Node {
 	private ClassNode ownerClass;	// class node where this method is first defined
 	private int curMethodOffset;		// offset in callerClass
 	
-	public MethodNode (String i, Node t) {
+	public MethodNode (String i, TypeNode t) {
 		id=i;
 		type=t;
 	}
 
-	public MethodNode (String _id, Node _type, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
+	public MethodNode (String _id, TypeNode _type, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
 		id = _id;
 		type = _type;
 		parList = _parList;
@@ -33,7 +36,7 @@ public class MethodNode implements Node {
 
 	public String getId() { return id; }
 
-	public Node getType() { return type; }
+	public TypeNode getType() { return type; }
 
 	// public ArrowTypeNode getArrowType() { return arrowType; }
 	public STentry getEntry() { return methodEntry; }
@@ -100,7 +103,7 @@ public class MethodNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		ArrayList<Node> parTypes = new ArrayList<Node>();
+		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
 		int paroffset = 0;
 
 		//check args
@@ -161,7 +164,7 @@ public class MethodNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 		if (decList!=null) 
 			for (Node dec:decList)
 				dec.typeCheck(env);
@@ -170,7 +173,7 @@ public class MethodNode implements Node {
 			System.out.println("Wrong return type for function " + id);
 			System.exit(0);
 		}
-	return null;
+		return null;
 	}
 
 	public String codeGeneration() {

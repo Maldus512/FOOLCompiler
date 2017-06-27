@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 
+import ast.types.*;
+
 /* Interface for a generic instruction node */
 public interface Node {
 
@@ -14,7 +16,7 @@ public interface Node {
     //fa il type checking e ritorna: 
     //  per una espressione, il suo tipo (oggetto BoolTypeNode o IntTypeNode)
     //  per una dichiarazione, "null"
-    Node typeCheck(Environment env);
+    TypeNode typeCheck(Environment env);
 
     String codeGeneration();
 

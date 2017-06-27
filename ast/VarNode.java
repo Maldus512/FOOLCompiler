@@ -5,16 +5,19 @@ import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
+import util.STentry;
 import lib.FOOLlib;
+
+import ast.types.*;
 
 /* Class representing a variable declaration and assignment */
 public class VarNode implements Node {
 
 	private String id;
-	private Node type;
+	private TypeNode type;
 	private Node exp;
 
-	public VarNode (String i, Node t, Node v) {
+	public VarNode (String i, TypeNode t, Node v) {
 		id = i;
 		type = t;
 		exp = v;
@@ -67,7 +70,7 @@ public class VarNode implements Node {
 	}
 
 	//valore di ritorno non utilizzato
-	public Node typeCheck(Environment env) {
+	public TypeNode typeCheck(Environment env) {
 
 		// TODO: bisogna controllare che il tipo dichiarato per la variabile sia lo stesso utilizzato per l'istanziazione dell'oggetto, o che sia un suo sottotipo.
 		// l'id della classe istanziata lo si può ottenere con:
