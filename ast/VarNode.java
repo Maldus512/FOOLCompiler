@@ -37,15 +37,16 @@ public class VarNode implements Node {
 
 			HashMap<String,STentry> level_zero = env.getST().get(0);
 			for (STentry e : level_zero.values()) {	// iterate over definition of classes
-				ClassNode c = (ClassNode)(e.getClassNode());
-				if (c != null) {
-					if ( t.getId().equals( c.getId() ) ) {
+				if (e.getType() instanceof ClassTypeNode) {
+					ClassTypeNode classType = (ClassTypeNode)(e.getType());
+
+					if ( ((String)(t.getId())).equals(classType.getId()) ) {
 						classDefined = true;
-						type = c.getClassType();
-						entry.setClassNode(c);
-						entry.setType(type);
+						type = classType;
+						entry.setType( classType );
 						break;
 					}
+					
 				}
 			}
 
@@ -61,15 +62,6 @@ public class VarNode implements Node {
 
 		res.addAll(exp.checkSemantics(env));
 
-		// if (id.equals("test")) {
-		// 	System.out.println("Visiting id: " + id);
-		// 	STentry e = hm.get(id);
-		// 	Node t = e.getType();
-		// 	if (t instanceof ClassTypeNode) {
-
-		// 	}
-		// }
-
 		return res;
 	}
 
@@ -82,10 +74,6 @@ public class VarNode implements Node {
 	//valore di ritorno non utilizzato
 	public TypeNode typeCheck(Environment env) {
 
-		// TODO: bisogna controllare che il tipo dichiarato per la variabile sia lo stesso utilizzato per l'istanziazione dell'oggetto, o che sia un suo sottotipo.
-		// l'id della classe istanziata lo si può ottenere con:
-		// String newType = ((NewNode)exp).getClassId();
-		
 		if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ) {
 			System.out.println("incompatible value for variable "+id);
 			System.exit(0);

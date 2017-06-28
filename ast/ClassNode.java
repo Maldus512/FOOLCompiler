@@ -16,7 +16,7 @@ public class ClassNode implements Node {
 	private ArrayList<Node> fieldList;
 	private ArrayList<Node> methodList;
 	private String superClassId;
-	private ClassTypeNode classType;
+	private ClassTypeNode type;
 	
 	public ClassNode (String name) {
 		id = name;
@@ -58,7 +58,7 @@ public class ClassNode implements Node {
 
 	public void setSuperClass(String id) { superClassId = id; }
 
-	public ClassTypeNode getClassType() { return classType; }
+	public ClassTypeNode getType() { return type; }
 
 	public ArrayList<Node> getMethodList() { return methodList; }
 
@@ -70,7 +70,7 @@ public class ClassNode implements Node {
 		// get symtable at nestingLevel, which is now 0
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
 		// add entry with current nestingLevel at offset 0, and decrement offset
-		STentry entry = new STentry(env.getNestLevel(), env.decStaticOffset(), this);
+		STentry entry = new STentry(env.getNestLevel(), type, env.decStaticOffset());
 
 		// check if the class has already been declared
 		if ( hm.put( id, entry ) != null ) {
@@ -84,8 +84,8 @@ public class ClassNode implements Node {
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		env.getST().add(hmn);
 
-		HashMap<String,TypeNode> fieldTypes = new HashMap<String,TypeNode>();
-		HashMap<String,ArrowTypeNode> methodTypes = new HashMap<String,ArrowTypeNode>();
+		HashMap<String,STentry> fieldEntries = new HashMap<String,STentry>();
+		HashMap<String,STentry> methodEntries = new HashMap<String,STentry>();
 
 		int fieldOffset = 0;	// offset for class's fields
 		int methodOffset = 0;	// offset for class's methods
@@ -98,40 +98,48 @@ public class ClassNode implements Node {
 				res.add( new SemanticError("Superclass '" + superClassId + "' for class '" + id + "' has not been declared."));
 				return res;
 			}
+
+			HashMap<String,TypeNode> fieldTypeMap = ((ClassTypeNode)(superClassEntry.getType())).getFieldTypeMap();
 			
 			// add to the subclass's symbol table every field of its superclass
-			for (Node f:superClassEntry.getClassNode().fieldList) {
-				FieldNode field = (FieldNode) f;
-				fieldTypes.put(field.getId(), field.getType());
+			for ( String key : fieldTypeMap.keySet() ) {
 
-				// add fields with nesting level set to superclass fields' nesting level
-				hmn.put( field.getId(), new STentry(superClassEntry.getNestLevel()+1, field.getType(), fieldOffset++ ) );
+				// create new field STentry with nesting level set to superclass fields' nesting level
+				STentry fieldEntry = new STentry( superClassEntry.getNestLevel()+1, fieldTypeMap.get(key), fieldOffset++ );
+				
+				hmn.put( key, fieldEntry );
+				fieldEntries.put ( key, fieldEntry );
 			}
 
+			HashMap<String,STentry> methodEntriesMap = ((ClassTypeNode)(superClassEntry.getType())).getMethodEntriesMap();
+
 			// add to the subclass's symbol table every method of its superclass
-			for(Node n:superClassEntry.getClassNode().methodList) {
-				MethodNode f = (MethodNode) n;
+			for( String key : methodEntriesMap.keySet() ) {
+				// MethodNode f = (MethodNode) n;
 
-				res.addAll( f.checkSemantics(env, methodOffset++, this) );
+				// res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
-				methodTypes.put(f.getId(), (ArrowTypeNode)(f.getEntry().getType()) );
+				hmn.put( key, methodEntriesMap.get(key) );
+				methodEntries.put( key, methodEntriesMap.get(key) );
+				methodOffset++;
 			}
 
 		}
 
-		/*
-			Overriding of fields is handled by using a temporary hash table where to insert already declared fields, only for the subclass: if a double entry is found then the field has already been defined for that class.
-		*/
+
+		
+		// Overriding of fields is handled by using a temporary hash table where to insert already declared fields, only for the subclass: if a double entry is found then the field has already been defined for that class.
 
 		// check fields
-		HashMap<String,STentry> temp = new HashMap<String,STentry> ();
+		HashMap<String,STentry> temp = new HashMap<String,STentry>();
 
 		for (Node f:fieldList) {
 
 			FieldNode field = (FieldNode) f;
-			fieldTypes.put(field.getId(),field.getType());
-
-			STentry prevEntry = hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), fieldOffset++ ) );
+			STentry fieldEntry = new STentry( env.getNestLevel(), field.getType(), fieldOffset++ );
+			
+			fieldEntries.put ( field.getId(), fieldEntry );
+			STentry prevEntry = hmn.put( field.getId(), fieldEntry );
 			if ( prevEntry != null) {
 
 				if (temp.put( field.getId(), null) != null) {	// field has been redeclared twice within the same class
@@ -140,31 +148,40 @@ public class ClassNode implements Node {
 				}
 
 				// if we are here, we are overriding a field, thus we must update its offset accordingly
-				hmn.put( field.getId(), new STentry(env.getNestLevel(), field.getType(), prevEntry.getOffset()) );
+				fieldEntry.setOffset( prevEntry.getOffset() );
+				hmn.put( field.getId(), fieldEntry );
+				fieldEntries.put ( field.getId(), fieldEntry );
 				fieldOffset--;
 			}
 		}
 
-		/*
-			Overriding of methods is handled by setting, for each method, an "owner class", corresponding to the first class which declares such method: if a class defines a method but an entry is already present, the owner class is checked: if the owner is the class itself, the method has been redefined within the same class.
-			Note: this could be done in the same way as for fields, but this is more metal. \m/_
-		*/
-
+		
+		
+		// Overriding of methods is handled in the same way as for fields.
+		
 		// check semantics of class's methods
+		temp = new HashMap<String,STentry> ();
+		
 		for(Node n:methodList) {
 			MethodNode f = (MethodNode) n;
+			int methodNumber = hmn.size();
+
+			if ( temp.put( f.getId(), null) != null ) {
+				res.add( new SemanticError("Method name '" + f.getId() + "' for class '" + id + "' has already been used.") );
+				return res;
+			}
 			
-			res.addAll( f.checkSemantics(env, methodOffset++, this) );
+			res.addAll( f.checkSemantics(env, methodOffset++) );
 
-			// methodTypes.add(f.getArrowType());
-			methodTypes.put(f.getId(), (ArrowTypeNode)(f.getEntry().getType()) );
+			methodEntries.put( f.getId(), f.getEntry() );
 
-			// adjust methodOffset to correct offset
-			methodOffset = f.getOffset();
+			// if a method has been overrided, hmn was not changed, thus we must adjust methodOffset to correct offset
+			if (methodNumber == hmn.size())
+				methodOffset--;
 		}
 
-		classType = new ClassTypeNode(id, fieldTypes, methodTypes);
-		entry.setType( classType );
+		type = new ClassTypeNode(id, fieldEntries, methodEntries);
+		entry.setType( type );
 
 
 		// // DEBUG
@@ -191,14 +208,14 @@ public class ClassNode implements Node {
 	public TypeNode typeCheck(Environment env) {
 		if (superClassId != null) {
 		HashMap<String,STentry> hm = env.getST().get(0);
-      	STentry superClassEntry = hm.get( superClassId );
+      	
+      	ClassTypeNode superType = (ClassTypeNode)( (hm.get( superClassId )).getType() );
 
-      	ClassNode superNode = superClassEntry.getClassNode();
-      	if (!FOOLlib.isSubtype(classType, superNode.getClassType())) {
-      		System.out.println("Error: "+id+" is not a subclass of "+superNode.getId());
+      	if ( !FOOLlib.isSubtype(type, superType) ) {
+      		System.out.println("Error: " + id + " is not a subclass of " + superType.getId());
       	}
       }
-      	return classType;
+      	return type;
 	}
 
 	public String codeGeneration() {

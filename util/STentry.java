@@ -7,8 +7,7 @@ public class STentry {
 	private int nl;
 	private TypeNode type;
 	private int offset;
-	private ClassNode classInfo;		// needed for inheritance
-	// private ClassNode actualClassInfo;	// actual class used to instantiate an object - can be classInfo or one of its subclasses
+	// private ClassNode classInfo;		// needed for inheritance
 
 	public STentry (int n, int os) {
 		nl = n;
@@ -21,11 +20,11 @@ public class STentry {
 		offset = os;
 	}
 
-	public STentry (int n, int os, ClassNode c) {
-		nl = n;
-		classInfo = c;
-		offset = os;
-	}
+	// public STentry (int n, int os, ClassNode c) {
+	// 	nl = n;
+	// 	classInfo = c;
+	// 	offset = os;
+	// }
 
 	public void setType (TypeNode t) {
 		type = t;
@@ -33,6 +32,10 @@ public class STentry {
 
 	public TypeNode getType () {
 		return type;
+	}
+
+	public void setOffset (int o) {
+		offset = o;
 	}
 
 	public int getOffset () {
@@ -43,20 +46,12 @@ public class STentry {
 		return nl;
 	}
 
-	public ClassNode getClassNode() {
-		return classInfo;
-	}
-
-	public void setClassNode(ClassNode c) {
-		classInfo = c;
-	}
-
-	// public void setActualClassNode(ClassNode c) {
-	// 	actualClassInfo = c;
+	// public ClassNode getClassNode() {
+	// 	return classInfo;
 	// }
 
-	// public ClassNode getActualClassNode() {
-	// 	return actualClassInfo;
+	// public void setClassNode(ClassNode c) {
+	// 	classInfo = c;
 	// }
 
 	public String toPrint(String s) {

@@ -18,8 +18,8 @@ public class MethodNode implements Node {
 	private ArrayList<Node> parList;
 	private ArrayList<Node> decList;
 	private Node body;
-	private ClassNode ownerClass;	// class node where this method is first defined
-	private int curMethodOffset;		// offset in callerClass
+	// private ClassNode ownerClass;	// class node where this method is first defined
+	// private int curMethodOffset;		// offset in callerClass
 	
 	public MethodNode (String i, TypeNode t) {
 		id=i;
@@ -47,9 +47,7 @@ public class MethodNode implements Node {
 
 	public Node getBody() { return body; }
 
-	public String getOwnerClassId() { return ownerClass.getId(); }
-
-	public int getOffset() { return curMethodOffset; }
+	// public int getOffset() { return curMethodOffset; }
 
 	public void addDecBody (ArrayList<Node> d, Node b) {
 		decList = d;
@@ -58,45 +56,22 @@ public class MethodNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		return checkSemantics(env, 0, null);
-		// return checkSemantics(env, 0, -1, null);
+		return checkSemantics(env, 0);
 	}
 
-	public ArrayList<SemanticError> checkSemantics(Environment env, int offset, ClassNode callerClass) {
-		// callerClass is the class from where the semantic check has been called
-		curMethodOffset = offset + 1;
+	public ArrayList<SemanticError> checkSemantics(Environment env, int offset) {
+		// curMethodOffset = offset + 1;
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
-		STentry entry = new STentry(env.getNestLevel(), offset, ownerClass);
+		STentry entry = new STentry(env.getNestLevel(), offset);
 
 		STentry prevEntry = hm.put( id, entry );
-		if ( prevEntry != null) {
-
-			if (callerClass == null) { // if callerClass is null there are no class calling, thus we are not inside a class.
-				res.add( new SemanticError("Function name '" + id + "' has already been used.") );
-				return res;
-			}
-
-			// if the previous entry's class is the same of the calling one, the method has been redefined within the same class
-			if (prevEntry.getClassNode().getId().equals( callerClass.getId() ) ) {
-				
-				res.add( new SemanticError("Method name '" + id + "' for class '" + callerClass.getId() + "' has already been used.") );
-				return res;
-
-			}
-
+		if ( prevEntry != null ) {
 			// if we are here we are overriding a method, thus we must update offsets accordingly
-			entry = new STentry( env.getNestLevel(), prevEntry.getOffset(), ownerClass );
-
-			curMethodOffset--;
-		}
-
-		// if this method is defined for the first time, update ownerClass for both method and ST's entry
-		if (ownerClass == null && callerClass != null) {
-			ownerClass = callerClass;
-			hm.get(id).setClassNode(ownerClass);
+			entry.setOffset( prevEntry.getOffset() );
+			// curMethodOffset--;
 		}
 
 		env.incNestLevel();
@@ -107,19 +82,17 @@ public class MethodNode implements Node {
 		int paroffset = 0;
 
 		//check args
-		for(Node a:parList) {
-			ParNode arg = (ParNode) a;
-			parTypes.add(arg.getType());
+		for(Node n : parList) {
+			ParNode par = (ParNode) n;
+			parTypes.add(par.getType());
 
-			if ( hmn.put( arg.getId(), new STentry(env.getNestLevel(), arg.getType(), paroffset++) ) != null  ) {
-				res.add( new SemanticError("Parameter name " + arg.getId() + " of method " + id + " has already been used.") );
+			if ( hmn.put( par.getId(), new STentry(env.getNestLevel(), par.getType(), paroffset++) ) != null  ) {
+				res.add( new SemanticError("Parameter name " + par.getId() + " of method " + id + " has already been used.") );
 				return res;
 			}
 		}
 
 		//set method type
-		// arrowType = new ArrowTypeNode(parTypes, type);
-		// entry.setType( arrowType );
 		entry.setType( new ArrowTypeNode(parTypes, type) );
 
 		methodEntry = entry;

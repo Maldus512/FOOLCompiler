@@ -70,11 +70,12 @@ public class FunNode implements Node {
 				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
 
 				for (STentry e : level_zero.values()) {
-					if ( (e.getClassNode() instanceof ClassNode) && (e.getClassNode().getId().equals( parId )) ) {
-						ClassNode c = (ClassNode)(e.getClassNode());
-						parEntry.setClassNode( c );
-						parEntry.setType( c.getClassType() );
-						par.setType( c.getClassType() );
+					if ( e.getType() instanceof ClassTypeNode && ((ClassTypeNode)(e.getType())).getId().equals( parId ) ) {
+
+						ClassTypeNode entryType = (ClassTypeNode)(e.getType());
+						
+						parEntry.setType( entryType );
+						par.setType( entryType );
 						classDefined = true;
 					}
 				}

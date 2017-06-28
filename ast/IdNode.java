@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 import util.STentry;
+import java.util.HashMap;
 
 import ast.types.*;
 
@@ -31,11 +32,11 @@ public class IdNode implements Node {
 		int j = env.getNestLevel();
 		STentry tmp = null; 
 		
-		while (j>=0 && tmp==null)
+		while (j >= 0 && tmp == null)
 			tmp = (env.getST().get(j--)).get(id);
 		
 		if (tmp == null) {
-			res.add( new SemanticError("Id "+id+" not declared") );
+			res.add( new SemanticError("Id " + id + " not declared") );
 			return res;
 		}
 

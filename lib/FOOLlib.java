@@ -27,10 +27,10 @@ public class FOOLlib {
       return true;
     } 
     else if ( (a instanceof ClassTypeNode) && (b instanceof ClassTypeNode) ){
-      HashMap<String,TypeNode> fieldA = ((ClassTypeNode)a).getFields();
-      HashMap<String,TypeNode> fieldB = ((ClassTypeNode)b).getFields();;
-      HashMap<String,ArrowTypeNode> methodsA = ((ClassTypeNode)a).getMethods();;
-      HashMap<String,ArrowTypeNode> methodsB = ((ClassTypeNode)b).getMethods();;
+      HashMap<String,TypeNode> fieldA = ((ClassTypeNode)a).getFieldTypeMap();
+      HashMap<String,TypeNode> fieldB = ((ClassTypeNode)b).getFieldTypeMap();;
+      HashMap<String,ArrowTypeNode> methodsA = ((ClassTypeNode)a).getMethodTypeMap();;
+      HashMap<String,ArrowTypeNode> methodsB = ((ClassTypeNode)b).getMethodTypeMap();;
       
       if( fieldA.keySet().size() < fieldB.keySet().size() || methodsA.keySet().size() < methodsB.keySet().size()){
         System.out.println("Fatal error: subclass cannot have fewer fields/methods than superclass");

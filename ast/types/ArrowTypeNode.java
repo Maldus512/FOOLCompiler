@@ -7,26 +7,31 @@ import util.SemanticError;
 
 /* node for a function type */
 public class ArrowTypeNode extends TypeNode {
-    private ArrayList<TypeNode> parlist; 
-    private TypeNode ret;
+	private ArrayList<TypeNode> parList; 
+	private TypeNode ret;
 
-    public ArrowTypeNode (ArrayList<TypeNode> p, TypeNode r) {
-        parlist=p;
-        ret=r;
-    }
+	public ArrowTypeNode (ArrayList<TypeNode> p, TypeNode r) {
+		parList = p;
+		ret = r;
+	}
 
-    public String toPrint(String s) { //
-        String parlstr="";
-        for (Node par:parlist)
-            parlstr+=par.toPrint(s+"  ");
-        return s+"ArrowType\n" + parlstr + ret.toPrint(s+"  ->") ; 
-    }
+	public String toPrint(String s) {
+		String parstr = "";
+		
+		for (Node par : parList)
+			parstr += par.toPrint(s+"  ");
 
-    public TypeNode getRet () { //
-        return ret;
-    }
+		return s + "ArrowType\n"
+				+ parstr
+				+ ret.toPrint(s+"  ->")
+			;
+	}
 
-    public ArrayList<TypeNode> getParList () { //
-        return parlist;
-    }
+	public TypeNode getRet () {
+		return ret;
+	}
+
+	public ArrayList<TypeNode> getParList () {
+		return parList;
+	}
 }  

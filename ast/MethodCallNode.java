@@ -15,12 +15,12 @@ public class MethodCallNode implements Node {
 	private STentry methodEntry;
 	private ArrayList<Node> parList;
 	private int nestLevel;
-	private String selfId;
+	private String varId;
 
 	public MethodCallNode(String text, ArrayList<Node> args, String sn) {
 		id = text;
 		parList = args;
-		selfId = sn;
+		varId = sn;
 	}
 
 	public String toPrint(String s) {
@@ -46,10 +46,10 @@ public class MethodCallNode implements Node {
 
 		// seek for var (a.k.a. selfName) id
 		while (j>=0 && varTmp==null)
-			varTmp = (env.getST().get(j--)).get(selfId);
+			varTmp = (env.getST().get(j--)).get(varId);
 
 		if (varTmp == null) {
-			res.add( new SemanticError("Object id '" + selfId + "' has not been declared.") );
+			res.add( new SemanticError("Object id '" + varId + "' has not been declared.") );
 			return res;
 		}
 
@@ -74,20 +74,20 @@ public class MethodCallNode implements Node {
 
 
 		// get actual instance of the object calling the method
-		String ownerClass = ((ClassNode)(varTmp.getClassNode())).getId();
+		String ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
 
 		// seek for method definition
 		HashMap<String,STentry> level_zero = env.getST().get(0);
 
 		for (STentry e : level_zero.values()) {
 			
-			if ( (e.getClassNode() instanceof ClassNode) && (e.getClassNode().getId().equals(ownerClass)) ) {
+			if ( e.getType() instanceof ClassTypeNode && ((ClassTypeNode)(e.getType())).getId().equals(ownerClass) ) {
 
-				for (Node n : e.getClassNode().getMethodList()) {
-					MethodNode m = (MethodNode)n;
+				HashMap<String,STentry> methodEntries = ((ClassTypeNode)(e.getType())).getMethodEntriesMap();
 
-					if (m.getId().equals(id)) {
-						methodTmp = m.getEntry();
+				for (String key : methodEntries.keySet()) {
+					if (key.equals(id)) {
+						methodTmp = methodEntries.get(key);
 						break;
 					}
 				}
