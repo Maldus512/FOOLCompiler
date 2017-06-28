@@ -22,18 +22,6 @@ public class ClassTypeNode extends TypeNode {
 		return id;
 	}
 
-	// public ArrayList<String> getMethodIds() {
-	// 	return new ArrayList<String>(methodTypeMap.keySet());
-	// }
-
-	// public ArrayList<TypeNode> getFieldTypeList() {
-	// 	return new ArrayList<TypeNode>(fieldTypeMap.values());
-	// }
-
-	// public ArrayList<TypeNode> getMethodTypeList() {
-	// 	return new ArrayList<TypeNode>(methodTypeMap.values());
-	// }
-
 	public HashMap<String,STentry> getFieldEntriesMap() {
 		return fieldEntries;
 	}

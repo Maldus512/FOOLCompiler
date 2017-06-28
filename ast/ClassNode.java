@@ -207,28 +207,18 @@ public class ClassNode implements Node {
 
 	public TypeNode typeCheck(Environment env) {
 		if (superClassId != null) {
-<<<<<<< HEAD
-		HashMap<String,STentry> hm = env.getST().get(0);
-      	
-      	ClassTypeNode superType = (ClassTypeNode)( (hm.get( superClassId )).getType() );
 
-      	if ( !FOOLlib.isSubtype(type, superType) ) {
-      		System.out.println("Error: " + id + " is not a subclass of " + superType.getId());
-      	}
-      }
-      	return type;
-=======
-			HashMap<String, STentry> hm = env.getST().get(0);
-			STentry superClassEntry = hm.get(superClassId);
+			HashMap<String,STentry> hm = env.getST().get(0);
 
-			ClassNode superNode = superClassEntry.getClassNode();
-			if (!FOOLlib.isSubtype(classType, superNode.getClassType())) {
-				System.out.println("Error: " + id + " is not a subclass of " + superNode.getId());
+			ClassTypeNode superType = (ClassTypeNode)( (hm.get( superClassId )).getType() );
+
+			if ( !FOOLlib.isSubtype(type, superType) ) {
+				System.out.println("Error: " + id + " is not a subclass of " + superType.getId());
 				return new BottomTypeNode();
 			}
 		}
-		return classType;
->>>>>>> a6f9d2c5f8a674e0598deac24f799d24430e8091
+
+		return type;
 	}
 
 	public String codeGeneration() {

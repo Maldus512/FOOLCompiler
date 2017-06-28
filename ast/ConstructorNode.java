@@ -95,21 +95,21 @@ public class ConstructorNode implements Node {
 
 			HashMap<String,TypeNode> p = t.getFieldTypeMap();
 			
-			// System.out.println("parametri dichiarati = "+ p.keySet() + " paramatri ricevuti = " + parList.size());
+			System.out.println("parametri dichiarati = "+ p.keySet() + " paramatri ricevuti = " + parList.size());
 
 			if ( !(p.keySet().size() == parList.size()) ) {
 				System.out.println("Wrong number of parameters in the invocation of the constructor "+classId);
-				// System.exit(0);
+				System.exit(0);
 			}
 			
 			for (int i=0; i<parList.size(); i++) {
-				// System.out.println("il parametro analizzato è "+i);
-				// System.out.println("il tipo aspettato è  "+(parList.get(i)).typeCheck(env));
-				// System.out.println("il tipo ricevuto è  "+(p.get(i)) );
+				System.out.println("il parametro analizzato è "+i);
+				System.out.println("il tipo aspettato è  "+(parList.get(i)).typeCheck(env));
+				System.out.println("il tipo ricevuto è  "+(p.get(i)) );
 
 				if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) { //TO DO : ADATTARE CON IL VALORE DELLA HM, COSÌ NON LO POSSO FARE
 					System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+classId);
-					// System.exit(0);
+					System.exit(0);
 				}
 			}
 
