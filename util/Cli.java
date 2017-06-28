@@ -15,7 +15,7 @@ public class Cli {
 
     public void parse(String[] args) {
         options = new Options();
-        options.addOption("h", "help", false, "show help.");
+        options.addOption("h", "help", false, "show this help menu.");
         options.addOption("c", "check", false, "only perform semantic and type check");
         options.addOption("d", "debug", false, "verbose output (parse tree)");
         options.addOption("v", "version", false, "compiler version");
