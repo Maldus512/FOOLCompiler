@@ -38,7 +38,7 @@ clean:
 	$(MAKE) clean -C parser
 
 run: classes
-	 java -classpath $(CP) Fcc -f $(f) -d
+	 java -classpath $(CP) Fcc -f $(f)
 #run: classes
 #	java Test $(f)
 
