@@ -12,15 +12,15 @@ Start the compiler with
 
 It is possibile to specify the following parameters:
 
-- `-c`, `--check`             only perform semantic and type check
+- `-c`, `--check` : only perform semantic and type check
 
-- `-d`, `--debug`             verbose output (parse tree)
+- `-d`, `--debug` : verbose output (parse tree)
 
-- `-f`, `--input-file <arg>`  input file to be compilated
+- `-f`, `--input-file <arg>` : input file to be compilated
 
-- `-h`, `--help`              show this help menu
+- `-h`, `--help` : show this help menu
 
-- `-v`, `--version`            compiler version
+- `-v`, `--version` : compiler version
 
 ### Cleaning the project
 `$ make clean`
