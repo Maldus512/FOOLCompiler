@@ -76,22 +76,18 @@ public class ProgClassNode implements Node {
 		return res;
 	}
 
-<<<<<<< HEAD
-	public Node typeCheck(Environment env) {
+	@Override
+	public TypeNode typeCheck(Environment env) {
 		for (Node d:decList)
 			d.typeCheck(env);
 
-
-		for (Node c:classList)
-=======
-	public TypeNode typeCheck(Environment env) {
 		for (ClassNode c:classList)
->>>>>>> 06bf71b764bedfbd4d733a68ffedda435e540b03
 			c.typeCheck(env);
 
 		return exp.typeCheck(env);
 	}
 
+	@Override
 	public String codeGeneration() {
 		String classes = "";
 		String declCode="";

@@ -38,7 +38,7 @@ clean:
 	$(MAKE) clean -C parser
 
 run: classes
-	 java -classpath "./lib/commons-cli.jar:$(CLASSPATH)" Fcc -f $(f)
+	 java -classpath $(CP) Fcc -f $(f)
 #run: classes
 #	java Test $(f)
 
