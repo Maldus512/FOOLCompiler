@@ -85,13 +85,8 @@ public class VarNode implements Node {
 		// TODO: bisogna controllare che il tipo dichiarato per la variabile sia lo stesso utilizzato per l'istanziazione dell'oggetto, o che sia un suo sottotipo.
 		// l'id della classe istanziata lo si può ottenere con:
 		// String newType = ((NewNode)exp).getClassId();
-<<<<<<< HEAD
 		TypeNode res = exp.typeCheck(env);
 		if (! (FOOLlib.isSubtype(res,type)) ) {
-=======
-		
-		if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ) {
->>>>>>> 64d7eb26896849c4c9fcf89bfb1c7805c52fd32e
 			System.out.println("incompatible value for variable "+id);
 			return new BottomTypeNode();
 		} else {

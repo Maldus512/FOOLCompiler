@@ -174,13 +174,8 @@ public class MethodNode implements Node {
 		}
 		
 		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
-<<<<<<< HEAD
 			System.out.println("Wrong return type for function " + id);
 			return new BottomTypeNode();
-=======
-			System.out.println("Wrong return type for method " + id);
-			System.exit(0);
->>>>>>> 64d7eb26896849c4c9fcf89bfb1c7805c52fd32e
 		}
 		return new VoidTypeNode();
 	}
