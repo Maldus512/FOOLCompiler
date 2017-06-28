@@ -207,6 +207,7 @@ public class ClassNode implements Node {
 
 	public TypeNode typeCheck(Environment env) {
 		if (superClassId != null) {
+<<<<<<< HEAD
 		HashMap<String,STentry> hm = env.getST().get(0);
       	
       	ClassTypeNode superType = (ClassTypeNode)( (hm.get( superClassId )).getType() );
@@ -216,6 +217,18 @@ public class ClassNode implements Node {
       	}
       }
       	return type;
+=======
+			HashMap<String, STentry> hm = env.getST().get(0);
+			STentry superClassEntry = hm.get(superClassId);
+
+			ClassNode superNode = superClassEntry.getClassNode();
+			if (!FOOLlib.isSubtype(classType, superNode.getClassType())) {
+				System.out.println("Error: " + id + " is not a subclass of " + superNode.getId());
+				return new BottomTypeNode();
+			}
+		}
+		return classType;
+>>>>>>> a6f9d2c5f8a674e0598deac24f799d24430e8091
 	}
 
 	public String codeGeneration() {

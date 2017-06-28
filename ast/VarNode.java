@@ -76,9 +76,10 @@ public class VarNode implements Node {
 
 		if (! (FOOLlib.isSubtype(exp.typeCheck(env),type)) ) {
 			System.out.println("incompatible value for variable "+id);
-			System.exit(0);
+			return new BottomTypeNode();
 		}
-		return null;
+
+		return res;
 	}
 
 	public String codeGeneration() {

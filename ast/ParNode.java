@@ -40,7 +40,7 @@ public class ParNode implements Node {
 
 	//non utilizzato
 	public TypeNode typeCheck(Environment env) {
-		return null;
+		return new VoidTypeNode();
 	}
 
 	//non utilizzato

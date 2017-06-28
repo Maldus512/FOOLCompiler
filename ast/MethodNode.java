@@ -138,15 +138,19 @@ public class MethodNode implements Node {
 
 	//valore di ritorno non utilizzato
 	public TypeNode typeCheck(Environment env) {
-		if (decList!=null) 
-			for (Node dec:decList)
-				dec.typeCheck(env);
+		if (decList!=null) {
+			for (Node dec:decList) {
+				if (dec.typeCheck(env) instanceof BottomTypeNode) {
+					return new BottomTypeNode();
+				}
+			}
+		}
 		
 		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
-			System.out.println("Wrong return type for method " + id);
-			System.exit(0);
+			System.out.println("Wrong return type for function " + id);
+			return new BottomTypeNode();
 		}
-		return null;
+		return new VoidTypeNode();
 	}
 
 	public String codeGeneration() {

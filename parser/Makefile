@@ -1,8 +1,9 @@
 JFLAGS = -g
-JC = javac
+CP = -cp ../lib/antlr-4.7-complete.jar
+JC = javac $(CP)
 
 ifndef ANTLR
-ANTLR = java -Xmx500M org.antlr.v4.Tool
+ANTLR = java $(CP) -Xmx500M org.antlr.v4.Tool
 endif
 
 

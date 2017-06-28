@@ -64,21 +64,25 @@ public class CallNode implements Node {
 
     public TypeNode typeCheck(Environment env) {  //                           
         ArrowTypeNode t=null;
-        if (entry.getType() instanceof ArrowTypeNode) t=(ArrowTypeNode) entry.getType(); 
-        else {
+        if (entry.getType() instanceof ArrowTypeNode) {
+            t=(ArrowTypeNode) entry.getType(); 
+        } else {
             System.out.println("Invocation of a non-function "+id);
-            System.exit(0);
+            return new BottomTypeNode();
         }
+
         ArrayList<TypeNode> p = t.getParList();
         if ( !(p.size() == parList.size()) ) {
             System.out.println("Wrong number of parameters in the invocation of "+id);
-            System.exit(0);
+            return new BottomTypeNode();
         } 
-        for (int i=0; i<parList.size(); i++) 
+
+        for (int i=0; i<parList.size(); i++)  {
             if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
                 System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
-                System.exit(0);
+                return new BottomTypeNode();
             } 
+        }
         return t.getRet();
     }
 
