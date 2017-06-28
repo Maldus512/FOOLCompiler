@@ -1,12 +1,12 @@
 JFLAGS = -g
 DIR := ${CURDIR}
-CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(CLASSPATH)'
+CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(DIR)/lib/antlr-4.7-complete.jar:$(CLASSPATH)'
 JC = javac -g -classpath $(CP)
 JAVA = java -classpath $(CP)
 #JC = javac
 
 ifndef GRUN
-GRUN = java org.antlr.v4.gui.TestRig
+GRUN = java -cp ./lib/antlr-4.7-complete.jar org.antlr.v4.gui.TestRig
 endif
 
 
