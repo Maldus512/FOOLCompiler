@@ -1,6 +1,8 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import util.STentry;
 
 import util.Environment;
 import util.SemanticError;
@@ -26,7 +28,38 @@ public class FieldNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		return new ArrayList<SemanticError>();
+		return checkSemantics(env, 0);
+	}
+
+	public ArrayList<SemanticError> checkSemantics(Environment env, int offset) {
+
+		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
+
+		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		STentry entry = new STentry(env.getNestLevel(), offset);
+
+		if (type instanceof ClassTypeNode) {
+			String classId = ((ClassTypeNode)type).getId();
+			ClassTypeNode fullClassType = env.classEnvGet(classId);
+			
+			if (fullClassType == null) {
+				res.add( new SemanticError("Class " + classId + " has not been defined."));
+				return res;
+			}
+			type = fullClassType;
+			
+		}
+		entry.setType(type);
+
+		STentry prevEntry = hm.put( id, entry );
+		if ( prevEntry != null) {
+			// if we are here, we are overriding a field, thus we must update its offset accordingly
+			entry.setOffset( prevEntry.getOffset() );
+		}
+
+		hm.put( id, entry );
+
+		return res;
 	}
 
 	public String toPrint(String s) {

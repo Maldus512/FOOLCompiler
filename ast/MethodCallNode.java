@@ -53,45 +53,24 @@ public class MethodCallNode implements Node {
 			return res;
 		}
 
-		// // DEBUG
-		// HashMap<String,STentry> level_zero = env.getST().get(0);
-		// System.out.println();
-		// for (String s : level_zero.keySet()) {
-			
-		// 	STentry e = level_zero.get(s);
-		// 	System.out.println( "Key: " + s + ", Type: " + e.getType() + ", NestLevel: " + e.getNestLevel() + ", Offset: " + e.getOffset() );
-
-		// 	if (e.getClassNode() instanceof ClassNode) {
-		// 		for (Node n : e.getClassNode().getMethodList()) {
-		// 			MethodNode m = (MethodNode)n;
-
-		// 			System.out.println("\tClass: " + e.getClassNode().getId() + ", Id: " + m.getId() + ", NestLevel: " + m.getEntry().getNestLevel() + ", Offset: " + m.getEntry().getOffset() + ", ParList: " + ((ArrowTypeNode)(m.getEntry().getType())).getParList().size() );
-		// 		}
-		// 	}
-
-		// }
-		// System.out.println();
-
-
-		// get actual instance of the object calling the method
+		if(! (varTmp.getType() instanceof ClassTypeNode)){
+			res.add( new SemanticError("Var id '" + varId + "' is not an object.") );
+			return res;
+		}
+		
 		String ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
 
 		// seek for method definition
-		HashMap<String,STentry> level_zero = env.getST().get(0);
+		ClassTypeNode classType = env.classEnvGet(ownerClass); 
 
-		for (STentry e : level_zero.values()) {
-			
-			if ( e.getType() instanceof ClassTypeNode && ((ClassTypeNode)(e.getType())).getId().equals(ownerClass) ) {
 
-				HashMap<String,STentry> methodEntries = ((ClassTypeNode)(e.getType())).getMethodEntriesMap();
+		HashMap<String,STentry> methodEntries = classType.getMethodEntriesMap();
 
-				for (String key : methodEntries.keySet()) {
-					if (key.equals(id)) {
-						methodTmp = methodEntries.get(key);
-						break;
-					}
-				}
-			}
+		for (String key : methodEntries.keySet()) {
+			if (key.equals(id)) {
+				methodTmp = methodEntries.get(key);
+				break;
+			}				
 		}
 
 		if (methodTmp == null) {

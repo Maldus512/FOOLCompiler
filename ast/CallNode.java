@@ -9,10 +9,10 @@ import ast.types.*;
 
 public class CallNode implements Node {
 
-	private String id;
-	private STentry entry; 
-	private ArrayList<Node> parList;
-	private int nestingLevel;
+	protected String id;
+	protected STentry entry; 
+	protected ArrayList<Node> parList;
+	protected int nestingLevel;
 
 
 	public CallNode (String i, STentry e, ArrayList<Node> p, int nl) {

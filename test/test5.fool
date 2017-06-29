@@ -2,7 +2,7 @@ class SUPERCLASS (bool x, int y) {
     int main() print(x);
     bool maina(bool tita) print (y);
 }
-class SUBCLASS implements SUPERCLASS (int b, bool a) {
+class SUBCLASS implements SUPERCLASS (int b, bool a, bool b) {
     int maind() print(a);
     int mainb() print(y);
     int main(int cella) print(cella);

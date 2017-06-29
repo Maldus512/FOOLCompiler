@@ -52,8 +52,10 @@ public class ProgClassNode implements Node {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		// check semantics for every class declaration
-		for(ClassNode n:classList)
-			res.addAll(n.checkSemantics(env));
+		for(ClassNode n:classList){
+			res.addAll(n.checkSemantics(env));	
+			env.incClassOffset();
+		}
 
 		// if there are lets
 		if (decList.size() > 0) {

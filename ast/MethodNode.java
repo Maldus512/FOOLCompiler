@@ -13,8 +13,6 @@ public class MethodNode implements Node {
 
 	private String id;
 	private TypeNode type; 
-	private STentry methodEntry;
-	// private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList;
 	private ArrayList<Node> decList;
 	private Node body;
@@ -37,9 +35,6 @@ public class MethodNode implements Node {
 	public String getId() { return id; }
 
 	public TypeNode getType() { return type; }
-
-	// public ArrowTypeNode getArrowType() { return arrowType; }
-	public STentry getEntry() { return methodEntry; }
 
 	public ArrayList<Node> getParList() { return parList; }
 
@@ -71,7 +66,6 @@ public class MethodNode implements Node {
 		if ( prevEntry != null ) {
 			// if we are here we are overriding a method, thus we must update offsets accordingly
 			entry.setOffset( prevEntry.getOffset() );
-			// curMethodOffset--;
 		}
 
 		env.incNestLevel();
@@ -95,7 +89,6 @@ public class MethodNode implements Node {
 		//set method type
 		entry.setType( new ArrowTypeNode(parTypes, type) );
 
-		methodEntry = entry;
 		hm.put( id, entry );
 
 		//check semantics in the dec list

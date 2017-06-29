@@ -2,27 +2,37 @@ package util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import ast.types.ClassTypeNode;
 
 public class Environment {
 
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<HashMap<String,STentry>>();
+	private HashMap<String,ClassTypeNode> classEnv = new HashMap<String,ClassTypeNode>();
 	private int nestingLevel;
 	private int offset;
-	private int staticOffset;	// offset for classes
+	private int classOffset;	// offset for classes
 
 	public Environment() {
 		nestingLevel = -1;
 		offset = 0;
-		staticOffset = 0;
+		classOffset = 0;
 	}
 
 	public ArrayList<HashMap<String,STentry>> getST() {
 		return symTable;
 	}
 
+
 	public int getNestLevel() {
 		return nestingLevel;
+	}
+
+	public ClassTypeNode classEnvGet(String key){
+		return classEnv.get(key);
+	}
+
+	public ClassTypeNode classEnvPut(String key, ClassTypeNode value){
+		return classEnv.put(key,value);
 	}
 
 	public int incNestLevel() {
@@ -49,20 +59,20 @@ public class Environment {
 		offset = n;
 	}
 
-	public int getStaticOffset() {
-		return staticOffset;
+	public int getClassOffset() {
+		return classOffset;
 	}
 
-	public int incStaticOffset() {
-		return staticOffset++;
+	public int incClassOffset() {
+		return classOffset++;
 	}
 
-	public int decStaticOffset() {
-		return staticOffset--;
+	public int decClassOffset() {
+		return classOffset--;
 	}
 
-	public void setStaticOffset(int n) {
-		staticOffset = n;
+	public void setClassOffset(int n) {
+		classOffset = n;
 	}
 
 	//livello ambiente con dichiarazioni piu' esterno � 0 (prima posizione ArrayList) invece che 1 (slides)

@@ -8,3 +8,4 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - Aggiungere il jar di antlr alla cartella lib, che sicuro LaNeve non ce l'ha installato a riga di comando
 - Rivedere la funzione toPrint (Certe cose non mi sono molto chiare nella stampa)
 - Aggiungere il tipo void alla sintassi
+- FieldNode e ParNode potrebbero essere sottoclassi

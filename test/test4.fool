@@ -1,4 +1,5 @@
 class testClass (int x, int y) {
     int main() print(2);
 };
-testClass.main();
+let testClass test = new testClass(1,2); in test.main();
+

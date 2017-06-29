@@ -41,12 +41,17 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitNewExp(NewExpContext ctx) {
-		ConstructorNode n = new ConstructorNode(ctx.ID().getText());
 
-		for (ExpContext par : ctx.exp())
-			n.addPar( visit(par) );
+		ConstructorNode res;
 
-		return n;
+		ArrayList<Node> args = new ArrayList<Node>();
+
+		for(ExpContext exp : ctx.exp())
+			args.add(visit(exp));
+
+		res = new ConstructorNode(ctx.ID().getText(), args);
+
+		return res;
 	}
 
 	@Override
