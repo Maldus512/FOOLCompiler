@@ -53,7 +53,7 @@ public class ClassNode implements Node {
 	public void addField (Node f) { fieldList.add(f); }
 
 	public void addMethod (FunNode f) {
-		MethodNode m = new MethodNode(f.getId(), f.getType(), f.getParList(), f.getDecList(), f.getBody());
+		MethodNode m = new MethodNode(f.getId(), f.getType(), id, f.getParList(), f.getDecList(), f.getBody());
 		methodList.add(m);
 	}
 
