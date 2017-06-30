@@ -1,1 +1,0 @@
-let int foo(bool i) i; in foo(1);

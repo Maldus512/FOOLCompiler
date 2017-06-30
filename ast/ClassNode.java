@@ -59,25 +59,27 @@ public class ClassNode implements Node {
 
 	public void setSuperClass(String id) { superClassId = id; }
 
-	public ClassTypeNode getType() { return type; }
+	public ArrayList<Node> getMethodList() {
+		return methodList;
+	}
 
-	public ArrayList<Node> getMethodList() { return methodList; }
+	public ClassTypeNode getType() { return type; }
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 		
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
-		
+		HashMap<Integer, Node> methodsByOffset = new HashMap<Integer, Node>();
+
 		env.incNestLevel();	// nestingLevel is now 1
 
 		// check if the class has already been declared
-		if ( env.classEnvPut( id, null ) != null ) {
+		if ( env.classTypeEnvPut( id, null ) != null ) {
 			res.add( new SemanticError("Class name '" + id + "' has already been used.") );
 			env.getST().remove(env.decNestLevel());
 			return res;
 		}
 
-		
 
 		// create a new hashmap for fields and methods and add it to the symbol table
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
@@ -86,20 +88,24 @@ public class ClassNode implements Node {
 		HashMap<String,STentry> fieldEntries = new HashMap<String,STentry>();
 		HashMap<String,STentry> methodEntries = new HashMap<String,STentry>();
 
-		int fieldOffset = 0;	// offset for class's fields
-		int methodOffset = 0;	// offset for class's methods
+		int fieldOffset = 0;	// offset for class' fields
+		int methodOffset = 0;	// offset for class' methods
 
+		// check if super class has been declared
 		if (superClassId != null) {
-			// check if super class has been declared
-			ClassTypeNode superClass = env.classEnvGet( superClassId );
+			// If we are a subclass we need to fill fieldList and methodList with the superclass' fields and methods
+			ClassTypeNode superClassType = env.classTypeEnvGet( superClassId );
+			//TODO: cambiare lo 0, non e' elegante
+			ClassNode superClass = env.classEnvGet(superClassId);
+			
 
-			if (superClass == null) {
+			if (superClassType == null) {
 				res.add( new SemanticError("Superclass '" + superClassId + "' for class '" + id + "' has not been declared."));
 				env.getST().remove(env.decNestLevel());
 				return res;
 			}
 
-			HashMap<String,STentry> fieldEntryMap = superClass.getFieldEntriesMap();
+			HashMap<String,STentry> fieldEntryMap = superClassType.getFieldEntriesMap();
 
 			// add to the subclass's symbol table every field of its superclass
 			for ( String key : fieldEntryMap.keySet() ) {
@@ -112,26 +118,29 @@ public class ClassNode implements Node {
 				fieldEntries.put ( key, fieldEntry );
 			}
 
+			if (superClass != null && superClassType != null) {
+				HashMap<String,STentry> methodEntriesMap = superClassType.getMethodEntriesMap();
 
-			HashMap<String,STentry> methodEntriesMap = superClass.getMethodEntriesMap();
+				// add to the subclass's symbol table every method of its superclass
+				for( String key : methodEntriesMap.keySet() ) {
+					// MethodNode f = (MethodNode) n;
 
-			// add to the subclass's symbol table every method of its superclass
-			for( String key : methodEntriesMap.keySet() ) {
-				// MethodNode f = (MethodNode) n;
+					// res.addAll( f.checkSemantics(env, methodOffset++, this) );
 
-				// res.addAll( f.checkSemantics(env, methodOffset++, this) );
-
-				hmn.put( key, methodEntriesMap.get(key) );
-				methodEntries.put( key, methodEntriesMap.get(key) );
-				methodOffset++;
+					hmn.put( key, methodEntriesMap.get(key) );
+					methodEntries.put( key, methodEntriesMap.get(key) );
+				}
+			
+				for (Node m : superClass.getMethodList()) {
+					methodsByOffset.put(methodOffset, m);
+					methodOffset++;
+				}
 			}
-
 		}
 
 
-		
-		// Overriding of fields is handled by using a temporary hash table where to insert already declared fields, only for the subclass: if a double entry is found then the field has already been defined for that class.
-
+		// Overriding of fields is handled by using a temporary hash table where to insert already declared fields,
+		// only for the subclass: if a double entry is found then the field has already been defined for that class.
 		// check fields
 		HashMap<String,STentry> temp = new HashMap<String,STentry>();
 
@@ -155,11 +164,12 @@ public class ClassNode implements Node {
 				fieldOffset--;
 		}
 
-		TypeNode[] orderedFields = new TypeNode[fieldEntries.size()];
+		TypeNode[] orderedFieldTypes = new TypeNode[fieldEntries.size()];
 
 		for (String key : fieldEntries.keySet()){
-			orderedFields[fieldEntries.get(key).getOffset()] = fieldEntries.get(key).getType();
+			orderedFieldTypes[fieldEntries.get(key).getOffset()] = fieldEntries.get(key).getType();
 		}
+
 
 		// Overriding of methods is handled in the same way as for fields.
 		
@@ -176,7 +186,8 @@ public class ClassNode implements Node {
 				return res;
 			}
 			
-			res.addAll( f.checkSemantics(env, methodOffset++) );
+			res.addAll( f.checkSemantics(env, methodOffset) );
+			methodsByOffset.put(methodOffset++, n);
 
 			methodEntries.put( f.getId(), hmn.get(f.getId()) );
 
@@ -185,14 +196,23 @@ public class ClassNode implements Node {
 				methodOffset--;
 		}
 
+		Node[] orderedMethods = new Node[methodsByOffset.size()];
+
+		for (Integer key : methodsByOffset.keySet()){
+			orderedMethods[key] = methodsByOffset.get(key);
+		}
+
+		//Replace previous lists with ordered ones
+		methodList = new ArrayList<Node>(Arrays.asList(orderedMethods));
 
 		type = new ClassTypeNode(id, fieldEntries, methodEntries);
-		env.classEnvPut( id, type );
+		env.classTypeEnvPut( id, type );
+		env.classEnvPut(id, this);
 
 		env.getST().remove(env.decNestLevel());
 
 		ArrowTypeNode constructor = 
-			new ArrowTypeNode(new ArrayList<TypeNode>(Arrays.asList(orderedFields)), type );
+			new ArrowTypeNode(new ArrayList<TypeNode>(Arrays.asList(orderedFieldTypes)), type );
 
 		//Nesting level should ALWAYS be 0 here. We refer to it as env.getNestLevel()
 		//for coherence purposes.
@@ -205,7 +225,7 @@ public class ClassNode implements Node {
 	public TypeNode typeCheck(Environment env) {
 		if (superClassId != null) {
 
-			ClassTypeNode superType = env.classEnvGet(superClassId);
+			ClassTypeNode superType = env.classTypeEnvGet(superClassId);
 
 			if ( !FOOLlib.isSubtype(type, superType) ) {
 				System.out.println("Error: " + id + " is not a subclass of " + superType.getId());

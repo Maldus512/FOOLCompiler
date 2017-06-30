@@ -9,3 +9,4 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - Rivedere la funzione toPrint (Certe cose non mi sono molto chiare nella stampa)
 - Aggiungere il tipo void alla sintassi
 - FieldNode e ParNode potrebbero essere sottoclassi
+- Rendere fool un interprete a riga di comando (come python)

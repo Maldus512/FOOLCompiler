@@ -2,9 +2,7 @@ JFLAGS = -g
 CP = -cp ../lib/antlr-4.7-complete.jar
 JC = javac $(CP)
 
-ifndef ANTLR
-ANTLR = java $(CP) -Xmx500M org.antlr.v4.Tool
-endif
+ANTLR = java $(CP) -Xmx500M org.antlr.v4.Tool 
 
 
 GEN = {}Lexer.java {}Parser.java {}Visitor.java {}BaseVisitor.java

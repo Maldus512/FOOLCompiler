@@ -62,7 +62,7 @@ public class MethodCallNode implements Node {
 		ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
 
 		// seek for method definition
-		ClassTypeNode classType = env.classEnvGet(ownerClass); 
+		ClassTypeNode classType = env.classTypeEnvGet(ownerClass); 
 
 
 		HashMap<String,STentry> methodEntries = classType.getMethodEntriesMap();

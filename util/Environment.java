@@ -2,12 +2,14 @@ package util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import ast.ClassNode;
 import ast.types.ClassTypeNode;
 
 public class Environment {
 
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<HashMap<String,STentry>>();
-	private HashMap<String,ClassTypeNode> classEnv = new HashMap<String,ClassTypeNode>();
+	private HashMap<String,ClassTypeNode> classTypeEnv = new HashMap<String,ClassTypeNode>();
+	private HashMap<String,ClassNode> classEnv = new HashMap<String,ClassNode>();
 	private int nestingLevel;
 	private int offset;
 	private int classOffset;	// offset for classes
@@ -27,13 +29,23 @@ public class Environment {
 		return nestingLevel;
 	}
 
-	public ClassTypeNode classEnvGet(String key){
+	public ClassTypeNode classTypeEnvGet(String key){
+		return classTypeEnv.get(key);
+	}
+
+	public ClassTypeNode classTypeEnvPut(String key, ClassTypeNode value){
+		return classTypeEnv.put(key,value);
+	}
+
+	public ClassNode classEnvGet(String key){
 		return classEnv.get(key);
 	}
 
-	public ClassTypeNode classEnvPut(String key, ClassTypeNode value){
+	public ClassNode classEnvPut(String key, ClassNode value){
 		return classEnv.put(key,value);
 	}
+
+
 
 	public int incNestLevel() {
 		return nestingLevel++;

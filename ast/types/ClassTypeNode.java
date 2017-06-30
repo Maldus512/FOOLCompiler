@@ -34,7 +34,7 @@ public class ClassTypeNode extends TypeNode {
 		HashMap<String,TypeNode> fieldTypeMap = new HashMap<String,TypeNode>();
 
 		for (String key : fieldEntries.keySet())
-			fieldTypeMap.put( key, ((STentry)(fieldEntries.get(key))).getType() );
+			fieldTypeMap.put( key, fieldEntries.get(key).getType() );
 
 		return fieldTypeMap;
 	}
@@ -43,7 +43,7 @@ public class ClassTypeNode extends TypeNode {
 		HashMap<String,ArrowTypeNode> methodTypeMap = new HashMap<String,ArrowTypeNode>();
 
 		for (String key : methodEntries.keySet())
-			methodTypeMap.put( key, (ArrowTypeNode)(((STentry)(methodEntries.get(key))).getType()) );
+			methodTypeMap.put( key, (ArrowTypeNode)methodEntries.get(key).getType() );
 
 		return methodTypeMap;
 	}
@@ -54,10 +54,10 @@ public class ClassTypeNode extends TypeNode {
 				methodstr = "";
 
 		for (String key : fieldEntries.keySet())
-			fieldstr += ((TypeNode)(fieldEntries.get(key).getType())).toPrint(s + "  ");
+			fieldstr += fieldEntries.get(key).getType().toPrint(s + "  ");
 
 		for (String key : methodEntries.keySet())
-			methodstr += ((TypeNode)(methodEntries.get(key).getType())).toPrint(s + "  ");
+			methodstr += methodEntries.get(key).getType().toPrint(s + "  ");
 
 		return s + "ClassType\n"
 				+ fieldstr

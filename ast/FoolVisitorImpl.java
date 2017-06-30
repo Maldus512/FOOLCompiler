@@ -130,7 +130,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	public Node visitSingleExp(SingleExpContext ctx) {
 
 		//simply return the result of the visit to the inner exp
-		return visit(ctx.exp());
+		return new ProgNode(visit(ctx.exp()));
 
 	}
 

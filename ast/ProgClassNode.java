@@ -44,6 +44,7 @@ public class ProgClassNode implements Node {
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
 		env.incNestLevel();	// nestingLevel is now 0
+		env.setClassOffset(0);
 
 		// create a new hashmap and add it to the symbol table
 		HashMap<String,STentry> hm = new HashMap<String,STentry> ();
@@ -102,7 +103,7 @@ public class ProgClassNode implements Node {
 		for (Node dec:decList)
 			declCode+=dec.codeGeneration();
 		for (ClassNode c : classList) {
-			classes += c.codeGeneration();
+			classes += "#CLASS\n" + c.codeGeneration();
 		}
 		return "push 0\n" 
 			+ "# .DATA\n"

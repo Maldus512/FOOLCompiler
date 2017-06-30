@@ -42,7 +42,7 @@ public class ConstructorNode extends CallNode {
 		
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 		
-		if( env.classEnvGet(id) == null ){
+		if( env.classTypeEnvGet(id) == null ){
 			res.add( new SemanticError("Class " + id + " has not been defined.") );
 			return res;
 		}
