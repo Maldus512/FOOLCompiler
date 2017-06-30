@@ -75,6 +75,9 @@ public class FOOLlib {
       } 
       return ( isSubtype(((ArrowTypeNode)a).getRet(), ((ArrowTypeNode)b).getRet() ));
     }
+    else if ( a instanceof BottomTypeNode ){
+      return true;
+    }
     else{
       return false;
     }

@@ -14,7 +14,9 @@ public class ConstructorNode extends CallNode {
 	public ConstructorNode (String i, ArrayList<Node> p) {
 		super(i,p);
 	}
-
+	public ConstructorNode (String i, STentry e, ArrayList<Node> p, int nl) {
+		super(i,e,p,nl);
+	}
 	public String getId() {
 		return id;
 	}

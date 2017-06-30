@@ -16,6 +16,7 @@ public class MethodCallNode implements Node {
 	private ArrayList<Node> parList;
 	private int nestLevel;
 	private String varId;
+	private String ownerClass;
 
 	public MethodCallNode(String text, ArrayList<Node> args, String sn) {
 		id = text;
@@ -58,7 +59,7 @@ public class MethodCallNode implements Node {
 			return res;
 		}
 		
-		String ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
+		ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
 
 		// seek for method definition
 		ClassTypeNode classType = env.classEnvGet(ownerClass); 
@@ -88,6 +89,7 @@ public class MethodCallNode implements Node {
 	}
 
 	public TypeNode typeCheck(Environment env) {
+		
 		ArrowTypeNode t=null;
 		if (methodEntry.getType() instanceof ArrowTypeNode) {
 			t = (ArrowTypeNode)methodEntry.getType(); 
@@ -97,12 +99,12 @@ public class MethodCallNode implements Node {
 		}
 		ArrayList<TypeNode> p = t.getParList();
 		if ( !(p.size() == parList.size()) ) {
-			System.out.println("Wrong number of parameters in the invocation of "+id);
+			System.out.println("Wrong number of parameters in the invocation of "+id + " method of class " + ownerClass);
 			return new BottomTypeNode();
 		} 
 		for (int i=0; i<parList.size(); i++)
 			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id + " method of class " + ownerClass);
 				return new BottomTypeNode();
 			} 
 		return t.getRet();
