@@ -1,0 +1,2 @@
+#! /bin/bash
+java -cp '.:./lib/commons-cli.jar:./lib/antlr-4.7-complete.jar:$(CLASSPATH)' Fool $@

@@ -27,9 +27,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-public class Fcc {
+public class Fool {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		Cli commandArgs = new Cli();
 
@@ -41,79 +41,24 @@ public class Fcc {
 			System.exit(0);
 		}
 
-		FileInputStream is = null;
+        FileInputStream isASM = new FileInputStream(fileName);
+        CharStream inputASM = CharStreams.fromStream(isASM);
+        SVMLexer lexerASM = new SVMLexer(inputASM);
+        CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
+        SVMParser parserASM = new SVMParser(tokensASM);
 
-		try {
-			is = new FileInputStream(fileName);
-		} catch (FileNotFoundException e) {
-			System.out.println("\nERROR. No file found with the given name.\n");
-			System.exit(2);
-		}
+        parserASM.assembly();
 
-		CharStream input = null;
-		try {
-			input = CharStreams.fromStream(is);
-		} catch (IOException e) {
-			System.out.println(e.toString());
-			System.exit(2);
-		}
-		FOOLLexer lexer = new FOOLLexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
+        System.out.println("You had: "+lexerASM.lexicalErrors+" lexical error(s) and "+parserASM.getNumberOfSyntaxErrors()+" syntax error(s).");
+        if (lexerASM.lexicalErrors>0 || parserASM.getNumberOfSyntaxErrors()>0) System.exit(1);
 
-		SyntaxErrorListener errorListener = new SyntaxErrorListener();
-		FOOLParser parser = new FOOLParser(tokens);
-		parser.removeErrorListeners();
-		parser.addErrorListener(errorListener);
-
-		FoolVisitorImpl visitor = new FoolVisitorImpl();
-
-		Node ast = visitor.visit(parser.prog()); //generazione AST 
-		if (errorListener.errors > 0) {
-			System.out.println("The program was not in the right format. Exiting the compilation process now");
-			System.exit(1);
-		}
-
-		Environment env = new Environment();
-		ArrayList<SemanticError> err = ast.checkSemantics(env);
-
-		if (err.size() > 0) {
-			System.out.println("You had: " + err.size() + " error(s):");
-			for (SemanticError e : err)
-				System.out.println("\t" + e);
-
-			System.exit(1);
-		}
-
-		if (commandArgs.verbose) {
-			System.out.println("Visualizing AST...");
-			System.out.println(ast.toPrint(""));
-		}
-
-		Node type = ast.typeCheck(env); //type-checking bottom-up 
-
-		if (commandArgs.verbose) {
-			System.out.println(type.toPrint("Type of the program is: "));
-		}
-
-		if (commandArgs.codeGen) {
-
-			try {
-				// CODE GENERATION  prova.fool.asm
-				String code = ast.codeGeneration();
-				BufferedWriter out = new BufferedWriter(new FileWriter(fileName + ".asm"));
-				out.write(code);
-				out.close();
-			} catch (IOException e) {
-				System.out.println(e.toString());
-				System.exit(2);
-			}
-			System.out.println("Code generated!");
-		}
+        System.out.println("Starting Virtual Machine...");
+        ExecuteVM vm = new ExecuteVM(parserASM.code);
+        vm.cpu();
 		System.exit(0);
 	}
 
 	public static class Cli {
-		public boolean codeGen = true;
 		public String inputFile = null;
 		public boolean verbose = false;
 		private Options options;
@@ -121,7 +66,6 @@ public class Fcc {
 		public void parse(String[] args) {
 			options = new Options();
 			options.addOption("h", "help", false, "show this help menu.");
-			options.addOption("c", "check", false, "only perform semantic and type check");
 			options.addOption("d", "debug", false, "verbose output (parse tree)");
 			options.addOption("v", "version", false, "compiler version");
 			options.addOption("f", "input-file", true, "input file to be compilated");
@@ -134,11 +78,6 @@ public class Fcc {
 
 				if (cmd.hasOption("h")) {
 					help();
-					option = true;
-				}
-
-				if (cmd.hasOption("c")) {
-					codeGen = false;
 					option = true;
 				}
 

@@ -1,17 +1,15 @@
 JFLAGS = -g
 DIR := ${CURDIR}
-CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(DIR)/lib/antlr-4.7-complete.jar:$(CLASSPATH)'
+CP = '$(DIR):$(DIR)/lib/commons-cli.jar:$(DIR)/lib/antlr-4.7-complete.jar:'
 JC = javac -g -classpath $(CP)
 JAVA = java -classpath $(CP)
 #JC = javac
 
-ifndef GRUN
 GRUN = java -cp ./lib/antlr-4.7-complete.jar org.antlr.v4.gui.TestRig
-endif
 
 
 # CLASSES = Fcc.java Test.java
-SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Test.java
+SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard test/*.java) $(wildcard util/*.java) Fcc.java Fool.java
 CLASSES = $(SOURCES:.java=.class)
 
 
@@ -34,7 +32,7 @@ generated:
 	$(MAKE) -C parser
 
 clean:
-	$(RM)  $(CLASSES) ./test/*.asm
+	$(RM)  $(CLASSES) ./test/*.asm *.class
 	$(MAKE) clean -C parser
 
 run: classes
