@@ -16,17 +16,20 @@ public class MethodNode implements Node {
 	private ArrayList<Node> parList;
 	private ArrayList<Node> decList;
 	private Node body;
+	private String ownerClass;
 	// private ClassNode ownerClass;	// class node where this method is first defined
 	// private int curMethodOffset;		// offset in callerClass
 	
-	public MethodNode (String i, TypeNode t) {
+	public MethodNode (String i, TypeNode t, String o) {
 		id=i;
 		type=t;
+		ownerClass=o;
 	}
 
-	public MethodNode (String _id, TypeNode _type, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
+	public MethodNode (String _id, TypeNode _type, String _o, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
 		id = _id;
 		type = _type;
+		ownerClass = _o;
 		parList = _parList;
 		decList = _decList;
 		body = _body;

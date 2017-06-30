@@ -60,7 +60,7 @@ public class ConstructorNode extends CallNode {
 
 	@Override
 	public String codeGeneration() {
-		return "";
+		return super.codeGeneration();
 	}  
 
 }  
