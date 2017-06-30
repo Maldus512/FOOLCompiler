@@ -1,0 +1,12 @@
+class SUPERCLASS (bool x, int y) {
+    int main() print(x);
+    bool maina(bool tita) print (y);
+}
+class SUBCLASS implements SUPERCLASS (int b, bool a, bool c) {
+    int maind() print(a);
+    int mainb() print(y);
+    int main() print(x);
+    bool maina(bool x) print(x);
+    int maine() print(b);
+};
+let bool x = true; SUPERCLASS test = new SUBCLASS(true, true, 2, false, true); in test.main();

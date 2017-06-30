@@ -1,0 +1,8 @@
+class testClass (int x, int y) {
+    int main() print(2);
+}
+class finalClass implements testClass(int x) {
+    int final() print(x+y);
+};
+let testClass test = new testClass(1,2); in test.main();
+

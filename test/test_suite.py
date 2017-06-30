@@ -25,10 +25,10 @@ def main():
 
     comp = res
 
-    for fil in sorted(os.listdir('.')):
-        if os.path.isfile(fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil:
+    for fil in sorted(os.listdir('./tests')):
+        if os.path.isfile("./tests/"+fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil:
             print("Checking "+fil+" ...")
-            proc = Popen(comp + ["-c", "-f", fil])
+            proc = Popen(comp + ["-f", "./tests/"+fil])
             proc.wait()
 
             if proc.returncode != 0:
