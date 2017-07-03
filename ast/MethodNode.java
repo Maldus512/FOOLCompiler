@@ -151,6 +151,9 @@ public class MethodNode implements Node {
 
 	public String codeGeneration() {
 	  
+		String myLabel = ownerClass + "_" + id;
+
+
 		String declCode="";
 		if (decList!=null) for (Node dec:decList)
 			declCode+=dec.codeGeneration();
@@ -163,23 +166,25 @@ public class MethodNode implements Node {
 		for (Node dec:parList)
 			popParl+="pop\n";
 		
-		String funl=FOOLlib.freshFunLabel(); 
-		FOOLlib.putCode(funl+":\n"+
-				"cfp\n"+ //setta $fp a $sp				
-				"lra\n"+ //inserimento return address
-				declCode+ //inserimento dichiarazioni locali
-				body.codeGeneration()+
-				"srv\n"+ //pop del return value
-				popDecl+
-				"sra\n"+ // pop del return address
-				"pop\n"+ // pop di AL
-				popParl+
-				"sfp\n"+  // setto $fp a valore del CL
-				"lrv\n"+ // risultato della funzione sullo stack
-				"lra\n"+"js\n" // salta a $ra
-				);
+		boolean alreadyDefined = FOOLlib.staleLabel(myLabel);
+		if (!alreadyDefined) {
+			FOOLlib.putCode(myLabel+":\n"+
+					"cfp\n"+ //setta $fp a $sp				
+					"lra\n"+ //inserimento return address
+					declCode+ //inserimento dichiarazioni locali
+					body.codeGeneration()+
+					"srv\n"+ //pop del return value
+					popDecl+
+					"sra\n"+ // pop del return address
+					"pop\n"+ // pop di AL
+					popParl+
+					"sfp\n"+  // setto $fp a valore del CL
+					"lrv\n"+ // risultato della funzione sullo stack
+					"lra\n"+"js\n" // salta a $ra
+					);
+		}
 		
-		return "push "+ funl +"\n";
+		return "push "+ myLabel +"\n";
 	}
 
 }

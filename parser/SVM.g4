@@ -86,7 +86,7 @@ PRINT	 : 'print' ;	// print top of stack
 HALT	 : 'halt' ;	// stop execution
 
 COL	 : ':' ;
-LABEL	 : ('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')* ;
+LABEL	 : ('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')*('_'('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')* )? ;
 NUMBER	 : '0' | ('-')?(('1'..'9')('0'..'9')*) ;
 LINECOMENTS    : '#' (~('\n'|'\r'))* -> skip;
 
