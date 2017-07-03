@@ -56,7 +56,7 @@ public class FunNode implements Node {
 		env.getST().add(hmn);
 
 		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
-		int paroffset = 0;
+		int paroffset = 1;
 
 		// check parameters
 		for (Node a:parList) {

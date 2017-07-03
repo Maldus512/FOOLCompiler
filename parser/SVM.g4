@@ -50,6 +50,8 @@ assembly:
 	  | COPYFP          {code[i++] = COPYFP;}   //
 	  | LOADHP          {code[i++] = LOADHP;}   //
 	  | STOREHP         {code[i++] = STOREHP;}   //
+	  | MALL n=NUMBER	{code[i++] = MALL;
+	  						code[i++] = Integer.parseInt($n.text);}
 	  | PRINT           {code[i++] = PRINT;}
 	  | HALT            {code[i++] = HALT;}
 	  )* { for (Integer refAdd: labelRef.keySet()) {
@@ -83,6 +85,7 @@ COPYFP   : 'cfp' ;      // copy stack pointer into frame pointer
 LOADHP	 : 'lhp' ;	// load heap pointer in the stack
 STOREHP	 : 'shp' ;	// store top into heap pointer
 PRINT	 : 'print' ;	// print top of stack
+MALL	 : 'mall' ; //alloc n bytes in heap
 HALT	 : 'halt' ;	// stop execution
 
 COL	 : ':' ;

@@ -27,6 +27,11 @@ public class ExecuteVM {
         switch ( bytecode ) {
           case SVMParser.PUSH:
             push( code[ip++] );
+            if (sp < hp) {
+              //STACKOVERFLOW
+              System.out.println("www.stackoverflow.com");
+              System.exit(1);
+            }
             break;
           case SVMParser.POP:
             pop();
@@ -106,14 +111,30 @@ public class ExecuteVM {
          case SVMParser.LOADHP : //
             push(hp);
             break;
+         case SVMParser.MALL : //
+            push(hp);
+            hp += code[ip++];
+            if (hp > sp) {
+              //HEAPOVERFLOW
+              System.out.println("OUT OF MEMORY. AHHHHHHHHHHHHHHHHHHH");
+              System.exit(1);
+            }
+            break;
          case SVMParser.PRINT :
             System.out.println((sp<MEMSIZE)?memory[sp]:"Empty stack!");
             break;
          case SVMParser.HALT :
+            dumpHeap();
             return;
         }
       }
     } 
+
+    private void dumpHeap() {
+      for (int i = hp-1; i >= 0; i--) {
+        System.out.println(i + " : " + memory[i]);
+      }
+    }
     
     private int pop() {
       return memory[sp++];

@@ -3,10 +3,11 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - Passare come parametro alla funzione toPrint un intero e non una stringa
 - Mettere da qualche parte che non faccia schifo la generazione di codice delle funzioni (in realta' discretamente importante, fa veramente molto schifo messa com'e')
 - Definire method come sottoclasse di fun
-- Cambiare i meccanismi di type e semantic checking in maniera uniforme: se ho bisogno di un riferimento a un'altro nodo forse sarebbe meglio salvarsi la STEntry, e non il nodo direttamente
+- Idem per methodCall
 - Il type checking dovrebbe ritornare una lista di errori come il semantic check; poi il tipo del programma lo ottengo dal nodo
-- Aggiungere il jar di antlr alla cartella lib, che sicuro LaNeve non ce l'ha installato a riga di comando
 - Rivedere la funzione toPrint (Certe cose non mi sono molto chiare nella stampa)
 - Aggiungere il tipo void alla sintassi
 - FieldNode e ParNode potrebbero essere sottoclassi
 - Rendere fool un interprete a riga di comando (come python)
+- Messaggi di errori con piu' dettagli (parametri dell'errore, riga di codice)
+- Mettere a posto gli indici porco Anubis

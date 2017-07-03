@@ -44,7 +44,7 @@ public class ProgClassNode implements Node {
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
 		env.incNestLevel();	// nestingLevel is now 0
-		env.setClassOffset(0);
+		env.setClassOffset(-2);
 
 		// create a new hashmap and add it to the symbol table
 		HashMap<String,STentry> hm = new HashMap<String,STentry> ();
@@ -52,15 +52,17 @@ public class ProgClassNode implements Node {
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
+		int initialClassOffset = 0;
 		// check semantics for every class declaration
 		for(ClassNode n:classList){
 			res.addAll(n.checkSemantics(env));	
-			env.incClassOffset();
+			env.decClassOffset();
+			initialClassOffset += n.getMethodList().size();
 		}
 
 		// if there are lets
 		if (decList.size() > 0) {
-			env.setOffset(-2);
+			env.setOffset(-2 - initialClassOffset);
 
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
@@ -103,13 +105,14 @@ public class ProgClassNode implements Node {
 		for (Node dec:decList)
 			declCode+=dec.codeGeneration();
 		for (ClassNode c : classList) {
-			classes += "#CLASS\n" + c.codeGeneration();
+			classes += "#VTABLE\n" + c.codeGeneration();
 		}
 		return "push 0\n" 
-			+ "# .DATA\n"
+			+ "## .DATA\n"
 			+ classes
+			+ "\n## LET\n"
 			+ declCode
-			+ "##\n"
+			+ "\n## IN\n"
 			+ exp.codeGeneration()
 			+ "halt\n"
 			+ FOOLlib.getCode(); 
