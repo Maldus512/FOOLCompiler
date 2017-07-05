@@ -63,28 +63,21 @@ public class FunNode implements Node {
 			ParNode par = (ParNode) a;
 
 			STentry parEntry = new STentry(env.getNestLevel(), par.getType(), paroffset++);
+			
 
 			if (par.getType() instanceof ClassTypeNode) {
-				boolean classDefined = false;
-				HashMap<String,STentry> level_zero = env.getST().get(0);
 				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
-
-				for (STentry e : level_zero.values()) {
-					if ( e.getType() instanceof ClassTypeNode && ((ClassTypeNode)(e.getType())).getId().equals( parId ) ) {
-
-						ClassTypeNode entryType = (ClassTypeNode)(e.getType());
-						
-						parEntry.setType( entryType );
-						par.setType( entryType );
-						classDefined = true;
-					}
-				}
-
-				if (!classDefined) {
-					res.add( new SemanticError("Class " + parId + " has not been defined."));
+				ClassTypeNode entryType = env.classTypeEnvGet(parId);
+				if (entryType == null) {
+					res.add( new SemanticError("Class " + parId + " has not been defined for par "+ id +".")); //TODO controllare che esista la variabile e non la classe
 					return res;
 				}
+				entryType = new ClassTypeNode (entryType);
+				entryType.isField(false);
+				parEntry.setType( entryType );
+				par.setType( entryType );
 			}
+
 
 			parTypes.add(par.getType());
 

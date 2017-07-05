@@ -85,7 +85,8 @@ public class MethodNode implements Node {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
-		STentry entry = new STentry(env.getNestLevel(), offset);
+		//meno uno perchè il nesting level con cui chiamare un metodo deve essere lo stesso della classe
+		STentry entry = new STentry(env.getNestLevel() - 1 , offset);
 
 		STentry prevEntry = hm.put( id, entry );
 		if ( prevEntry != null ) {
@@ -165,7 +166,7 @@ public class MethodNode implements Node {
 		String popParl="";
 		for (Node dec:parList)
 			popParl+="pop\n";
-		
+		popParl+="pop\n";    //aggiungo un nuovo pop perché abbiamo un metodo in più, this
 		boolean alreadyDefined = FOOLlib.staleLabel(myLabel);
 		if (!alreadyDefined) {
 			FOOLlib.putCode(myLabel+":\n"+

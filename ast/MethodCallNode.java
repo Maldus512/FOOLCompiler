@@ -112,7 +112,8 @@ public class MethodCallNode implements Node {
 			parCode+=parList.get(i).codeGeneration();
 
 		String getAR="";
-		for (int i=0; i<nestLevel-methodEntry.getNestLevel(); i++)
+		//meno uno percheè le classi non creano un nuovo record di attivazione
+		for (int i=0; i<nestLevel-1-methodEntry.getNestLevel(); i++)
 			getAR+="lw\n";
 
 		String thisRef = varNode.codeGeneration();
