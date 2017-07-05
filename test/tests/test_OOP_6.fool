@@ -1,14 +1,7 @@
-/*class testClass (int a) {
+class testClass (int a) {
 	int hello() a;
 }
 class finalClass (testClass x) {
     int main() print(x.hello());
 };
-let testClass test = new testClass(42); finalClass tette = new finalClass(test); in tette.main();*/
-
-
-
-class banana(int b) {
-    int a() print(a);
-};
-let banana b = new  banana(2); in b.a();
+let testClass test = new testClass(42); finalClass tette = new finalClass(test); in tette.main();

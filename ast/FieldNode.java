@@ -41,6 +41,7 @@ public class FieldNode implements Node {
 		if (type instanceof ClassTypeNode) {
 			String classId = ((ClassTypeNode)type).getId();
 			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
+			fullClassType.isField(type.isField());
 			
 			if (fullClassType == null) {
 				res.add( new SemanticError("Class " + classId + " has not been defined."));
