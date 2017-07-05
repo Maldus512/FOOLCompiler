@@ -44,7 +44,10 @@ public class IdNode implements Node {
 			tmp = (env.getST().get(j--)).get(id);
 		
 		if (tmp == null) {
-			res.add( new SemanticError("Id " + id + " not declared") );
+			res.add( new SemanticError("Id " + id + " not declared.") );
+			return res;
+		} else if (tmp.getType() instanceof ArrowTypeNode) {
+			res.add( new SemanticError("Id " + id + " is a function.") );
 			return res;
 		}
 
@@ -56,7 +59,7 @@ public class IdNode implements Node {
 
 	public TypeNode typeCheck(Environment env) {
 		if (entry.getType() instanceof ArrowTypeNode) {
-			System.out.println("Wrong usage of function identifier");
+			System.out.println("Wrong usage of function identifier.");
 			return new BottomTypeNode();
 		}
 		return entry.getType();

@@ -21,9 +21,9 @@ public class MethodNode implements Node {
 	// private int curMethodOffset;		// offset in callerClass
 	
 	public MethodNode (String i, TypeNode t, String o) {
-		id=i;
-		type=t;
-		ownerClass=o;
+		id = i;
+		type = t;
+		ownerClass = o;
 	}
 
 	public MethodNode (String _id, TypeNode _type, String _o, ArrayList<Node> _parList, ArrayList<Node> _decList, Node _body) {
@@ -50,6 +50,28 @@ public class MethodNode implements Node {
 	public void addDecBody (ArrayList<Node> d, Node b) {
 		decList = d;
 		body = b;
+	}
+
+	public void addPar (Node p) {
+		parList.add(p);
+	}
+
+	public String toPrint(String s) {
+		String	parlstr="",
+				declstr="";
+		
+		for (Node par:parList)
+			parlstr+=par.toPrint(s+"  ");
+		
+		if (decList!=null)
+			for (Node dec:decList)
+				declstr+=dec.toPrint(s+"  ");
+
+		return s+"Fun:" + id +"\n"
+			   +type.toPrint(s+"  ")
+			   +parlstr
+			   +declstr
+			   +body.toPrint(s+"  ") ; 
 	}
 
 	@Override
@@ -110,28 +132,6 @@ public class MethodNode implements Node {
 		env.getST().remove(env.decNestLevel());
 
 		return res;
-	}
-
-	public void addPar (Node p) {
-		parList.add(p);
-	}  
-
-	public String toPrint(String s) {
-		String	parlstr="",
-				declstr="";
-		
-		for (Node par:parList)
-			parlstr+=par.toPrint(s+"  ");
-		
-		if (decList!=null)
-			for (Node dec:decList)
-				declstr+=dec.toPrint(s+"  ");
-
-		return s+"Fun:" + id +"\n"
-			   +type.toPrint(s+"  ")
-			   +parlstr
-			   +declstr
-			   +body.toPrint(s+"  ") ; 
 	}
 
 	//valore di ritorno non utilizzato

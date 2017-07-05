@@ -9,6 +9,6 @@ let testClass test = new testClass(42); finalClass tette = new finalClass(test);
 
 
 class banana(int b) {
-    int a() print(a);
+    int a() print(b);
 };
-let banana b = new  banana(2); in b.a();
+let banana b = new banana(2); in b.a();
