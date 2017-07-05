@@ -70,7 +70,10 @@ public class MethodCallNode implements Node {
 		if (methodTmp == null) {
 			res.add( new SemanticError("Method id '" + id + "' has not been declared for class " + ownerClass + ".") );
 			return res;
-		}
+		} else if (! (methodTmp.getType() instanceof ArrowTypeNode) ) {
+            res.add(new SemanticError("Id '" + id + "' is not a method for class " + ownerClass + "."));
+            return res;
+        }
 
 		this.methodEntry = methodTmp;
 		this.nestLevel = env.getNestLevel();
@@ -87,17 +90,17 @@ public class MethodCallNode implements Node {
 		if (methodEntry.getType() instanceof ArrowTypeNode) {
 			t = (ArrowTypeNode)methodEntry.getType(); 
 		} else {
-			System.out.println("Invocation of a non-function "+id);
+			System.out.println("Invocation of a non-function " + id + ".");
 			return new BottomTypeNode();
 		}
 		ArrayList<TypeNode> p = t.getParList();
 		if ( !(p.size() == parList.size()) ) {
-			System.out.println("Wrong number of parameters in the invocation of "+id + " method of class " + ownerClass);
+			System.out.println("Wrong number of parameters in the invocation of " + id + " method of class " + ownerClass + ".");
 			return new BottomTypeNode();
 		} 
 		for (int i=0; i<parList.size(); i++)
 			if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id + " method of class " + ownerClass);
+				System.out.println("Wrong type for " + (i+1) + "-th parameter in the invocation of " + id + " method of class " + ownerClass + ".");
 				return new BottomTypeNode();
 			} 
 		return t.getRet();

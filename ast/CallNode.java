@@ -45,13 +45,16 @@ public class CallNode implements Node {
 		int j = env.getNestLevel();
 		STentry tmp = null; 
 		
-		while (j>=0 && tmp==null)
+		while (j >= 0 && tmp == null)
 			tmp = (env.getST().get(j--)).get(id);
 		
 		if (tmp == null) {
 			res.add(new SemanticError("Id '" + id + "' not declared."));
 			return res;
-		}
+		} else if (! (tmp.getType() instanceof ArrowTypeNode) ) {
+            res.add(new SemanticError("Id '" + id + "' is not a function."));
+            return res;
+        }
 
 		this.entry = tmp;
 		this.nestingLevel = env.getNestLevel();
@@ -67,19 +70,19 @@ public class CallNode implements Node {
         if (entry.getType() instanceof ArrowTypeNode) {
             t=(ArrowTypeNode) entry.getType(); 
         } else {
-            System.out.println("Invocation of a non-function "+id);
+            System.out.println("Invocation of a non-function " + id + ".");
             return new BottomTypeNode();
         }
 
         ArrayList<TypeNode> p = t.getParList();
         if ( !(p.size() == parList.size()) ) {
-            System.out.println("Wrong number of parameters in the invocation of "+id);
+            System.out.println("Wrong number of parameters in the invocation of " + id + ".");
             return new BottomTypeNode();
         } 
 
         for (int i=0; i<parList.size(); i++)  {
             if ( !(FOOLlib.isSubtype( (parList.get(i)).typeCheck(env), p.get(i)) ) ) {
-                System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+                System.out.println("Wrong type for " + (i+1) + "-th parameter in the invocation of " + id + ".");
                 return new BottomTypeNode();
             } 
         }
