@@ -12,6 +12,13 @@ public class ClassTypeNode extends TypeNode {
 	private HashMap<String,STentry> fieldEntries;
 	private HashMap<String,STentry> methodEntries;
 
+	public ClassTypeNode(ClassTypeNode clone) {
+		id = clone.getId();
+		fieldEntries = clone.getFieldEntriesMap();
+		methodEntries = clone.getMethodEntriesMap();
+		isField = clone.isField();
+	}
+
 	public ClassTypeNode (String i, HashMap<String,STentry> f, HashMap<String,STentry> m) {
 		id = i;
 		fieldEntries = f;

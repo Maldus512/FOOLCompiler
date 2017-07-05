@@ -10,7 +10,7 @@ import ast.Node;
 // No actual difference from Node - just clarity purposes
 public class TypeNode implements Node {
 
-    private boolean isField = false;
+    protected boolean isField = false;
 
     public boolean isField() {
         return isField;
