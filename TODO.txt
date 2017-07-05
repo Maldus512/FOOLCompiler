@@ -10,4 +10,5 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - FieldNode e ParNode potrebbero essere sottoclassi
 - Rendere fool un interprete a riga di comando (come python)
 - Messaggi di errori con piu' dettagli (parametri dell'errore, riga di codice)
-- Mettere a posto gli indici porco Anubis
+- Mettere a posto gli indici di memoria porco Anubis
+- Forse l'environment delle classi dovrebbe essere fatto solo da ClassNode, non ClassTypeNode. Tutto quello che sa un ClassTypeNode lo sa anche un ClassNode, no?

@@ -68,7 +68,8 @@ public class MethodNode implements Node {
 		STentry prevEntry = hm.put( id, entry );
 		if ( prevEntry != null ) {
 			// if we are here we are overriding a method, thus we must update offsets accordingly
-			entry.setOffset( prevEntry.getOffset() );
+			//TODO
+			//entry.setOffset( prevEntry.getOffset() );
 		}
 
 		env.incNestLevel();
@@ -76,7 +77,8 @@ public class MethodNode implements Node {
 		env.getST().add(hmn);
 
 		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
-		int paroffset = 1;
+		/** paroffset starts from 2 to leave room for "this" reference */
+		int paroffset = 2;
 
 		//check args
 		for(Node n : parList) {
@@ -150,9 +152,7 @@ public class MethodNode implements Node {
 	}
 
 	public String codeGeneration() {
-	  
 		String myLabel = ownerClass + "_" + id;
-
 
 		String declCode="";
 		if (decList!=null) for (Node dec:decList)

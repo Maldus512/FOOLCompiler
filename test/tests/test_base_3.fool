@@ -1,1 +1,1 @@
-let int foo(bool i) i; in foo(true);
+let int foo(bool i) let int i = 55; in print(i); in foo(true);

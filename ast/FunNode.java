@@ -98,15 +98,22 @@ public class FunNode implements Node {
 		arrowType = new ArrowTypeNode(parTypes, type);
 		entry.setType( arrowType );
 
-		// check dec list
 		if (decList.size() > 0) {
+			// check dec list
+			env.incNestLevel();
+			HashMap<String,STentry> lethm = new HashMap<String,STentry> ();
+			env.getST().add(lethm);
 			env.setOffset(-2);
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
-		}
 
-		//check body
-		res.addAll(body.checkSemantics(env));
+			res.addAll(body.checkSemantics(env));
+
+			env.getST().remove(env.decNestLevel());
+		} else {
+			//check body
+			res.addAll(body.checkSemantics(env));
+		}
 
 		//close scope
 		env.getST().remove(env.decNestLevel());

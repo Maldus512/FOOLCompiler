@@ -10,6 +10,16 @@ import ast.Node;
 // No actual difference from Node - just clarity purposes
 public class TypeNode implements Node {
 
+    private boolean isField = false;
+
+    public boolean isField() {
+        return isField;
+    }
+
+    public void isField(boolean field) {
+        isField = field;
+    }
+
     /* function that generates the parse tree for the node */
     public String toPrint(String indent) {
         return indent;

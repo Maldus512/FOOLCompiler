@@ -1,0 +1,5 @@
+class testClass (int a) {
+	int main() a;
+};
+let testClass test = new testClass(42); in print(test.main());
+

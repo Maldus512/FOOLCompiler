@@ -1,9 +1,14 @@
-class testClass (int x, int y) {
-    int main() print(2);
+class testClass (int a, int b, int c) {
+    int x() print(2);
+    int y() print(3);
+    int z() print(4);
 }
-class finalClass implements testClass(int x) {
-    int final() print(x+y);
+class filler (bool k) {
+    int main() print(33);
+    int maina() print(44);
+}
+class finalClass implements testClass(int a) {
+    int x() print(55);
 };
-//let int bar() 42; in print(bar());
-let testClass test = new testClass(1,2); in print(5);
+let finalClass test = new finalClass(1, 42, 3); in test.x();
 

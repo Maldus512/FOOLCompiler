@@ -24,6 +24,14 @@ public class IdNode implements Node {
 				+ entry.toPrint(s+"  ") ;
 	}
 
+	public TypeNode getType() {
+		return entry.getType();
+	}
+
+	public String getId() {
+		return id;
+	}
+
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 
@@ -42,7 +50,7 @@ public class IdNode implements Node {
 
 		entry = tmp;
 		nestinglevel = env.getNestLevel();
-		
+
 		return res;
 	}
 
@@ -57,13 +65,23 @@ public class IdNode implements Node {
 	public String codeGeneration() {
 		String getAR="";
 		
-		for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
-			getAR+="lw\n";
+		if (!entry.getType().isField()) {
+			for (int i=0; i<nestinglevel-entry.getNestLevel(); i++) 
+				getAR+="lw\n";
 
-		return	"push "+entry.getOffset()+"\n"+ //metto offset sullo stack
-				"lfp\n"+getAR+ //risalgo la catena statica
-				"add\n"+ 
-				"lw\n"; //carico sullo stack il valore all'indirizzo ottenuto
+			return	"push "+entry.getOffset()+"\n"+ //metto offset sullo stack
+					"lfp\n"+getAR+ //risalgo la catena statica
+					"add\n"+ 
+					"lw\n"; //carico sullo stack il valore all'indirizzo ottenuto
+		} else {
+			return  "push 1\n" +
+					"lfp\n" +
+					"add\n" +
+					"lw\n" +
+					"push " + entry.getOffset() + "\n" +
+					"add\n" +
+					"lw\n";
+		}
 
 	}
 }  

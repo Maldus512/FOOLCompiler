@@ -17,7 +17,7 @@ public class Environment {
 	public Environment() {
 		nestingLevel = -1;
 		offset = 0;
-		classOffset = 0;
+		classOffset = -2;
 	}
 
 	public ArrayList<HashMap<String,STentry>> getST() {

@@ -86,8 +86,11 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 			c.setSuperClass(ctx.ID(1).getText());
 
 		// visit all class's fields
-		for(VardecContext vc : ctx.vardec())
-			c.addField( new FieldNode(vc.ID().getText(),(TypeNode) visit( vc.type() )) );
+		for(VardecContext vc : ctx.vardec()) {
+			TypeNode type = (TypeNode) visit( vc.type() );
+			type.isField(true);
+			c.addField( new FieldNode(vc.ID().getText(),type ) );
+		}
 
 		// visit all class's methods
 		for(FunContext fc : ctx.fun()) {
@@ -294,7 +297,6 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		//this corresponds to a variable access
 		return new IdNode(ctx.ID().getText());
-
 	}
 
 	@Override
@@ -305,10 +307,9 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		for(ExpContext exp : ctx.exp())
 			args.add(visit(exp));
 
-		MethodCallNode m = new MethodCallNode(ctx.ID(1).getText(), args, ctx.ID(0).getText());
+		MethodCallNode m = new MethodCallNode(ctx.ID(1).getText(), args, new IdNode(ctx.ID(0).getText()));
 
 		return m;
-
 	}
 
 	@Override

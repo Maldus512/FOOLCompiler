@@ -15,13 +15,13 @@ public class MethodCallNode implements Node {
 	private STentry methodEntry;
 	private ArrayList<Node> parList;
 	private int nestLevel;
-	private String varId;
+	private IdNode varNode;
 	private String ownerClass;
 
-	public MethodCallNode(String text, ArrayList<Node> args, String sn) {
+	public MethodCallNode(String text, ArrayList<Node> args, Node sn) {
 		id = text;
 		parList = args;
-		varId = sn;
+		varNode = (IdNode)sn;
 	}
 
 	public String toPrint(String s) {
@@ -37,29 +37,22 @@ public class MethodCallNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		int j = env.getNestLevel();
-		STentry varTmp = null;
 		STentry methodTmp = null;
-		
 
-		// seek for var (a.k.a. selfName) id
-		while (j>=0 && varTmp==null)
-			varTmp = (env.getST().get(j--)).get(varId);
-
-		if (varTmp == null) {
-			res.add( new SemanticError("Object id '" + varId + "' has not been declared.") );
-			return res;
-		}
-
-		if(! (varTmp.getType() instanceof ClassTypeNode)){
-			res.add( new SemanticError("Var id '" + varId + "' is not an object.") );
+		res.addAll(varNode.checkSemantics(env));
+		if (res.size() > 0) {
 			return res;
 		}
 		
-		ownerClass = ((ClassTypeNode)(varTmp.getType())).getId();
+		if(! (varNode.getType() instanceof ClassTypeNode)){
+			res.add( new SemanticError("Var id '" + varNode.getId() + "' is not an object.") );
+			return res;
+		}
+		
+		ownerClass = ((ClassTypeNode)(varNode.getType())).getId();
 
 		// seek for method definition
 		ClassTypeNode classType = env.classTypeEnvGet(ownerClass); 
@@ -119,8 +112,11 @@ public class MethodCallNode implements Node {
 		for (int i=0; i<nestLevel-methodEntry.getNestLevel(); i++)
 			getAR+="lw\n";
 
+		String thisRef = varNode.codeGeneration();
+
 		return "lfp\n"+ //CL
 			parCode+
+			thisRef+
 			"lfp\n"+getAR+ //setto AL risalendo la catena statica
 			// ora recupero l'indirizzo a cui saltare e lo metto sullo stack
 			"push "+methodEntry.getOffset()+"\n"+ //metto offset sullo stack

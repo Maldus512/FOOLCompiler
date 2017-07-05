@@ -52,17 +52,17 @@ public class ProgClassNode implements Node {
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		int initialClassOffset = 0;
+		int initialClassOffset = env.getClassOffset();
 		// check semantics for every class declaration
 		for(ClassNode n:classList){
 			res.addAll(n.checkSemantics(env));	
-			env.decClassOffset();
-			initialClassOffset += n.getMethodList().size();
+			initialClassOffset -= n.getMethodList().size()+1;
+			env.setClassOffset(initialClassOffset);
 		}
 
 		// if there are lets
 		if (decList.size() > 0) {
-			env.setOffset(-2 - initialClassOffset);
+			env.setOffset(env.getClassOffset());
 
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
