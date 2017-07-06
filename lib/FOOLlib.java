@@ -19,15 +19,20 @@ public class FOOLlib {
 
   //valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
   public static boolean isSubtype (TypeNode a, TypeNode b) {
+    
     if ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ){
       return true;
     }
     else if (/* a.getClass().equals(b.getClass())*/(a instanceof IntTypeNode) && (b instanceof IntTypeNode) ){
       return true;
+    }
+     else if (/* a.getClass().equals(b.getClass())*/(a instanceof VoidTypeNode) && (b instanceof VoidTypeNode) ){
+      return true;
     } 
     else if (/* a.getClass().equals(b.getClass())*/(a instanceof BoolTypeNode) && (b instanceof BoolTypeNode) ){
       return true;
-    } 
+    }
+
     else if ( (a instanceof ClassTypeNode) && (b instanceof ClassTypeNode) ){
       HashMap<String,TypeNode> fieldA = ((ClassTypeNode)a).getFieldTypeMap();
       HashMap<String,TypeNode> fieldB = ((ClassTypeNode)b).getFieldTypeMap();;
@@ -78,7 +83,7 @@ public class FOOLlib {
       return ( isSubtype(((ArrowTypeNode)a).getRet(), ((ArrowTypeNode)b).getRet() ));
     }
     else if ( a instanceof BottomTypeNode ){
-      return true;
+      return false;
     }
     else{
       return false;
