@@ -35,6 +35,7 @@ dec   : varasm           #varAssignment
 type   : INT  
         | BOOL 
         | ID
+        | VOID
       ;  
     
 exp    :  ('-')? left=term ((PLUS | MINUS) right=exp)?
@@ -86,6 +87,7 @@ VAR    : 'var' ;
 FUN    : 'fun' ;
 INT    : 'int' ;
 BOOL   : 'bool' ;
+VOID   : 'void' ;
 CLASS   : 'class' ;
 IMPLEMENTS   : 'implements' ;
 THIS   : 'this' ;

@@ -24,10 +24,14 @@ public class FOOLlib {
     }
     else if (/* a.getClass().equals(b.getClass())*/(a instanceof IntTypeNode) && (b instanceof IntTypeNode) ){
       return true;
+    }
+     else if (/* a.getClass().equals(b.getClass())*/(a instanceof VoidTypeNode) && (b instanceof VoidTypeNode) ){
+      return true;
     } 
     else if (/* a.getClass().equals(b.getClass())*/(a instanceof BoolTypeNode) && (b instanceof BoolTypeNode) ){
       return true;
-    } 
+    }
+
     else if ( (a instanceof ClassTypeNode) && (b instanceof ClassTypeNode) ){
       HashMap<String,TypeNode> fieldA = ((ClassTypeNode)a).getFieldTypeMap();
       HashMap<String,TypeNode> fieldB = ((ClassTypeNode)b).getFieldTypeMap();;
@@ -78,7 +82,7 @@ public class FOOLlib {
       return ( isSubtype(((ArrowTypeNode)a).getRet(), ((ArrowTypeNode)b).getRet() ));
     }
     else if ( a instanceof BottomTypeNode ){
-      return true;
+      return false;
     }
     else{
       return false;
