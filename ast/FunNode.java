@@ -45,7 +45,6 @@ public class FunNode implements Node {
 		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
 		STentry entry = new STentry(env.getNestLevel(), env.decOffset());
 
-		
 		if (hm.put( id, entry ) != null) {
 			res.add( new SemanticError("Function name '" + id + "' has already been used.") );
 			return res;
@@ -93,16 +92,19 @@ public class FunNode implements Node {
 
 		if (decList.size() > 0) {
 			// check dec list
-			env.incNestLevel();
+			//env.incNestLevel();
 			HashMap<String,STentry> lethm = new HashMap<String,STentry> ();
 			env.getST().add(lethm);
+			int oldOffset = env.getOffset();
 			env.setOffset(-2);
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
 
 			res.addAll(body.checkSemantics(env));
+			env.setOffset(oldOffset);
 
-			env.getST().remove(env.decNestLevel());
+			//env.getST().remove(env.decNestLevel());
+			env.getST().remove(env.getLastNestLevel());
 		} else {
 			//check body
 			res.addAll(body.checkSemantics(env));
@@ -155,9 +157,11 @@ public class FunNode implements Node {
 
 	public String codeGeneration() {
 	  
-		String declCode="";
+		String declCode="# LET\n";
 		if (decList!=null) for (Node dec:decList)
 			declCode+=dec.codeGeneration();
+
+		declCode += "##\n";
 		
 		String popDecl="";
 		if (decList!=null) for (Node dec:decList)

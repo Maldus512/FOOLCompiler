@@ -1,8 +1,16 @@
 package parser;
+
+import java.util.HashMap;;
+
 public class ExecuteVM {
     
     public static final int CODESIZE = 10000;
     public static final int MEMSIZE = 1000;
+
+    private HashMap<Integer, Integer> heapReferences = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> garbageCollector = new HashMap<Integer, Integer>();
+
+    private boolean debug = false;
     
     private int[] code;
     private int[] memory = new int[MEMSIZE];
@@ -18,6 +26,13 @@ public class ExecuteVM {
     public ExecuteVM(int[] code) {
       this.code = code;
     }
+
+    public ExecuteVM(int[] code, int flags) {
+      this.code = code;
+      if ((flags & 1) >0) {
+        debug = true;
+      }
+    }
     
     public void cpu() {
       while ( true ) {
@@ -29,7 +44,7 @@ public class ExecuteVM {
             push( code[ip++] );
             if (sp < hp) {
               //STACKOVERFLOW
-              System.out.println("www.stackoverflow.com");
+              System.out.println("STACK OVERFLOW");
               System.exit(1);
             }
             break;
@@ -112,19 +127,25 @@ public class ExecuteVM {
             push(hp);
             break;
          case SVMParser.MALL : //
+            int size = code[ip++];
             push(hp);
-            hp += code[ip++];
+            hp += size;
             if (hp > sp) {
               //HEAPOVERFLOW
-              System.out.println("OUT OF MEMORY. AHHHHHHHHHHHHHHHHHHH");
+              System.out.println("OUT OF MEMORY.");
               System.exit(1);
             }
+            if (debug) {
+              System.out.println("Allocated " + size + " words at " + (hp-size) + ".");
+            }
+            heapReferences.put(sp, hp-size);
+            garbageCollector.put(hp-size, 1);
             break;
          case SVMParser.PRINT :
             System.out.println((sp<MEMSIZE)?memory[sp]:"Empty stack!");
             break;
          case SVMParser.HALT :
-            dumpHeap();
+            //dumpHeap();
             return;
         }
       }
@@ -137,11 +158,20 @@ public class ExecuteVM {
     }
     
     private int pop() {
+      if (heapReferences.get(sp) != null) {
+        Integer refCount = garbageCollector.get(memory[sp]);
+        refCount--;
+        if (refCount > 0) {
+          garbageCollector.put(memory[sp], refCount);
+        } else {
+          garbageCollector.put(memory[sp],null);
+        }
+      }
+      heapReferences.put(sp, null);
       return memory[sp++];
     }
     
     private void push(int v) {
       memory[--sp] = v;
     }
-    
 }
