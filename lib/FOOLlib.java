@@ -19,6 +19,7 @@ public class FOOLlib {
 
   //valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
   public static boolean isSubtype (TypeNode a, TypeNode b) {
+    
     if ( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) ){
       return true;
     }

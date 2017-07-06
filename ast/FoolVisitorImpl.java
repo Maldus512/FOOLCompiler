@@ -192,6 +192,8 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 			return new IntTypeNode();
 		else if(ctx.getText().equals("bool"))
 			return new BoolTypeNode();
+		else if(ctx.getText().equals("void"))
+			return new VoidTypeNode();
 
 		return new ClassTypeNode(ctx.getText(), null, null);
 	}

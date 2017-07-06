@@ -20,7 +20,8 @@ public class PrintNode implements Node {
   }
   
   public TypeNode typeCheck(Environment env) {
-    return val.typeCheck(env);
+    //return val.typeCheck(env);
+    return new VoidTypeNode();
   }  
   
   @Override
