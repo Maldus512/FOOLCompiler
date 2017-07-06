@@ -24,6 +24,9 @@ public class Environment {
 		return symTable;
 	}
 
+	public int getLastNestLevel() {
+		return symTable.size()-1;
+	}
 
 	public int getNestLevel() {
 		return nestingLevel;

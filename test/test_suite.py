@@ -25,9 +25,22 @@ def main():
 
     comp = res
 
+    if "Fcc" in comp:
+        compiling = True
+    else:
+        compiling = False
+
     for fil in sorted(os.listdir('./tests')):
-        if os.path.isfile("./tests/"+fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil:
+        if os.path.isfile("./tests/"+fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil and compiling:
             print("Checking "+fil+" ...")
+            proc = Popen(comp + ["-f", "./tests/"+fil])
+            proc.wait()
+
+            if proc.returncode != 0:
+                print("Error in file " + fil)
+                exit(1)
+        elif "Fool" in comp and "asm" in fil:
+            print("Executing "+fil+" ...")
             proc = Popen(comp + ["-f", "./tests/"+fil])
             proc.wait()
 

@@ -39,7 +39,8 @@ public class MethodCallNode implements Node {
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		int j = env.getNestLevel();
+		//int j = env.getNestLevel();
+		int j = env.getLastNestLevel();
 		STentry methodTmp = null;
 
 		res.addAll(varNode.checkSemantics(env));
@@ -113,7 +114,7 @@ public class MethodCallNode implements Node {
 
 		String getAR="";
 		//meno uno percheè le classi non creano un nuovo record di attivazione
-		for (int i=0; i<nestLevel-1-methodEntry.getNestLevel(); i++)
+		for (int i=0; i<nestLevel-methodEntry.getNestLevel(); i++)
 			getAR+="lw\n";
 
 		String thisRef = varNode.codeGeneration();

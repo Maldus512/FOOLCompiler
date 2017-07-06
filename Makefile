@@ -42,6 +42,7 @@ run: classes
 
 test: classes
 	cd test && python test_suite.py "$(JAVA) Fcc"
+	cd test && python test_suite.py "$(JAVA) Fool"
 
 go:
 	$(MAKE) clean

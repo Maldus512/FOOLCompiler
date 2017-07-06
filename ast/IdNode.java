@@ -37,7 +37,8 @@ public class IdNode implements Node {
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		int j = env.getNestLevel();
+		//int j = env.getNestLevel();
+		int j = env.getLastNestLevel();
 		STentry tmp = null; 
 		
 		while (j >= 0 && tmp == null)

@@ -127,7 +127,9 @@ public class MethodNode implements Node {
 		}
 
 		//check body
+		env.decNestLevel();
 		res.addAll(body.checkSemantics(env));
+		env.incNestLevel();
 
 		//close scope
 		env.getST().remove(env.decNestLevel());

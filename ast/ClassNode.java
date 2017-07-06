@@ -226,8 +226,6 @@ public class ClassNode implements Node {
 				res.addAll(m.checkSemantics(env, env.getClassOffset() - methodOffset - 1));
 			}
 			methodEntries.put(m.getId(), hmn.get(m.getId()));
-			System.out.println(m.getId() + " " + hmn.get(m.getId()).getNestLevel());
-
 
 			// if a method has been overrided, hmn was not changed, 
 			// thus we must adjust methodOffset to correct offset
