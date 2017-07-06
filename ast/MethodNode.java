@@ -121,9 +121,17 @@ public class MethodNode implements Node {
 
 		//check semantics in the dec list
 		if(decList.size() > 0) {
+			HashMap<String,STentry> lethm = new HashMap<String,STentry> ();
+			env.getST().add(lethm);
+			int oldOffset = env.getOffset();
 			env.setOffset(-2);
 			for(Node n:decList)
 				res.addAll(n.checkSemantics(env));
+
+			res.addAll(body.checkSemantics(env));
+			env.setOffset(oldOffset);
+
+			env.getST().remove(env.getLastNestLevel());
 		}
 
 		//check body

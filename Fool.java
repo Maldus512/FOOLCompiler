@@ -53,7 +53,11 @@ public class Fool {
         if (lexerASM.lexicalErrors>0 || parserASM.getNumberOfSyntaxErrors()>0) System.exit(1);
 
         System.out.println("Starting Virtual Machine...");
-        ExecuteVM vm = new ExecuteVM(parserASM.code);
+		int flags = 0;
+		if (commandArgs.verbose) {
+			flags = 1;
+		}
+        ExecuteVM vm = new ExecuteVM(parserASM.code, flags);
         vm.cpu();
 		System.exit(0);
 	}

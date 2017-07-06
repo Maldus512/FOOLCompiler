@@ -67,7 +67,8 @@ public class ProgLetInNode implements Node {
 	}
 
 	public String codeGeneration() {
-		String declCode="# .DATA\n";
+		String declCode="# .DATA\n" +
+						"# LET\n";
 		for (Node dec:declist)
 			declCode+=dec.codeGeneration();
 

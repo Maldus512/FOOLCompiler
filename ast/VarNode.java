@@ -28,7 +28,8 @@ public class VarNode implements Node {
 		
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		//HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		HashMap<String,STentry> hm = env.getST().get(env.getLastNestLevel());
 		STentry entry = new STentry(env.getNestLevel(), type, env.decOffset());
 
 
