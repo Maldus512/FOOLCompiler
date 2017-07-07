@@ -86,6 +86,20 @@ public class FunNode implements Node {
 			}
 		}
 
+		if ( type instanceof ClassTypeNode ) {	// if we are instantiating an object
+			String classId = ((ClassTypeNode)type).getId();
+			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
+			
+			if (fullClassType == null) {
+				res.add( new SemanticError("Class " + classId + " has not been defined."));
+				return res;
+			}
+			type = fullClassType;
+			entry.setType(type);
+
+		}
+
+
 		// set function type
 		arrowType = new ArrowTypeNode(parTypes, type);
 		entry.setType( arrowType );
