@@ -43,7 +43,7 @@ public class ConstructorNode extends CallNode {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 		
 		if( env.classTypeEnvGet(id) == null ){
-			res.add( new SemanticError("Class " + id + " has not been defined; cannot be instanciated. ") );
+			res.add( new SemanticError("Class " + id + " has not been defined; cannot be instantiated.") );
 			return res;
 		}
 		

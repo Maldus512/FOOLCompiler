@@ -39,7 +39,7 @@ public class LessEqualNode implements Node {
         TypeNode l = left.typeCheck(env);
         TypeNode r = right.typeCheck(env);
         if (! ( FOOLlib.isSubtype(l,r) || FOOLlib.isSubtype(r,l) ) ) {
-            System.out.println("Incompatible types in <=");
+            System.out.println("Incompatible types in '<=' operand.");
             return new BottomTypeNode();
         }
         return new BoolTypeNode();
