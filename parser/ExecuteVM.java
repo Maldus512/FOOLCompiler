@@ -68,8 +68,8 @@ public class ExecuteVM {
       case SVMParser.DIV:
         v1 = pop();
         v2 = pop();
-        if (v1==0){
-          System.out.println("You are dividin by 0.");
+        if (v1 == 0) {
+          System.out.println("Division by zero detected.");
           System.exit(1);
         }
         push(v2 / v1);
@@ -116,6 +116,28 @@ public class ExecuteVM {
         if (v2 <= v1)
           ip = address;
         break;
+      case SVMParser.BRANCHGREATEQ:
+        address = code[ip++];
+        v1 = pop();
+        v2 = pop();
+        if (v2 >= v1)
+          ip = address;
+        break;
+      case SVMParser.BRANCHLESS:
+        address = code[ip++];
+        v1 = pop();
+        v2 = pop();
+        if (v2 < v1)
+          ip = address;
+        break;
+      case SVMParser.BRANCHGREAT:
+        address = code[ip++];
+        v1 = pop();
+        v2 = pop();
+        if (v2 > v1)
+          ip = address;
+        break;
+
       case SVMParser.JS: //
         address = pop();
         ra = ip;

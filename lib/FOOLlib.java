@@ -40,29 +40,29 @@ public class FOOLlib {
       HashMap<String,ArrowTypeNode> methodsB = ((ClassTypeNode)b).getMethodTypeMap();;
       
       if( fieldA.keySet().size() < fieldB.keySet().size() || methodsA.keySet().size() < methodsB.keySet().size()){
-        System.out.println("Fatal error: subclass cannot have fewer fields/methods than superclass");
+        System.out.println("Fatal error: subclass cannot have fewer fields/methods than superclass.");
         return false;
       } 
       
 
       for (Map.Entry<String, TypeNode> entry : fieldB.entrySet()){
         if ( fieldA.get(entry.getKey()) == null ){
-          System.out.println("Fatal error: field "+entry.getKey()+" not found in superclass");
+          System.out.println("Fatal error: field "+entry.getKey()+" not found in superclass.");
           return false;
         }
         else if (! isSubtype(fieldA.get(entry.getKey()),entry.getValue()) ){
-          System.out.println("Error: field "+entry.getKey()+" in subclass is not a subtype");
+          System.out.println("Error: field "+entry.getKey()+" in subclass is not a subtype.");
           return false;
         }
       }
 
       for (Map.Entry<String, ArrowTypeNode> entry : methodsB.entrySet()){
         if ( methodsA.get(entry.getKey()) == null ){
-          System.out.println("Fatal error: method "+entry.getKey()+" not found in superclass");
+          System.out.println("Fatal error: method "+entry.getKey()+" not found in superclass.");
           return false;
         }
         else if (! isSubtype(methodsA.get(entry.getKey()), entry.getValue()) ){
-          System.out.println("Error: method "+entry.getKey()+" in subclass is not a subtype");
+          System.out.println("Error: method "+entry.getKey()+" in subclass is not a subtype.");
           return false;
         }
       }

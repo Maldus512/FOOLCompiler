@@ -36,7 +36,7 @@ exp    :  ('-')? left=term ((PLUS | MINUS) right=exp)?
 term   : left=factor ((TIMES | DIV) right=term)?
       ;
    
-factor : left=value (EQ right=value)?
+factor : left=value ((EQ|GREATER|SMALLER|GREATEREQ|SMALLEREQ) right=value)?
       ;     
    
 value  :  INTEGER                        		      #intVal
@@ -59,6 +59,10 @@ SEMIC  : ';' ;
 COLON  : ':' ;
 COMMA  : ',' ;
 EQ     : '==' ;
+GREATER     : '>';
+SMALLER     : '<';
+GREATEREQ   : '>=';
+SMALLEREQ   : '<=';
 ASM    : '=' ;
 PLUS   : '+' ;
 MINUS  : '-' ;
@@ -86,6 +90,7 @@ IMPLEMENTS   : 'implements' ;
 THIS   : 'this' ;
 NEW    : 'new' ;
 DOT    : '.' ;
+
 
 
 //Numbers

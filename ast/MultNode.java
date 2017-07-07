@@ -39,7 +39,7 @@ public class MultNode implements Node {
   public TypeNode typeCheck(Environment env) {
     if (! ( FOOLlib.isSubtype(left.typeCheck(env),new IntTypeNode()) &&
             FOOLlib.isSubtype(right.typeCheck(env),new IntTypeNode()) ) ) {
-      System.out.println("Non integers in multiplication");
+      System.out.println("Non integers in multiplication.");
       return new BottomTypeNode();
     }
     return new IntTypeNode();

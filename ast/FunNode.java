@@ -68,7 +68,7 @@ public class FunNode implements Node {
 				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
 				ClassTypeNode entryType = env.classTypeEnvGet(parId);
 				if (entryType == null) {
-					res.add( new SemanticError("Class " + parId + " has not been defined for par "+ id +".")); //TODO controllare che esista la variabile e non la classe
+					res.add( new SemanticError("Class " + parId + " has not been defined for par " + id + ".")); //TODO controllare che esista la variabile e non la classe
 					return res;
 				}
 				entryType = new ClassTypeNode (entryType);

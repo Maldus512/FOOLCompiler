@@ -1,0 +1,1 @@
+let int x = 17 ; int y = 18 ; in if x>=y then { print(12) } else {print (1000000)};

@@ -47,7 +47,7 @@ public class IfNode implements Node {
   
   public TypeNode typeCheck(Environment env) {
     if (!(FOOLlib.isSubtype(cond.typeCheck(env),new BoolTypeNode()))) {
-      System.out.println("non boolean condition in if");
+      System.out.println("Non boolean condition in 'if' expression.");
       return new BottomTypeNode();
     }
     TypeNode t = th.typeCheck(env);
@@ -56,7 +56,7 @@ public class IfNode implements Node {
       return e;
     if (FOOLlib.isSubtype(e,t))
       return t;
-    System.out.println("Incompatible types in then else branches");
+    System.out.println("Incompatible types in else branch.");
     return new BottomTypeNode();
   }
   

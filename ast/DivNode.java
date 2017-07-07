@@ -40,7 +40,7 @@ public class DivNode implements Node {
   public TypeNode typeCheck(Environment env) {
     if (! ( FOOLlib.isSubtype(left.typeCheck(env),new IntTypeNode()) &&
             FOOLlib.isSubtype(right.typeCheck(env),new IntTypeNode()) ) ) {
-      System.out.println("Non integers in division");
+      System.out.println("Non integers in division.");
       return new BottomTypeNode();
     }
     return new IntTypeNode();
