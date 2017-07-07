@@ -243,7 +243,20 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		if(ctx.right == null){
 			//it is a simple expression
 			return visit( ctx.left );
-		}else{
+		}
+		else{
+			if(ctx.GREATER() != null){
+				return new GreaterNode(visit(ctx.left), visit(ctx.right));	
+			}
+			if(ctx.SMALLER() != null){
+				return new SmallerNode(visit(ctx.left), visit(ctx.right));	
+			}
+			if(ctx.GREATEREQ() != null){
+				return new GreatEqualNode(visit(ctx.left), visit(ctx.right));	
+			}
+			if(ctx.SMALLEREQ() != null){
+				return new LessEqualNode(visit(ctx.left), visit(ctx.right));	
+			}
 			//it is a binary expression, you should visit left and right
 			return new EqualNode(visit(ctx.left), visit(ctx.right));
 		}

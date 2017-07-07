@@ -40,6 +40,12 @@ assembly:
                         labelRef.put(i++,$l.text);}
 	  | BRANCHLESSEQ l=LABEL {code[i++] = BRANCHLESSEQ;
                           labelRef.put(i++,$l.text);}
+	  | BRANCHGREATEQ l=LABEL {code[i++] = BRANCHGREATEQ;
+                          labelRef.put(i++,$l.text);}	
+	  | BRANCHLESS l=LABEL {code[i++] = BRANCHLESS;
+                          labelRef.put(i++,$l.text);}
+	  | BRANCHGREAT l=LABEL {code[i++] = BRANCHGREAT;	
+	  				  labelRef.put(i++,$l.text);}
 	  | JS              {code[i++] = JS;}		     //
 	  | LOADRA          {code[i++] = LOADRA;}    //
 	  | STORERA         {code[i++] = STORERA;}   //
@@ -74,6 +80,9 @@ LOADW	 : 'lw' ;	// load a value from the memory cell pointed by top
 BRANCH	 : 'b' ;	// jump to label
 BRANCHEQ : 'beq' ;	// jump to label if top == next
 BRANCHLESSEQ:'bleq' ;	// jump to label if top <= next
+BRANCHGREATEQ:'bgeq' ; // jump to label if top >= next
+BRANCHLESS:'bl' ; // jump to label if top < next
+BRANCHGREAT:'bg' ; // jump to label if top > next
 JS	 : 'js' ;	// jump to instruction pointed by top of stack and store next instruction in ra
 LOADRA	 : 'lra' ;	// load from ra
 STORERA  : 'sra' ;	// store top into ra	 
