@@ -139,17 +139,20 @@ public class ExecuteVM {
         break;
       case SVMParser.PRINT:
         System.out.println((sp < MEMSIZE) ? memory[sp] : "Empty stack!");
+        //pop();
         break;
       case SVMParser.HALT:
-        //dumpHeap();
+        if (debug == true) {
+          dumpHeap();
+        }
         return;
       }
     }
   }
 
   private void dumpHeap() {
-    for (int i = hp - 1; i >= 0; i--) {
-      System.out.println(i + " : " + memory[i]);
+    for (Map.Entry<Integer, HeapBlock> entry : garbageCollector.entrySet()) {
+      System.out.println("Block of size "+entry.getValue().blockSize + " at address " + entry.getKey() + ".");
     }
   }
 
@@ -193,16 +196,21 @@ public class ExecuteVM {
   }
 
   private int pop() {
+    int max;
     if (heapReferences.get(sp) != null) {
       HeapBlock block = garbageCollector.get(memory[sp]);
       if (block == null) {
         return memory[sp++];
       }
+      max = memory[sp] + block.blockSize;
       block.refCount--;
       if (block.refCount > 0) {
         garbageCollector.put(memory[sp], block);
       } else {
         garbageCollector.remove(memory[sp]);
+        if (max == hp) {
+          hp-= block.blockSize;
+        }
       }
       heapReferences.remove(sp);
     }

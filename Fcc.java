@@ -19,6 +19,8 @@ import util.SemanticError;
 import util.SyntaxErrorListener;
 import ast.FoolVisitorImpl;
 import ast.Node;
+import ast.types.ClassTypeNode;
+import ast.types.BottomTypeNode;
 
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
@@ -92,7 +94,16 @@ public class Fcc {
 		Node type = ast.typeCheck(env); //type-checking bottom-up 
 
 		if (commandArgs.verbose) {
-			System.out.println(type.toPrint("Type of the program is: "));
+			if (type instanceof ClassTypeNode) {
+				System.out.println("Type of the program is: " + ((ClassTypeNode)type).getId());
+			} else {
+				System.out.println(type.toPrint("Type of the program is: "));
+			}
+		}
+
+		if (type instanceof BottomTypeNode) {
+			System.out.println("Type checking of the program not successful.");
+			System.exit(1);
 		}
 
 		if (commandArgs.codeGen) {
