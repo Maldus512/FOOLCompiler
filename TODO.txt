@@ -10,6 +10,7 @@ Lista di cose non necessariamente da fare, ma che porco lo schifo sarebbe bene f
 - Mettere a posto gli indici di memoria porco Anubis
 
 RILEVANTI:
+- Mettere a posto l'error check di SVM.g4
 - Forse l'environment delle classi dovrebbe essere fatto solo da ClassNode, non ClassTypeNode. Tutto quello che sa un ClassTypeNode lo sa anche un ClassNode, no?
 - Messaggi di errori con piu' dettagli (parametri dell'errore, riga di codice)
 - Mettere da qualche parte che non faccia schifo la generazione di codice delle funzioni (in realta' discretamente importante, fa veramente molto schifo messa com'e')
