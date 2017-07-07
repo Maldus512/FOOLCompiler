@@ -83,17 +83,19 @@ public class ProgClassNode implements Node {
 
 	@Override
 	public TypeNode typeCheck(Environment env) {
+		for (ClassNode c:classList) {
+			if (c.typeCheck(env) instanceof BottomTypeNode) {
+				return new BottomTypeNode();
+			}
+		}
+
 		for (Node d:decList) {
 			if (d.typeCheck(env) instanceof BottomTypeNode) {
 				return new BottomTypeNode();
 			}
 		}
 
-		for (ClassNode c:classList) {
-			if (c.typeCheck(env) instanceof BottomTypeNode) {
-				return new BottomTypeNode();
-			}
-		}
+		
 
 		return exp.typeCheck(env);
 	}

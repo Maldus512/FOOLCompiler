@@ -15,7 +15,7 @@ let
 	SUPERCLASS test = new SUBCLASS(true, 0, false);
 	int f1(int f1p1) f1p1;
 	int z = f1(false);
-	int f2(SUPERCLASS p1) print( p1.maina(x) );
+	void f2(SUPERCLASS p1) print( p1.maina(x) );
 	int w = f2(test);
 	
 	int foolfammerda1() print(x);
