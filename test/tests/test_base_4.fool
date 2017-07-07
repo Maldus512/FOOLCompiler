@@ -1,5 +1,5 @@
 class TETTE(int c){
-	int main() print(c);
+	void main() print(c);
 };
 
-let int main(TETTE t) t.main() ; TETTE tt = new TETTE(21); in main(tt);
+let void main(TETTE t) t.main() ; TETTE tt = new TETTE(21); in main(tt);

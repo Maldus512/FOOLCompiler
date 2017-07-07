@@ -2,6 +2,6 @@ class testClass (int a) {
 	int hello() a;
 }
 class finalClass (testClass x) {
-    int main() print(x.hello());
+    void main() print(x.hello());
 };
 let finalClass tette = new finalClass(new testClass(42)); in tette.main();

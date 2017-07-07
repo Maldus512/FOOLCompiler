@@ -73,7 +73,7 @@ CRPAR  : '}' ;
 IF        : 'if' ;
 THEN   : 'then' ;
 ELSE   : 'else' ;
-//PRINT : 'print' ; 
+PRINT : 'print' ; 
 LET    : 'let' ;
 IN     : 'in' ;
 VAR    : 'var' ;

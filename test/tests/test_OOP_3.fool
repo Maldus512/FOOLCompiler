@@ -1,13 +1,13 @@
 class SUPERCLASS (bool x, int y) {
-    int main(bool c) print(x);
-    int maina(bool cacca) print (y);
+    int main(bool c) x;
+    int maina(bool cacca) y;
 }
 class SUBCLASS implements SUPERCLASS (bool x, bool a) {
-    int maind() print(a);
-    int mainb() print(y);
-    int main(int c) print(c);
-    bool maina(bool c) print(x);
-    int maine() print(y);
+    int maind() a;
+    int mainb() y;
+    int main(int c) c;
+    bool maina(bool c) x;
+    void maine() print(y);
 };
 let
 	bool x = true;
@@ -15,7 +15,7 @@ let
 	SUPERCLASS test = new SUBCLASS(true, 0, false);
 	int f1(int f1p1) f1p1;
 	int z = f1(false);
-	void f2(SUPERCLASS p1) print( p1.maina(x) );
+	int f2(SUPERCLASS p1) p1.maina(x);
 	int w = f2(test);
 	
 	void foolfammerda1() print(x);

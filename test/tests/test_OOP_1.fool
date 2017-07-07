@@ -1,14 +1,14 @@
 class testClass (int a, int b, int c) {
-    int x() print(2);
-    int y() print(3);
-    int z() print(4);
+    void x() print(2);
+    void y() print(3);
+    void z() print(4);
 }
 class filler (bool k) {
-    int main() print(33);
-    int maina() print(44);
+    void main() print(33);
+    void maina() print(44);
 }
 class finalClass implements testClass(int a) {
-    int x() print(55);
+    void x() print(55);
 };
 let finalClass test = new finalClass(1, 42, 3); in test.x();
 
