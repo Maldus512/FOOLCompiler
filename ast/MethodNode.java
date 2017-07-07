@@ -2,6 +2,7 @@ package ast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 import lib.FOOLlib;
 import util.Environment;
 import util.SemanticError;
@@ -180,7 +181,8 @@ public class MethodNode implements Node {
 
 	public String codeGeneration() {
 		String myLabel = ownerClass + "_" + id;
-
+		String srv = type instanceof VoidTypeNode ? "" : "srv\n";
+		String lrv = type instanceof VoidTypeNode ? "" : "lrv\n";
 		String declCode="";
 		if (decList!=null) for (Node dec:decList)
 			declCode+=dec.codeGeneration();
@@ -200,13 +202,13 @@ public class MethodNode implements Node {
 					"lra\n"+ //inserimento return address
 					declCode+ //inserimento dichiarazioni locali
 					body.codeGeneration()+
-					"srv\n"+ //pop del return value
+					srv+ //pop del return value
 					popDecl+
 					"sra\n"+ // pop del return address
 					"pop\n"+ // pop di AL
 					popParl+
 					"sfp\n"+  // setto $fp a valore del CL
-					"lrv\n"+ // risultato della funzione sullo stack
+					lrv+ // risultato della funzione sullo stack
 					"lra\n"+"js\n" // salta a $ra
 					);
 		}
