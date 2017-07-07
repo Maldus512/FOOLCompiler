@@ -25,7 +25,8 @@ public class ExecuteVM {
   private int hp = 0;
   private int fp = MEMSIZE;
   private int ra;
-  private int rv;
+  private int rv = -1;
+  private boolean loadedrv = false;
 
   public ExecuteVM(int[] code) {
     this.code = code;
@@ -80,7 +81,9 @@ public class ExecuteVM {
         memory[address] = pop();
         break;
       case SVMParser.LOADW: //
-        push(memory[pop()]);
+        int add = pop();
+        push(memory[add]);
+        addRefBySP(add);
         break;
       case SVMParser.BRANCH:
         address = code[ip];
@@ -112,10 +115,12 @@ public class ExecuteVM {
         push(ra);
         break;
       case SVMParser.STORERV: //
-        rv = pop();
+        heapReferences.remove(sp);
+        rv = popNoGC();
         break;
       case SVMParser.LOADRV: //
         push(rv);
+        heapReferences.put(sp, rv);
         break;
       case SVMParser.LOADFP: //
         push(fp);
@@ -157,7 +162,6 @@ public class ExecuteVM {
   }
 
   private int malloc(int size) {
-    int oldhp = hp;
     int newRef = 0;
     HeapBlock block = null;
     if (garbageCollector.size() == 0) {
@@ -195,24 +199,61 @@ public class ExecuteVM {
     return newRef;
   }
 
-  private int pop() {
+  private int popNoGC() {
+    return memory[sp++];
+  }
+
+  private boolean addRefBySP(int add) {
+    if (heapReferences.get(add) != null) {
+      if (addReference(heapReferences.get(add))) {
+        heapReferences.put(sp, heapReferences.get(add));
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  private boolean addReference(int ref) {
+    HeapBlock block = garbageCollector.get(ref);
+    if (block == null) {
+      return false;
+    }
+    block.refCount++;
+    garbageCollector.put(ref, block);
+    return true;
+  }
+
+  private boolean removeReference(int ref) {
     int max;
+    HeapBlock block = garbageCollector.get(ref);
+    if (block == null) {
+      return false;
+    }
+    max = ref + block.blockSize;
+    block.refCount--;
+    if (block.refCount > 0) {
+      garbageCollector.put(ref, block);
+    } else {
+      garbageCollector.remove(ref);
+      if (max == hp) {
+        hp-= block.blockSize;
+      }
+      if (debug == true) {
+        System.out.println("Deallocated block at "+ref+" of size "+block.blockSize+".");
+      }
+    }
+    return true;
+  }
+
+  private int pop() {
     if (heapReferences.get(sp) != null) {
-      HeapBlock block = garbageCollector.get(memory[sp]);
-      if (block == null) {
+      heapReferences.remove(sp);
+      if (!removeReference(memory[sp])) {
         return memory[sp++];
       }
-      max = memory[sp] + block.blockSize;
-      block.refCount--;
-      if (block.refCount > 0) {
-        garbageCollector.put(memory[sp], block);
-      } else {
-        garbageCollector.remove(memory[sp]);
-        if (max == hp) {
-          hp-= block.blockSize;
-        }
-      }
-      heapReferences.remove(sp);
     }
     return memory[sp++];
   }
