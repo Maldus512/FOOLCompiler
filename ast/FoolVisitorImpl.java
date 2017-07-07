@@ -21,6 +21,7 @@ import parser.FOOLParser.IntValContext;
 import parser.FOOLParser.LetInExpContext;
 import parser.FOOLParser.MethodExpContext;
 import parser.FOOLParser.NewExpContext;
+import parser.FOOLParser.PrintExpContext;
 import parser.FOOLParser.SingleExpContext;
 import parser.FOOLParser.TermContext;
 import parser.FOOLParser.TypeContext;
@@ -336,6 +337,14 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		else
 			//instantiate the invocation
 			res = new CallNode(ctx.ID().getText(), args);
+
+		return res;
+	}
+
+	@Override
+	public Node visitPrintExp(PrintExpContext ctx) {
+		
+		Node res = new PrintNode( visit(ctx.exp()) );
 
 		return res;
 	}

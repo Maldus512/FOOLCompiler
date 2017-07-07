@@ -269,6 +269,14 @@ public class ClassNode implements Node {
 	}
 
 	public TypeNode typeCheck(Environment env) {
+		
+		for (Node method : methodList){
+			if( method.typeCheck(env) instanceof BottomTypeNode){
+				return new BottomTypeNode();
+			}
+		}
+		
+
 		if (superClassId != null) {
 
 			ClassTypeNode superType = env.classTypeEnvGet(superClassId);
@@ -276,7 +284,7 @@ public class ClassNode implements Node {
 			if ( !FOOLlib.isSubtype(type, superType) ) {
 				System.out.println("Error: " + id + " is not a subclass of " + superType.getId());
 				return new BottomTypeNode();
-			}
+			}			
 		}
 
 		return type;

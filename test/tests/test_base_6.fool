@@ -1,0 +1,5 @@
+
+
+let void foo(int x) print(x); in foo(false);
+
+

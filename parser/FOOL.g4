@@ -1,4 +1,3 @@
-//grammar FoolProvaBis;
 grammar FOOL;
 
 /*------------------------------------------------------------------
@@ -47,6 +46,7 @@ value  :  INTEGER                        		      #intVal
       | ID                                             #varExp
       | THIS											  #thisExp
       | ID ( LPAR (exp (COMMA exp)* )? RPAR )          #funExp
+      | PRINT ( LPAR exp RPAR )          #printExp
       | ID DOT ID ( LPAR (exp (COMMA exp)* )? RPAR )	  #methodExp     
       | NEW ID (LPAR exp (COMMA exp)* RPAR)?			  #newExp 
       ; 
