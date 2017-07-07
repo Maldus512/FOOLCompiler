@@ -114,6 +114,21 @@ public class MethodNode implements Node {
 			}
 		}
 
+
+		if ( type instanceof ClassTypeNode ) {	// if we are instantiating an object
+			String classId = ((ClassTypeNode)type).getId();
+			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
+			
+			if (fullClassType == null) {
+				res.add( new SemanticError("Class " + classId + " has not been defined."));
+				return res;
+			}
+			type = fullClassType;
+			entry.setType(type);
+
+		}
+
+
 		//set method type
 		entry.setType( new ArrowTypeNode(parTypes, type) );
 

@@ -2,6 +2,7 @@ package parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 
 public class ExecuteVM {
@@ -25,7 +26,6 @@ public class ExecuteVM {
   private int fp = MEMSIZE;
   private int ra;
   private int rv = -1;
-  private boolean loadedrv = false;
 
   public ExecuteVM(int[] code) {
     this.code = code;
@@ -81,7 +81,17 @@ public class ExecuteVM {
         break;
       case SVMParser.STOREW: //
         address = pop();
-        memory[address] = pop();
+        int content;
+        if (heapReferences.get(sp) != null) {
+          content = popNoGC();
+          heapReferences.put(address,content );
+        } else {
+          content = popNoGC();
+        }
+        //if (addReference(content)) {
+         // heapReferences.put(address, content);
+        //}
+        memory[address] = content;
         break;
       case SVMParser.LOADW: //
         int add = pop();
@@ -168,7 +178,7 @@ public class ExecuteVM {
     int newRef = 0;
     HeapBlock block = null;
     if (garbageCollector.size() == 0) {
-      block = new HeapBlock(1, size);
+      block = new HeapBlock(1, size, newRef);
     }
     while (block == null) {
       boolean room = true;
@@ -182,7 +192,7 @@ public class ExecuteVM {
         }
       }
       if (room) {
-        block = new HeapBlock(1, size);
+        block = new HeapBlock(1, size, newRef);
         if (newRef+size >= sp) {
           //HEAPOVERFLOW
           System.out.println("OUT OF MEMORY.");
@@ -240,16 +250,25 @@ public class ExecuteVM {
     if (block.refCount > 0) {
       garbageCollector.put(ref, block);
     } else {
-      garbageCollector.remove(ref);
       if (max == hp) {
-        hp-= block.blockSize;
+        hp -= block.blockSize;
       }
+      //garbageCollector.remove(ref);
+      for (int i = block.address; i < block.address + block.blockSize; i++) {
+        if (heapReferences.get(i) != null) {
+          removeReference(memory[i]);
+          heapReferences.remove(i);
+        }
+      }
+      garbageCollector.remove(block.address);
+
       if (debug == true) {
-        System.out.println("Deallocated block at "+ref+" of size "+block.blockSize+".");
+        System.out.println("Deallocated block at " + ref + " of size " + block.blockSize + ".");
       }
     }
     return true;
   }
+
 
   private int pop() {
     if (heapReferences.get(sp) != null) {
@@ -268,10 +287,12 @@ public class ExecuteVM {
   private class HeapBlock {
     public int refCount;
     public int blockSize;
+    public int address;
 
-    public HeapBlock(int count, int size) {
+    public HeapBlock(int count, int size, int add) {
       refCount = count;
       blockSize = size;
+      address = add;
     }
   }
 }

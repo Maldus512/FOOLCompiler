@@ -1,0 +1,14 @@
+class TETTE(int c) {
+    int main() print(c);
+};
+let 
+    int foo(int x)
+        let 
+            int boo(TETTE t)
+                t.main();
+            TETTE tt = new TETTE(x);
+        in
+            boo(tt);
+    int z = 42;
+in
+    foo(z);

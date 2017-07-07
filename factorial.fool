@@ -1,0 +1,13 @@
+let
+    int mult(int f1, int f2) 
+        let 
+            int multRec(int res, int rf1, int rf2, int c)
+                if c == rf2 then {
+                    res
+                } else {
+                    res + multRec(rf1, rf1,rf2,c+1)
+            };
+        in
+            multRec(0, f1, f2, 0);
+in
+    print(mult(3,8));
