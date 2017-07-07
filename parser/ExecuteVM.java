@@ -3,7 +3,6 @@ package parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.javafx.geom.AreaOp.AddOp;;
 
 public class ExecuteVM {
 
@@ -69,6 +68,10 @@ public class ExecuteVM {
       case SVMParser.DIV:
         v1 = pop();
         v2 = pop();
+        if (v1==0){
+          System.out.println("You are dividin by 0.");
+          System.exit(1);
+        }
         push(v2 / v1);
         break;
       case SVMParser.SUB:
