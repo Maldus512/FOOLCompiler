@@ -209,9 +209,12 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		if(ctx.right == null){
 			//it is a simple expression
 			return visit( ctx.left );
-		}else{
+		}else if (ctx.MINUS() == null){
 			//it is a binary expression, you should visit left and right
 			return new PlusNode(visit(ctx.left), visit(ctx.right));
+		}
+		else {
+			return new MinusNode(visit(ctx.left), visit(ctx.right));
 		}
 
 	}
@@ -223,9 +226,12 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		if(ctx.right == null){
 			//it is a simple expression
 			return visit( ctx.left );
-		}else{
+		}else if (ctx.DIV() == null){
 			//it is a binary expression, you should visit left and right
 			return new MultNode(visit(ctx.left), visit(ctx.right));
+		}
+		else{
+			return new DivNode(visit(ctx.left), visit(ctx.right));
 		}
 	}
 
