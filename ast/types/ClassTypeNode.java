@@ -1,11 +1,7 @@
 package ast.types;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import util.STentry;
-
-import util.Environment;
-import util.SemanticError;
 
 public class ClassTypeNode extends TypeNode {
 

@@ -2,7 +2,7 @@
 import sys
 import os
 from subprocess import Popen
-import re
+
 
 def main():
     if len(sys.argv) < 2:
@@ -30,24 +30,23 @@ def main():
     else:
         compiling = False
 
-    for fil in sorted(os.listdir('./tests')):
-        if os.path.isfile("./tests/"+fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil and compiling:
-            print("Checking "+fil+" ...")
-            proc = Popen(comp + ["-f", "./tests/"+fil])
+    for fil in sorted(os.listdir('./')):
+        if os.path.isfile("./" + fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil and compiling:
+            print("Checking " + fil + " ...")
+            proc = Popen(comp + ["-f", "./" + fil])
             proc.wait()
 
             if proc.returncode != 0:
                 print("Error in file " + fil)
                 exit(1)
         elif "Fool" in comp and "asm" in fil:
-            print("Executing "+fil+" ...")
-            proc = Popen(comp + ["-f", "./tests/"+fil])
+            print("Executing " + fil + " ...")
+            proc = Popen(comp + ["-f", "./" + fil])
             proc.wait()
 
             if proc.returncode != 0:
                 print("Error in file " + fil)
                 exit(1)
-
 
 
 if __name__ == "__main__":

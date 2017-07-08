@@ -1,6 +1,0 @@
-@Zini
-Ho dovuto ordinare la lista dei metodi perche' prima ogni classe aveva nella sua lista solo i suoi metodi; Per inserire anche quelli della superclasse avrei dovuto
-controllare i nomi nella lista (se ci sono), e  ho preferito aggiungere la hashmap methodsByOffset
-
-@Zini
-Le classi si comportano male se definisci dei metodi con gli stessi nomi dei campi

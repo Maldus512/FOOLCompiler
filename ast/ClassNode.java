@@ -87,7 +87,7 @@ public class ClassNode implements Node {
 		int methodOffset = 0; // offset for class' methods
 
 		env.incNestLevel(); // nestingLevel is now 
-		int classOffset = env.getClassOffset();
+		// int classOffset = env.getClassOffset();
 
 		// check if the class has already been declared
 		if (env.classTypeEnvPut(id, null) != null) {
@@ -200,7 +200,6 @@ public class ClassNode implements Node {
 		/****************************/
 
 		// Overriding of methods is handled in the same way as for fields.
-		// check semantics of class's methods
 		temp = new HashMap<String, STentry>();
 
 		for (Node n : methodList) {
