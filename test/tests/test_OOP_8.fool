@@ -1,0 +1,6 @@
+class Checker(int x, int y){
+    int max() if x>=y then { x } else {y};
+    int min() if x<y then { x } else {y};
+};
+
+let int x=5; int y=13; Checker c = new Checker(x,y); in print(c.max());
