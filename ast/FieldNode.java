@@ -13,16 +13,16 @@ public class FieldNode implements Node {
 	private String id;
 	private TypeNode type;
 
-	public FieldNode (String i, TypeNode t) {
-		id=i;
-		type=t;
+	public FieldNode(String i, TypeNode t) {
+		id = i;
+		type = t;
 	}
 
-	public String getId(){
+	public String getId() {
 		return id;
 	}
 
-	public TypeNode getType(){
+	public TypeNode getType() {
 		return type;
 	}
 
@@ -35,37 +35,37 @@ public class FieldNode implements Node {
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		HashMap<String, STentry> hm = env.getST().get(env.getNestLevel());
 		STentry entry = new STentry(env.getNestLevel(), offset);
 
 		if (type instanceof ClassTypeNode) {
-			String classId = ((ClassTypeNode)type).getId();
+			String classId = ((ClassTypeNode) type).getId();
 			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
 			boolean field = type.isField();
-			
+
 			if (fullClassType == null) {
-				res.add( new SemanticError("Class " + classId + " has not been defined; field is not accessible."));
+				res.add(new SemanticError("Class " + classId + " has not been defined; field is not accessible."));
 				return res;
 			}
 			type = new ClassTypeNode(fullClassType);
 			type.isField(field);
-			
+
 		}
 		entry.setType(type);
 
-		STentry prevEntry = hm.put( id, entry );
-		if ( prevEntry != null) {
+		STentry prevEntry = hm.put(id, entry);
+		if (prevEntry != null) {
 			// if we are here, we are overriding a field, thus we must update its offset accordingly
-			entry.setOffset( prevEntry.getOffset() );
+			entry.setOffset(prevEntry.getOffset());
 		}
 
-		hm.put( id, entry );
+		hm.put(id, entry);
 
 		return res;
 	}
 
 	public String toPrint(String s) {
-		return s+"Field:" + id +"\n"+type.toPrint(s+"  ") ; 
+		return s + "Field:" + id + "\n" + type.toPrint(s + "  ");
 	}
 
 	//non utilizzato
@@ -78,4 +78,4 @@ public class FieldNode implements Node {
 		return "";
 	}
 
-}  
+}

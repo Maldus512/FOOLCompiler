@@ -1,4 +1,5 @@
 package ast.types;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import util.STentry;
@@ -9,8 +10,8 @@ import util.SemanticError;
 public class ClassTypeNode extends TypeNode {
 
 	private String id;
-	private HashMap<String,STentry> fieldEntries;
-	private HashMap<String,STentry> methodEntries;
+	private HashMap<String, STentry> fieldEntries;
+	private HashMap<String, STentry> methodEntries;
 
 	public ClassTypeNode(ClassTypeNode clone) {
 		id = clone.getId();
@@ -19,7 +20,7 @@ public class ClassTypeNode extends TypeNode {
 		isField = clone.isField();
 	}
 
-	public ClassTypeNode (String i, HashMap<String,STentry> f, HashMap<String,STentry> m) {
+	public ClassTypeNode(String i, HashMap<String, STentry> f, HashMap<String, STentry> m) {
 		id = i;
 		fieldEntries = f;
 		methodEntries = m;
@@ -29,36 +30,35 @@ public class ClassTypeNode extends TypeNode {
 		return id;
 	}
 
-	public HashMap<String,STentry> getFieldEntriesMap() {
+	public HashMap<String, STentry> getFieldEntriesMap() {
 		return fieldEntries;
 	}
 
-	public HashMap<String,STentry> getMethodEntriesMap() {
+	public HashMap<String, STentry> getMethodEntriesMap() {
 		return methodEntries;
 	}
 
-	public HashMap<String,TypeNode> getFieldTypeMap(){
-		HashMap<String,TypeNode> fieldTypeMap = new HashMap<String,TypeNode>();
+	public HashMap<String, TypeNode> getFieldTypeMap() {
+		HashMap<String, TypeNode> fieldTypeMap = new HashMap<String, TypeNode>();
 
 		for (String key : fieldEntries.keySet())
-			fieldTypeMap.put( key, fieldEntries.get(key).getType() );
+			fieldTypeMap.put(key, fieldEntries.get(key).getType());
 
 		return fieldTypeMap;
 	}
 
-	public HashMap<String,ArrowTypeNode> getMethodTypeMap(){
-		HashMap<String,ArrowTypeNode> methodTypeMap = new HashMap<String,ArrowTypeNode>();
+	public HashMap<String, ArrowTypeNode> getMethodTypeMap() {
+		HashMap<String, ArrowTypeNode> methodTypeMap = new HashMap<String, ArrowTypeNode>();
 
 		for (String key : methodEntries.keySet())
-			methodTypeMap.put( key, (ArrowTypeNode)methodEntries.get(key).getType() );
+			methodTypeMap.put(key, (ArrowTypeNode) methodEntries.get(key).getType());
 
 		return methodTypeMap;
 	}
 
 	@Override
 	public String toPrint(String s) {
-		String  fieldstr = "",
-				methodstr = "";
+		String fieldstr = "", methodstr = "";
 
 		for (String key : fieldEntries.keySet())
 			fieldstr += fieldEntries.get(key).getType().toPrint(s + "  ");
@@ -66,9 +66,6 @@ public class ClassTypeNode extends TypeNode {
 		for (String key : methodEntries.keySet())
 			methodstr += methodEntries.get(key).getType().toPrint(s + "  ");
 
-		return s + "ClassType\n"
-				+ fieldstr
-				+ methodstr
-			; 
+		return s + "ClassType\n" + fieldstr + methodstr;
 	}
-}  
+}

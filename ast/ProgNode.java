@@ -10,28 +10,28 @@ import ast.types.*;
 public class ProgNode implements Node {
 
   private Node exp;
-  
-  public ProgNode (Node e) {
-    exp=e;
+
+  public ProgNode(Node e) {
+    exp = e;
   }
-  
+
   public String toPrint(String s) {
-    
-    return "Prog\n" + exp.toPrint("  ") ;
+
+    return "Prog\n" + exp.toPrint("  ");
   }
-  
+
   @Override
-	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		
-		return exp.checkSemantics(env);
-	}
-  
+  public ArrayList<SemanticError> checkSemantics(Environment env) {
+
+    return exp.checkSemantics(env);
+  }
+
   public TypeNode typeCheck(Environment env) {
     return exp.typeCheck(env);
-  }  
-  
+  }
+
   public String codeGeneration() {
-		return exp.codeGeneration()+"halt\n";
-  }  
-  
-}  
+    return exp.codeGeneration() + "halt\n";
+  }
+
+}

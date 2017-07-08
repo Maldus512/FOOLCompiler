@@ -12,43 +12,40 @@ public class MultNode implements Node {
 
   private Node left;
   private Node right;
-  
-  public MultNode (Node l, Node r) {
-    left=l;
-    right=r;
+
+  public MultNode(Node l, Node r) {
+    left = l;
+    right = r;
   }
-  
+
   @Override
-	public ArrayList<SemanticError> checkSemantics(Environment env) {
-	  //create the result
-	  ArrayList<SemanticError> res = new ArrayList<SemanticError>();
-	  
-	  //check semantics in the left and in the right exp
-	  
-	  res.addAll(left.checkSemantics(env));
-	  res.addAll(right.checkSemantics(env));
-	  
-	  return res;
-	}
-  
-  public String toPrint(String s) {
-    return s+"Mult\n" + left.toPrint(s+"  ")  
-                      + right.toPrint(s+"  ") ; 
+  public ArrayList<SemanticError> checkSemantics(Environment env) {
+    //create the result
+    ArrayList<SemanticError> res = new ArrayList<SemanticError>();
+
+    //check semantics in the left and in the right exp
+
+    res.addAll(left.checkSemantics(env));
+    res.addAll(right.checkSemantics(env));
+
+    return res;
   }
-  
+
+  public String toPrint(String s) {
+    return s + "Mult\n" + left.toPrint(s + "  ") + right.toPrint(s + "  ");
+  }
+
   public TypeNode typeCheck(Environment env) {
-    if (! ( FOOLlib.isSubtype(left.typeCheck(env),new IntTypeNode()) &&
-            FOOLlib.isSubtype(right.typeCheck(env),new IntTypeNode()) ) ) {
+    if (!(FOOLlib.isSubtype(left.typeCheck(env), new IntTypeNode())
+        && FOOLlib.isSubtype(right.typeCheck(env), new IntTypeNode()))) {
       System.out.println("Non integers in multiplication.");
       return new BottomTypeNode();
     }
     return new IntTypeNode();
-  }  
-  
-  public String codeGeneration() {
-		return left.codeGeneration()+
-			   right.codeGeneration()+
-			   "mult\n";
   }
 
-}  
+  public String codeGeneration() {
+    return left.codeGeneration() + right.codeGeneration() + "mult\n";
+  }
+
+}

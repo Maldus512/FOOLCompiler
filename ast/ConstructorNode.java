@@ -11,18 +11,20 @@ import ast.types.*;
 
 public class ConstructorNode extends CallNode {
 
-	public ConstructorNode (String i, ArrayList<Node> p) {
-		super(i,p);
+	public ConstructorNode(String i, ArrayList<Node> p) {
+		super(i, p);
 	}
-	public ConstructorNode (String i, STentry e, ArrayList<Node> p, int nl) {
-		super(i,e,p,nl);
+
+	public ConstructorNode(String i, STentry e, ArrayList<Node> p, int nl) {
+		super(i, e, p, nl);
 	}
+
 	public String getId() {
 		return id;
 	}
 
 	// public ClassNode getClassRef() {
-		// return classRef;
+	// return classRef;
 	// }
 
 	@Override
@@ -30,24 +32,23 @@ public class ConstructorNode extends CallNode {
 		String parstr = "";
 
 		for (Node par : parList) {
-			parstr += par.toPrint(s+"  ");
+			parstr += par.toPrint(s + "  ");
 		}
-		
-		return s + "New:" + id +"\n"
-				+ parstr;
+
+		return s + "New:" + id + "\n" + parstr;
 	}
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		
+
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
-		
-		if( env.classTypeEnvGet(id) == null ){
-			res.add( new SemanticError("Class " + id + " has not been defined; cannot be instantiated.") );
+
+		if (env.classTypeEnvGet(id) == null) {
+			res.add(new SemanticError("Class " + id + " has not been defined; cannot be instantiated."));
 			return res;
 		}
-		
-		res.addAll( super.checkSemantics(env) );
+
+		res.addAll(super.checkSemantics(env));
 		return res;
 	}
 
@@ -61,7 +62,6 @@ public class ConstructorNode extends CallNode {
 	@Override
 	public String codeGeneration() {
 		return super.codeGeneration();
-	}  
+	}
 
-
-}  
+}

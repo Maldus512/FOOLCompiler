@@ -7,12 +7,12 @@ import ast.types.ClassTypeNode;
 
 public class Environment {
 
-	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<HashMap<String,STentry>>();
-	private HashMap<String,ClassTypeNode> classTypeEnv = new HashMap<String,ClassTypeNode>();
-	private HashMap<String,ClassNode> classEnv = new HashMap<String,ClassNode>();
+	private ArrayList<HashMap<String, STentry>> symTable = new ArrayList<HashMap<String, STentry>>();
+	private HashMap<String, ClassTypeNode> classTypeEnv = new HashMap<String, ClassTypeNode>();
+	private HashMap<String, ClassNode> classEnv = new HashMap<String, ClassNode>();
 	private int nestingLevel;
 	private int offset;
-	private int classOffset;	// offset for classes
+	private int classOffset; // offset for classes
 
 	public Environment() {
 		nestingLevel = -1;
@@ -20,35 +20,33 @@ public class Environment {
 		classOffset = -2;
 	}
 
-	public ArrayList<HashMap<String,STentry>> getST() {
+	public ArrayList<HashMap<String, STentry>> getST() {
 		return symTable;
 	}
 
 	public int getLastNestLevel() {
-		return symTable.size()-1;
+		return symTable.size() - 1;
 	}
 
 	public int getNestLevel() {
 		return nestingLevel;
 	}
 
-	public ClassTypeNode classTypeEnvGet(String key){
+	public ClassTypeNode classTypeEnvGet(String key) {
 		return classTypeEnv.get(key);
 	}
 
-	public ClassTypeNode classTypeEnvPut(String key, ClassTypeNode value){
-		return classTypeEnv.put(key,value);
+	public ClassTypeNode classTypeEnvPut(String key, ClassTypeNode value) {
+		return classTypeEnv.put(key, value);
 	}
 
-	public ClassNode classEnvGet(String key){
+	public ClassNode classEnvGet(String key) {
 		return classEnv.get(key);
 	}
 
-	public ClassNode classEnvPut(String key, ClassNode value){
-		return classEnv.put(key,value);
+	public ClassNode classEnvPut(String key, ClassNode value) {
+		return classEnv.put(key, value);
 	}
-
-
 
 	public int incNestLevel() {
 		return nestingLevel++;

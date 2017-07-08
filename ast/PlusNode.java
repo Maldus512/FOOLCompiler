@@ -13,9 +13,9 @@ public class PlusNode implements Node {
     private Node left;
     private Node right;
 
-    public PlusNode (Node l, Node r) {
-        left=l;
-        right=r;
+    public PlusNode(Node l, Node r) {
+        left = l;
+        right = r;
     }
 
     @Override
@@ -32,13 +32,12 @@ public class PlusNode implements Node {
     }
 
     public String toPrint(String s) {
-        return s+"Plus\n" + left.toPrint(s+"  ")  
-            + right.toPrint(s+"  ") ; 
+        return s + "Plus\n" + left.toPrint(s + "  ") + right.toPrint(s + "  ");
     }
 
     public TypeNode typeCheck(Environment env) {
-        if (! ( FOOLlib.isSubtype(left.typeCheck(env),new IntTypeNode()) &&
-                    FOOLlib.isSubtype(right.typeCheck(env),new IntTypeNode()) ) ) {
+        if (!(FOOLlib.isSubtype(left.typeCheck(env), new IntTypeNode())
+                && FOOLlib.isSubtype(right.typeCheck(env), new IntTypeNode()))) {
             System.out.println("Non integers in sum.");
             return new BoolTypeNode();
         }
@@ -46,9 +45,7 @@ public class PlusNode implements Node {
     }
 
     public String codeGeneration() {
-        return left.codeGeneration()+
-            right.codeGeneration()+
-            "add\n";
+        return left.codeGeneration() + right.codeGeneration() + "add\n";
     }
 
-}  
+}

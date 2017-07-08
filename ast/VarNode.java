@@ -17,7 +17,7 @@ public class VarNode implements Node {
 	private TypeNode type;
 	private Node exp;
 
-	public VarNode (String i, TypeNode t, Node v) {
+	public VarNode(String i, TypeNode t, Node v) {
 		id = i;
 		type = t;
 		exp = v;
@@ -25,20 +25,19 @@ public class VarNode implements Node {
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		
+
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
 		//HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
-		HashMap<String,STentry> hm = env.getST().get(env.getLastNestLevel());
+		HashMap<String, STentry> hm = env.getST().get(env.getLastNestLevel());
 		STentry entry = new STentry(env.getNestLevel(), type, env.decOffset());
 
-
-		if ( type instanceof ClassTypeNode ) {	// if we are instantiating an object
-			String classId = ((ClassTypeNode)type).getId();
+		if (type instanceof ClassTypeNode) { // if we are instantiating an object
+			String classId = ((ClassTypeNode) type).getId();
 			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
-			
+
 			if (fullClassType == null) {
-				res.add( new SemanticError("Class " + classId + " has not been defined."));
+				res.add(new SemanticError("Class " + classId + " has not been defined."));
 				return res;
 			}
 			type = fullClassType;
@@ -46,7 +45,7 @@ public class VarNode implements Node {
 
 		}
 
-		if ( hm.put(id,entry) != null ) {
+		if (hm.put(id, entry) != null) {
 			res.add(new SemanticError("Var id " + id + " already declared."));
 			return res;
 		}
@@ -57,9 +56,7 @@ public class VarNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s + "Var:" + id + "\n"
-				+ type.toPrint(s+"  ")
-				+ exp.toPrint(s);
+		return s + "Var:" + id + "\n" + type.toPrint(s + "  ") + exp.toPrint(s);
 	}
 
 	//valore di ritorno non utilizzato
@@ -67,8 +64,8 @@ public class VarNode implements Node {
 
 		TypeNode expType = exp.typeCheck(env);
 
-		if (! (FOOLlib.isSubtype(expType, type)) ) {
-			System.out.println("incompatible value for variable "+id);
+		if (!(FOOLlib.isSubtype(expType, type))) {
+			System.out.println("incompatible value for variable " + id);
 			return new BottomTypeNode();
 		}
 
@@ -77,6 +74,6 @@ public class VarNode implements Node {
 
 	public String codeGeneration() {
 		return exp.codeGeneration();
-	}  
+	}
 
-}  
+}

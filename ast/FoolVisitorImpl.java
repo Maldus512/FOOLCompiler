@@ -31,14 +31,9 @@ import parser.FOOLParser.VardecContext;
 
 import util.SemanticError;
 
-
 /* By implementing the FOOLBaseVisitor each method is a callback executed when
    the corrisponding node is found while parsing the tree*/
 public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
-
-	// TODO: override visitMethodExp per gestire le invocazioni di metodo delle classi
-	// TODO: override visitNewExp per gestire la creazione di nuovi oggetti
-	// TODO: override visitThisExp per gestire le invocazioni 'this.'
 
 	@Override
 	public Node visitNewExp(NewExpContext ctx) {
@@ -47,7 +42,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		ArrayList<Node> args = new ArrayList<Node>();
 
-		for(ExpContext exp : ctx.exp())
+		for (ExpContext exp : ctx.exp())
 			args.add(visit(exp));
 
 		res = new ConstructorNode(ctx.ID().getText(), args);
@@ -57,21 +52,21 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitClassExp(ClassExpContext ctx) {
-		ArrayList<ClassNode>	classNodeList = new ArrayList<ClassNode>();
-		ArrayList<Node>	decList = new ArrayList<Node>();
+		ArrayList<ClassNode> classNodeList = new ArrayList<ClassNode>();
+		ArrayList<Node> decList = new ArrayList<Node>();
 
 		// visit all class nodes
 		for (ClassdecContext cc : ctx.classdec())
-			classNodeList.add( (ClassNode)visit(cc) );
+			classNodeList.add((ClassNode) visit(cc));
 
 		// if there are lets visit them
 		if (ctx.let() != null) {
-			for(DecContext dc : ctx.let().dec())
-				decList.add( visit(dc) );
+			for (DecContext dc : ctx.let().dec())
+				decList.add(visit(dc));
 		}
 
 		// visit exp node
-		Node exp = visit( ctx.exp() );
+		Node exp = visit(ctx.exp());
 
 		ProgClassNode c = new ProgClassNode(classNodeList, decList, exp);
 
@@ -87,16 +82,16 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 			c.setSuperClass(ctx.ID(1).getText());
 
 		// visit all class's fields
-		for(VardecContext vc : ctx.vardec()) {
-			TypeNode type = (TypeNode) visit( vc.type() );
+		for (VardecContext vc : ctx.vardec()) {
+			TypeNode type = (TypeNode) visit(vc.type());
 			type.isField(true);
-			c.addField( new FieldNode(vc.ID().getText(),type ) );
+			c.addField(new FieldNode(vc.ID().getText(), type));
 		}
 
 		// visit all class's methods
-		for(FunContext fc : ctx.fun()) {
-			FunNode f = (FunNode)visit(fc);
-			c.addMethod( f );
+		for (FunContext fc : ctx.fun()) {
+			FunNode f = (FunNode) visit(fc);
+			c.addMethod(f);
 		}
 
 		return c;
@@ -116,16 +111,16 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//notice that the ctx.let().dec() method returns a list, this is
 		//because of the use of * or + in the grammar
 		//antlr detects this is a group and therefore returns a list
-		for(DecContext dc : ctx.let().dec()){
-			declarations.add( visit(dc) );
+		for (DecContext dc : ctx.let().dec()) {
+			declarations.add(visit(dc));
 		}
 
 		//visit exp context
-		Node exp = visit( ctx.exp() );
+		Node exp = visit(ctx.exp());
 
 		//build @res accordingly with the result of the visits to its
 		//content
-		res = new ProgLetInNode(declarations,  exp);
+		res = new ProgLetInNode(declarations, exp);
 
 		return res;
 	}
@@ -137,7 +132,6 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		return new ProgNode(visit(ctx.exp()));
 
 	}
-
 
 	@Override
 	public Node visitVarasm(VarasmContext ctx) {
@@ -158,22 +152,22 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitFun(FunContext ctx) {
 		//initialize @res with the visits to the type and its ID
-		FunNode res = new FunNode(ctx.ID().getText(), (TypeNode) visit(ctx.type()) );
+		FunNode res = new FunNode(ctx.ID().getText(), (TypeNode) visit(ctx.type()));
 
 		//add argument declarations
 		//we are getting a shortcut here by constructing directly the ParNode
 		//this could be done differently by visiting instead the VardecContext
-		for(VardecContext vc : ctx.vardec())
-			res.addPar( new ParNode(vc.ID().getText(),(TypeNode) visit( vc.type() )) );
+		for (VardecContext vc : ctx.vardec())
+			res.addPar(new ParNode(vc.ID().getText(), (TypeNode) visit(vc.type())));
 
 		//add body
 		//create a list for the nested declarations
 		ArrayList<Node> innerDec = new ArrayList<Node>();
 
 		//check whether there are actually nested decs
-		if(ctx.let() != null){
+		if (ctx.let() != null) {
 			//if there are visit each dec and add it to the @innerDec list
-			for(DecContext dc : ctx.let().dec())
+			for (DecContext dc : ctx.let().dec())
 				innerDec.add(visit(dc));
 		}
 
@@ -183,17 +177,17 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//add the body and the inner declarations to the function
 		res.addDecBody(innerDec, exp);
 
-		return res;		
+		return res;
 
 	}
 
 	@Override
 	public Node visitType(TypeContext ctx) {
-		if(ctx.getText().equals("int"))
+		if (ctx.getText().equals("int"))
 			return new IntTypeNode();
-		else if(ctx.getText().equals("bool"))
+		else if (ctx.getText().equals("bool"))
 			return new BoolTypeNode();
-		else if(ctx.getText().equals("void"))
+		else if (ctx.getText().equals("void"))
 			return new VoidTypeNode();
 
 		return new ClassTypeNode(ctx.getText(), null, null);
@@ -206,14 +200,13 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		//check whether this is a simple or binary expression
 		//notice here the necessity of having named elements in the grammar
-		if(ctx.right == null){
+		if (ctx.right == null) {
 			//it is a simple expression
-			return visit( ctx.left );
-		}else if (ctx.MINUS() == null){
+			return visit(ctx.left);
+		} else if (ctx.MINUS() == null) {
 			//it is a binary expression, you should visit left and right
 			return new PlusNode(visit(ctx.left), visit(ctx.right));
-		}
-		else {
+		} else {
 			return new MinusNode(visit(ctx.left), visit(ctx.right));
 		}
 
@@ -223,45 +216,40 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	public Node visitTerm(TermContext ctx) {
 		//check whether this is a simple or binary expression
 		//notice here the necessity of having named elements in the grammar
-		if(ctx.right == null){
+		if (ctx.right == null) {
 			//it is a simple expression
-			return visit( ctx.left );
-		}else if (ctx.DIV() == null){
+			return visit(ctx.left);
+		} else if (ctx.DIV() == null) {
 			//it is a binary expression, you should visit left and right
 			return new MultNode(visit(ctx.left), visit(ctx.right));
-		}
-		else{
+		} else {
 			return new DivNode(visit(ctx.left), visit(ctx.right));
 		}
 	}
-
 
 	@Override
 	public Node visitFactor(FactorContext ctx) {
 		//check whether this is a simple or binary expression
 		//notice here the necessity of having named elements in the grammar
-		if(ctx.right == null){
+		if (ctx.right == null) {
 			//it is a simple expression
-			return visit( ctx.left );
+			return visit(ctx.left);
 		}
-		else{
-			if(ctx.GREATER() != null){
-				return new GreaterNode(visit(ctx.left), visit(ctx.right));	
-			}
-			if(ctx.SMALLER() != null){
-				return new SmallerNode(visit(ctx.left), visit(ctx.right));	
-			}
-			if(ctx.GREATEREQ() != null){
-				return new GreatEqualNode(visit(ctx.left), visit(ctx.right));	
-			}
-			if(ctx.SMALLEREQ() != null){
-				return new LessEqualNode(visit(ctx.left), visit(ctx.right));	
-			}
-			//it is a binary expression, you should visit left and right
-			return new EqualNode(visit(ctx.left), visit(ctx.right));
-		}
-	}
 
+		if (ctx.GREAT() != null) {
+			return new GreatNode(visit(ctx.left), visit(ctx.right));
+		} else if (ctx.LESS() != null) {
+			return new LessNode(visit(ctx.left), visit(ctx.right));
+		} else if (ctx.GREATEQ() != null) {
+			return new GreatEqualNode(visit(ctx.left), visit(ctx.right));
+		} else if (ctx.LESSEQ() != null) {
+			return new LessEqualNode(visit(ctx.left), visit(ctx.right));
+		}
+
+		//it is a binary expression, you should visit left and right
+		return new EqualNode(visit(ctx.left), visit(ctx.right));
+
+	}
 
 	@Override
 	public Node visitIntVal(IntValContext ctx) {
@@ -275,7 +263,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 	public Node visitBoolVal(BoolValContext ctx) {
 
 		//there is no need to perform a check here, the lexer ensures this text is a boolean
-		return new BoolNode(Boolean.parseBoolean(ctx.getText())); 
+		return new BoolNode(Boolean.parseBoolean(ctx.getText()));
 	}
 
 	@Override
@@ -288,7 +276,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//this is actually the default implementation for this method in the FOOLBaseVisitor class
 		//therefore it can be safely removed here
 
-		return visit (ctx.exp());
+		return visit(ctx.exp());
 
 	}
 
@@ -302,11 +290,11 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//notice once again the need of named terminals in the rule, this is because
 		//we need to point to the right expression among the 3 possible ones in the rule
 
-		Node condExp = visit (ctx.cond);
+		Node condExp = visit(ctx.cond);
 
-		Node thenExp = visit (ctx.thenBranch);
+		Node thenExp = visit(ctx.thenBranch);
 
-		Node elseExp = visit (ctx.elseBranch);
+		Node elseExp = visit(ctx.elseBranch);
 
 		//build the @res properly and return it
 		res = new IfNode(condExp, thenExp, elseExp);
@@ -326,7 +314,7 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 
 		ArrayList<Node> args = new ArrayList<Node>();
 
-		for(ExpContext exp : ctx.exp())
+		for (ExpContext exp : ctx.exp())
 			args.add(visit(exp));
 
 		MethodCallNode m = new MethodCallNode(ctx.ID(1).getText(), args, new IdNode(ctx.ID(0).getText()));
@@ -344,26 +332,19 @@ public class FoolVisitorImpl extends FOOLBaseVisitor<Node> {
 		//get the invocation arguments
 		ArrayList<Node> args = new ArrayList<Node>();
 
-		for(ExpContext exp : ctx.exp())
+		for (ExpContext exp : ctx.exp())
 			args.add(visit(exp));
 
-		//especial check for stdlib func
-		//this is WRONG, THIS SHOULD BE DONE IN A DIFFERENT WAY
-		//JUST IMAGINE THERE ARE 800 stdlib functions...
-		if(ctx.ID().getText().equals("print"))
-			res = new PrintNode(args.get(0));
-
-		else
-			//instantiate the invocation
-			res = new CallNode(ctx.ID().getText(), args);
+		//instantiate the invocation
+		res = new CallNode(ctx.ID().getText(), args);
 
 		return res;
 	}
 
 	@Override
 	public Node visitPrintExp(PrintExpContext ctx) {
-		
-		Node res = new PrintNode( visit(ctx.exp()) );
+
+		Node res = new PrintNode(visit(ctx.exp()));
 
 		return res;
 	}
