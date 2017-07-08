@@ -5,6 +5,7 @@ import java.util.*;
 
 public class SyntaxErrorListener extends BaseErrorListener {
     public int errors = 0;
+
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
             String msg, RecognitionException e) {
@@ -16,12 +17,13 @@ public class SyntaxErrorListener extends BaseErrorListener {
     }
 
     static class SyntaxErrorException extends Exception {
-      // Parameterless Constructor
-      public SyntaxErrorException() {}
+        // Parameterless Constructor
+        public SyntaxErrorException() {
+        }
 
-      // Constructor that accepts a message
-      public SyntaxErrorException(String message) {
-         super(message);
-      }
- }
+        // Constructor that accepts a message
+        public SyntaxErrorException(String message) {
+            super(message);
+        }
+    }
 }

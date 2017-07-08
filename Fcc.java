@@ -95,7 +95,7 @@ public class Fcc {
 
 		if (commandArgs.verbose) {
 			if (type instanceof ClassTypeNode) {
-				System.out.println("Type of the program is: " + ((ClassTypeNode)type).getId());
+				System.out.println("Type of the program is: " + ((ClassTypeNode) type).getId());
 			} else {
 				System.out.println(type.toPrint("Type of the program is: "));
 			}

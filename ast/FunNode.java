@@ -1,4 +1,5 @@
 package ast;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,28 +13,38 @@ import ast.types.*;
 public class FunNode implements Node {
 
 	private String id;
-	private TypeNode type; 
+	private TypeNode type;
 	private ArrowTypeNode arrowType;
 	private ArrayList<Node> parList = new ArrayList<Node>();
 	private ArrayList<Node> decList;
 	private Node body;
 
-	public FunNode (String i, TypeNode t) {
+	public FunNode(String i, TypeNode t) {
 		id = i;
 		type = t;
 	}
 
-	public String getId() { return id; }
+	public String getId() {
+		return id;
+	}
 
-	public TypeNode getType() { return type; }
+	public TypeNode getType() {
+		return type;
+	}
 
-	public ArrayList<Node> getParList() { return parList; }
+	public ArrayList<Node> getParList() {
+		return parList;
+	}
 
-	public ArrayList<Node> getDecList() { return decList; }
+	public ArrayList<Node> getDecList() {
+		return decList;
+	}
 
-	public Node getBody() { return body; }
+	public Node getBody() {
+		return body;
+	}
 
-	public void addDecBody (ArrayList<Node> d, Node b) {
+	public void addDecBody(ArrayList<Node> d, Node b) {
 		decList = d;
 		body = b;
 	}
@@ -42,56 +53,55 @@ public class FunNode implements Node {
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
-		HashMap<String,STentry> hm = env.getST().get(env.getNestLevel());
+		HashMap<String, STentry> hm = env.getST().get(env.getNestLevel());
 		STentry entry = new STentry(env.getNestLevel(), env.decOffset());
 
-		if (hm.put( id, entry ) != null) {
-			res.add( new SemanticError("Function name '" + id + "' has already been used.") );
+		if (hm.put(id, entry) != null) {
+			res.add(new SemanticError("Function name '" + id + "' has already been used."));
 			return res;
 		}
 
 		env.incNestLevel();
-		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
+		HashMap<String, STentry> hmn = new HashMap<String, STentry>();
 		env.getST().add(hmn);
 
 		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
 		int paroffset = 1;
 
 		// check parameters
-		for (Node a:parList) {
+		for (Node a : parList) {
 			ParNode par = (ParNode) a;
 
 			STentry parEntry = new STentry(env.getNestLevel(), par.getType(), paroffset++);
-			
 
 			if (par.getType() instanceof ClassTypeNode) {
-				String parId = ( (ClassTypeNode)(par.getType()) ).getId();
+				String parId = ((ClassTypeNode) (par.getType())).getId();
 				ClassTypeNode entryType = env.classTypeEnvGet(parId);
 				if (entryType == null) {
-					res.add( new SemanticError("Class " + parId + " has not been defined for par " + id + ".")); //TODO controllare che esista la variabile e non la classe
+					res.add(new SemanticError("Class " + parId + " has not been defined for par " + id + ".")); //TODO controllare che esista la variabile e non la classe
 					return res;
 				}
-				entryType = new ClassTypeNode (entryType);
+				entryType = new ClassTypeNode(entryType);
 				entryType.isField(false);
-				parEntry.setType( entryType );
-				par.setType( entryType );
+				parEntry.setType(entryType);
+				par.setType(entryType);
 			}
-
 
 			parTypes.add(par.getType());
 
-			if ( hmn.put( par.getId(), parEntry ) != null  ) {
-				res.add( new SemanticError("Parameter name " + par.getId() + " of method " + id + " has already been used.") );
+			if (hmn.put(par.getId(), parEntry) != null) {
+				res.add(new SemanticError(
+						"Parameter name " + par.getId() + " of method " + id + " has already been used."));
 				return res;
 			}
 		}
 
-		if ( type instanceof ClassTypeNode ) {	// if we are instantiating an object
-			String classId = ((ClassTypeNode)type).getId();
+		if (type instanceof ClassTypeNode) { // if we are instantiating an object
+			String classId = ((ClassTypeNode) type).getId();
 			ClassTypeNode fullClassType = env.classTypeEnvGet(classId);
-			
+
 			if (fullClassType == null) {
-				res.add( new SemanticError("Class " + classId + " has not been defined."));
+				res.add(new SemanticError("Class " + classId + " has not been defined."));
 				return res;
 			}
 			type = fullClassType;
@@ -99,19 +109,18 @@ public class FunNode implements Node {
 
 		}
 
-
 		// set function type
 		arrowType = new ArrowTypeNode(parTypes, type);
-		entry.setType( arrowType );
+		entry.setType(arrowType);
 
 		if (decList.size() > 0) {
 			// check dec list
 			//env.incNestLevel();
-			HashMap<String,STentry> lethm = new HashMap<String,STentry> ();
+			HashMap<String, STentry> lethm = new HashMap<String, STentry>();
 			env.getST().add(lethm);
 			int oldOffset = env.getOffset();
 			env.setOffset(-2);
-			for(Node n:decList)
+			for (Node n : decList)
 				res.addAll(n.checkSemantics(env));
 
 			res.addAll(body.checkSemantics(env));
@@ -130,39 +139,34 @@ public class FunNode implements Node {
 		return res;
 	}
 
-	public void addPar (Node p) {
+	public void addPar(Node p) {
 		parList.add(p);
-	}  
+	}
 
 	public String toPrint(String s) {
-		String	parlstr="",
-				declstr="";
-		
-		for (Node par:parList)
-			parlstr+=par.toPrint(s+"  ");
-		
-		if (decList!=null)
-			for (Node dec:decList)
-				declstr+=dec.toPrint(s+"  ");
+		String parlstr = "", declstr = "";
 
-		return s+"Fun:" + id +"\n"
-			   +type.toPrint(s+"  ")
-			   +parlstr
-			   +declstr
-			   +body.toPrint(s+"  ") ; 
+		for (Node par : parList)
+			parlstr += par.toPrint(s + "  ");
+
+		if (decList != null)
+			for (Node dec : decList)
+				declstr += dec.toPrint(s + "  ");
+
+		return s + "Fun:" + id + "\n" + type.toPrint(s + "  ") + parlstr + declstr + body.toPrint(s + "  ");
 	}
 
 	//valore di ritorno non utilizzato
 	public TypeNode typeCheck(Environment env) {
-		if (decList!=null) {
-			for (Node dec:decList) {
+		if (decList != null) {
+			for (Node dec : decList) {
 				if (dec.typeCheck(env) instanceof BottomTypeNode) {
 					return new BottomTypeNode();
 				}
 			}
 		}
-		
-		if ( !(FOOLlib.isSubtype(body.typeCheck(env),type)) ){
+
+		if (!(FOOLlib.isSubtype(body.typeCheck(env), type))) {
 			System.out.println("Wrong return type for function " + id);
 			return new BottomTypeNode();
 		}
@@ -172,37 +176,35 @@ public class FunNode implements Node {
 	public String codeGeneration() {
 		String srv = type instanceof VoidTypeNode ? "" : "srv\n";
 		String lrv = type instanceof VoidTypeNode ? "" : "lrv\n";
-		String declCode="# LET\n";
-		if (decList!=null) for (Node dec:decList)
-			declCode+=dec.codeGeneration();
+		String declCode = "# LET\n";
+		if (decList != null)
+			for (Node dec : decList)
+				declCode += dec.codeGeneration();
 
 		declCode += "##\n";
-		
-		String popDecl="";
-		if (decList!=null) for (Node dec:decList)
-			popDecl+="pop\n";
-		
-		String popParl="";
-		for (Node dec:parList)
-			popParl+="pop\n";
-		
-		String funl=FOOLlib.freshFunLabel(); 
-		FOOLlib.putCode(funl+":\n"+
-				"cfp\n"+ //setta $fp a $sp; this is the Access Link				
-				"lra\n"+ //inserimento return address
-				declCode+ //inserimento dichiarazioni locali
-				body.codeGeneration()+
-				srv+ //pop del return value
-				popDecl+
-				"sra\n"+ // pop del return address
-				"pop\n"+ // pop di AL
-				popParl+
-				"sfp\n"+  // setto $fp a valore del CL; this is the control link
-				lrv+ // risultato della funzione sullo stack
-				"lra\n"+"js\n" // salta a $ra
-				);
-		
-		return "push "+ funl +"\n";
+
+		String popDecl = "";
+		if (decList != null)
+			for (Node dec : decList)
+				popDecl += "pop\n";
+
+		String popParl = "";
+		for (Node dec : parList)
+			popParl += "pop\n";
+
+		String funl = FOOLlib.freshFunLabel();
+		FOOLlib.putCode(funl + ":\n" + "cfp\n" + //setta $fp a $sp; this is the Access Link				
+				"lra\n" + //inserimento return address
+				declCode + //inserimento dichiarazioni locali
+				body.codeGeneration() + srv + //pop del return value
+				popDecl + "sra\n" + // pop del return address
+				"pop\n" + // pop di AL
+				popParl + "sfp\n" + // setto $fp a valore del CL; this is the control link
+				lrv + // risultato della funzione sullo stack
+				"lra\n" + "js\n" // salta a $ra
+		);
+
+		return "push " + funl + "\n";
 	}
 
 }

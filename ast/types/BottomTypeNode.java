@@ -6,12 +6,12 @@ import util.Environment;
 import util.SemanticError;
 
 public class BottomTypeNode extends TypeNode {
-  
-  public BottomTypeNode () {
-  }
-  
-  @Override
-  public String toPrint(String s) {
-	return s+"Exception\n";  
-  }
-}  
+
+	public BottomTypeNode() {
+	}
+
+	@Override
+	public String toPrint(String s) {
+		return s + "Exception\n";
+	}
+}

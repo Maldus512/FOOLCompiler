@@ -41,24 +41,26 @@ public class Fool {
 			System.exit(0);
 		}
 
-        FileInputStream isASM = new FileInputStream(fileName);
-        CharStream inputASM = CharStreams.fromStream(isASM);
-        SVMLexer lexerASM = new SVMLexer(inputASM);
-        CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
-        SVMParser parserASM = new SVMParser(tokensASM);
+		FileInputStream isASM = new FileInputStream(fileName);
+		CharStream inputASM = CharStreams.fromStream(isASM);
+		SVMLexer lexerASM = new SVMLexer(inputASM);
+		CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
+		SVMParser parserASM = new SVMParser(tokensASM);
 
-        parserASM.assembly();
+		parserASM.assembly();
 
-        System.out.println("You had: "+lexerASM.lexicalErrors+" lexical error(s) and "+parserASM.getNumberOfSyntaxErrors()+" syntax error(s).");
-        if (lexerASM.lexicalErrors>0 || parserASM.getNumberOfSyntaxErrors()>0) System.exit(1);
+		System.out.println("You had: " + lexerASM.lexicalErrors + " lexical error(s) and "
+				+ parserASM.getNumberOfSyntaxErrors() + " syntax error(s).");
+		if (lexerASM.lexicalErrors > 0 || parserASM.getNumberOfSyntaxErrors() > 0)
+			System.exit(1);
 
-        System.out.println("Starting Virtual Machine...");
+		System.out.println("Starting Virtual Machine...");
 		int flags = 0;
 		if (commandArgs.verbose) {
 			flags = 1;
 		}
-        ExecuteVM vm = new ExecuteVM(parserASM.code, flags);
-        vm.cpu();
+		ExecuteVM vm = new ExecuteVM(parserASM.code, flags);
+		vm.cpu();
 		System.exit(0);
 	}
 
