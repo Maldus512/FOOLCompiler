@@ -16,3 +16,4 @@ RILEVANTI:
 - Mettere da qualche parte che non faccia schifo la generazione di codice delle funzioni (in realta' discretamente importante, fa veramente molto schifo messa com'e')
 - Creare una routine di test piu' seria
 - Le classi si comportano male se viene definito un metodo con lo stesso nome di un campo - maldo l'errore è in qualche modo legato ad una hashmap che hai aggiunto tu, quindi se puoi guardaci tu
+- rimuovere tutti i commenti di TODO
