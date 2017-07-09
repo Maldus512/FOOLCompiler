@@ -1,7 +1,7 @@
 // @maldo: guarda qui
 
 class testClass (int holostessonome, int b, int c) {
-    void holostessonome() print(2);
+    void getholostessonome() print(holostessonome);
     void y() print(3);
     void z() print(4);
 }
@@ -12,5 +12,5 @@ class filler (bool k) {
 class finalClass implements testClass(int a) {
     void x() print(55);
 };
-let finalClass test = new finalClass(1, 42, 3); in test.x();
+let finalClass test = new finalClass(1, 42, 3, 5); in test.x();
 

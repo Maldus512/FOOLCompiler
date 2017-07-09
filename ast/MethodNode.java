@@ -95,11 +95,11 @@ public class MethodNode implements Node {
 		//meno uno perchè il nesting level con cui chiamare un metodo deve essere lo stesso della classe
 		STentry entry = new STentry(env.getNestLevel() - 1, offset);
 
-		STentry prevEntry = hm.put(id, entry);
-		if (prevEntry != null) {
-			// if we are here we are overriding a method, thus we must update offsets accordingly
-			//TODO
-			//entry.setOffset( prevEntry.getOffset() );
+		STentry prevEntry = hm.get(id);
+		if (prevEntry !=null && !(prevEntry.getType() instanceof ArrowTypeNode)) {
+			// Cannot override a different type
+			res.add(new SemanticError(
+					"Symbol " + id + " of type " + prevEntry.getType().toPrint("") + " cannot be redefined as method."));
 		}
 
 		env.incNestLevel();

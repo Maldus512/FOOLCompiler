@@ -217,7 +217,6 @@ public class ClassNode implements Node {
 			 * The current class offset to reach the symbol table;
 			 * The current method offset to reach the method;
 			 * -1 to step over the constructor (first method in each class)
-			 * TODO> COSE TORNA INDIETRO DEVI DARGLI IL TEMPO DI GUARIRE
 			 */
 
 			if (methodEntries.put(m.getId(), new STentry(-1, -1)) != null) {
@@ -229,10 +228,9 @@ public class ClassNode implements Node {
 
 			// if a method has been overrided, hmn was not changed, 
 			// thus we must adjust methodOffset to correct offset
-			if (methodNumber == hmn.size()) {
+			if (methodNumber == hmn.size() && methodOffsetByName.get(m.getId()) != null) {
 				//methodOffset--;
 				methodsByOffset.put(methodOffsetByName.get(m.getId()), m);
-				//	hmn.get(m.getId()).setOffset(env.getClassOffset() - methodOffsetByName.get(m.getId()) - 1);	
 			} else {
 				methodsByOffset.put(methodOffset, m);
 				methodOffset++;
@@ -241,7 +239,7 @@ public class ClassNode implements Node {
 
 		//if we have no superclass this step is useless
 		Node[] orderedMethods = new Node[methodsByOffset.size()];
-
+		
 		for (Integer key : methodsByOffset.keySet()) {
 			orderedMethods[key] = methodsByOffset.get(key);
 		}

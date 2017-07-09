@@ -1,5 +1,5 @@
 class TETTE(int c) {
-    int main() print(c);
+    int main() c;
 };
 let 
     int foo(int x)
