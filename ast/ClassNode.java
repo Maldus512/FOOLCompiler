@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Arrays;
 import util.STentry;
 
-import lib.FOOLlib;
+import util.FOOLlib;
 import util.Environment;
 import util.SemanticError;
 import ast.types.*;

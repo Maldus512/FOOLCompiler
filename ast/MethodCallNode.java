@@ -6,7 +6,7 @@ import java.util.HashMap;
 import util.Environment;
 import util.SemanticError;
 import util.STentry;
-import lib.FOOLlib;
+import util.FOOLlib;
 
 import ast.types.*;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import util.Environment;
 import util.SemanticError;
-import lib.FOOLlib;
+import util.FOOLlib;
 
 import ast.types.*;
 

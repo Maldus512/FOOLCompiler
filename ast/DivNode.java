@@ -6,7 +6,7 @@ import javax.lang.model.element.TypeElement;
 
 import util.Environment;
 import util.SemanticError;
-import lib.FOOLlib;
+import util.FOOLlib;
 
 import ast.types.*;
 

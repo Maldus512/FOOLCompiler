@@ -7,7 +7,7 @@ import ast.types.TypeNode;
 import ast.types.BoolTypeNode;
 import util.Environment;
 import util.SemanticError;
-import lib.FOOLlib;
+import util.FOOLlib;
 
 public class IfNode implements Node {
 
