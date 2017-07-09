@@ -3,49 +3,30 @@ import sys
 import os
 from subprocess import Popen
 
+dir = os.path.abspath("..")
+
+compiler = ["java", "-classpath",  "{}:{}/lib/commons-cli.jar:{}/lib/antlr-4.7-complete.jar:".format(dir,dir,dir),  "Fjc"]
+interpreter = ["java", "-classpath",  "{}:{}/lib/commons-cli.jar:{}/lib/antlr-4.7-complete.jar:".format(dir,dir,dir),  "Fool"]
 
 def main():
-    if len(sys.argv) < 2:
-        print("No compiler specified")
-        exit(1)
-
-    comp = sys.argv[1]
-    tmp = comp.split("'")
-    res = []
-
-    for piece in tmp[0].split(" "):
-        if piece:
-            res.append(piece)
-
-    res.append(tmp[1])
-
-    for piece in tmp[2].split(" "):
-        if piece:
-            res.append(piece)
-
-    comp = res
-
-    if "Fjc" in comp:
-        compiling = True
-    else:
-        compiling = False
-
     for fil in sorted(os.listdir('./')):
-        if os.path.isfile("./" + fil) and "test" in fil and fil != sys.argv[0] and not "asm" in fil and compiling:
+        if os.path.isfile("./" + fil) and "test" in fil and fil != sys.argv[0] and ".fool" and not ".asm" in fil:
             print("Checking " + fil + " ...")
-            proc = Popen(comp + ["-f", "./" + fil])
+            proc = Popen(compiler + ["-f", "./" + fil])
             proc.wait()
 
             if proc.returncode != 0:
                 print("Error in file " + fil)
                 exit(1)
-        elif "Fool" in comp and "asm" in fil:
-            print("Executing " + fil + " ...")
-            proc = Popen(comp + ["-f", "./" + fil])
+            
+            print("compiled successfully")
+
+            print("Executing " + fil + ".asm ...")
+            proc = Popen(interpreter + ["-f", "./" + fil +".asm"])
             proc.wait()
 
             if proc.returncode != 0:
-                print("Error in file " + fil)
+                print("Error while executing " + fil + ".asm")
                 exit(1)
 
 

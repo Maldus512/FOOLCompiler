@@ -31,8 +31,8 @@ run: classes
 	 java -classpath $(CP) Fjc -f $(f) -d
 
 test: classes
-	cd test && python test_suite.py "$(JAVA) Fjc"
-	cd test && python test_suite.py "$(JAVA) Fool"
+	cd test && python test_suite.py
+	cd test && python test_suite.py
 
 go:
 	$(MAKE) clean

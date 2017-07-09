@@ -48,11 +48,18 @@ public class Fjc {
 
 		FileInputStream is = null;
 
+		String[] extension = fileName.split("\\.");
+
+		if (extension.length == 0 || !extension[extension.length - 1].equals("fool")) {
+			System.out.println("Unrecognized file format: " + extension[extension.length -1]);
+			System.exit(-1);
+		}
+
 		try {
 			is = new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
 			System.out.println("\nERROR. No file found with the given name.\n");
-			System.exit(2);
+			System.exit(-1);
 		}
 
 		CharStream input = null;
@@ -106,7 +113,7 @@ public class Fjc {
 
 		if (type instanceof BottomTypeNode) {
 			System.out.println("Type checking of the program not successful.");
-			System.exit(1);
+			System.exit(2);
 		}
 
 		if (commandArgs.codeGen) {
@@ -119,9 +126,11 @@ public class Fjc {
 				out.close();
 			} catch (IOException e) {
 				System.out.println(e.toString());
-				System.exit(2);
+				System.exit(-1);
 			}
-			System.out.println("Code generated!");
+			if (commandArgs.verbose) {
+				System.out.println("Code generated: " + fileName+".asm");
+			}
 		}
 		System.exit(0);
 	}
