@@ -75,7 +75,12 @@ public class IdNode implements Node {
 					"lfp\n" + getAR + //risalgo la catena statica
 					"add\n" + "lw\n"; //carico sullo stack il valore all'indirizzo ottenuto
 		} else {
-			return "push 1\n" + "lfp\n" + "add\n" + "lw\n" + "push " + entry.getOffset() + "\n" + "add\n" + "lw\n";
+			// -1 because field references in a class need to have 1 less nesting level.
+			// This is because the class' nesting level does not immediatly translates
+			// into one more Activation Record
+			for (int i = 0; i < nestinglevel - entry.getNestLevel() -1; i++)
+				getAR += "lw\n";
+			return "push 1\n" + "lfp\n" + getAR + "add\n" + "lw\n" + "push " + entry.getOffset() + "\n" + "add\n" + "lw\n";
 		}
 
 	}

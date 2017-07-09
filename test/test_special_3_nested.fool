@@ -1,14 +1,14 @@
-class TETTE(int c) {
+class Test(int c) {
     int main() c;
 };
 let 
-    int foo(int x)
+    void foo(int x)
         let 
-            int boo(TETTE t)
+            int boo(Test t)
                 t.main();
-            TETTE tt = new TETTE(x);
+            Test tt = new Test(x);
         in
-            boo(tt);
+            print(boo(tt));
     int z = 42;
 in
     foo(z);

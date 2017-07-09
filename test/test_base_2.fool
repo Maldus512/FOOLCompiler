@@ -1,1 +1,4 @@
-let int x = 2; int y = 2; in print(x+y);
+let 
+    int x = 40;
+    int y = 2;
+in print(x+y);

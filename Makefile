@@ -32,7 +32,6 @@ run: classes
 
 test: classes
 	cd test && python test_suite.py
-	cd test && python test_suite.py
 
 go:
 	$(MAKE) clean

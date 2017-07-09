@@ -1,11 +1,13 @@
-class TETTE(int c){
+class Test(int c){
 	void main() print(c);
 };
-
-//let int foo(int x) let bool boo(TETTE t) t.main(x * 3);in boo(x) ; TETTE tt = new TETTE(5); in foo(tt);
-
-
-let void foo(int x) let void boo(TETTE t) t.main(); TETTE tt = new TETTE(x); in boo(tt) ; in foo(5);
-
-
-//let int foo(int x) let int boo(int t) print(t); int tt=5; in boo(tt) ; in foo(5);
+let 
+	void foo(int x) 
+		let 
+			void boo(Test t) 
+				t.main(); 
+			Test tt = new Test(x); 
+		in 
+			boo(tt); 
+in 
+	foo(42);

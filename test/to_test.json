@@ -1,0 +1,90 @@
+[
+    {
+        "name": "test_base_1.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_2.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_3.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_4.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_5.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_6.fool",
+        "output": "0"
+    },
+    {
+        "name": "test_base_7.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_base_8.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_1.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_2.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_3.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_4.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_5.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_6.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_7.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_8.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_9.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_OOP_10.fool",
+        "output": "1"
+    },
+    {
+        "name": "test_special_1_allocation.fool",
+        "output": ""
+    },
+    {
+        "name": "test_special_2_factorial.fool",
+        "output": "24"
+    },
+    {
+        "name": "test_special_3_nested.fool",
+        "output": "42"
+    },
+    {
+        "name": "test_special_4_blocks.fool",
+        "output": ""
+    }
+]

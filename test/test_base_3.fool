@@ -1,1 +1,8 @@
-let void foo(bool i) let int i = 55; in print(i); in foo(true);
+let
+    void foo(bool i)
+        let 
+            int i = 42; 
+        in 
+            print(i); 
+in 
+    foo(true);

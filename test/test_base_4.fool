@@ -1,5 +1,8 @@
-class TETTE(int c){
+class Test(int c){
 	void main() print(c);
 };
-
-let void main(TETTE t) t.main() ; TETTE tt = new TETTE(21); in main(tt);
+let 
+	void main(Test t) 
+		t.main(); 
+	Test tt = new Test(42);
+in main(tt);

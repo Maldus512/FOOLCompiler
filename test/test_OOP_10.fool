@@ -1,0 +1,10 @@
+class testClass (int a, int b, int c, int x, int y, int z) {
+    void main() print(a);
+}
+class finalClass implements testClass(bool x) {
+    void main() print(x);
+};
+let 
+    finalClass test = new finalClass(42,2,3, true,6,7); 
+in 
+    test.main();

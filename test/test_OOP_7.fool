@@ -1,4 +1,3 @@
-
 class SUPERCLASS (int x, bool y, int z) {
     void main() print(x);
 
@@ -7,4 +6,8 @@ class SUBCLASS implements SUPERCLASS (int a, bool b, bool z) {
     int maind() a;
 
 };
-let bool x = true; SUPERCLASS test = new SUBCLASS(true, true,true,true,true); in test.main();
+let 
+    bool x = true; 
+    SUPERCLASS test = new SUBCLASS(42, true,true,true,true); 
+in 
+    test.main();

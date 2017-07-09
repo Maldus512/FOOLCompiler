@@ -1,5 +1,12 @@
 class testClass (int a) {
-	int main() a;
+	void main() 
+		let 
+			void foo()
+				print(a);
+		in
+			foo();
 };
-let testClass test = new testClass(42); in print(test.main());
-
+let 
+	testClass test = new testClass(42); 
+in 
+	test.main();

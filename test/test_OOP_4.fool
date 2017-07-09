@@ -1,5 +1,7 @@
 class testClass (int a, int b, int c) {
-	int main() 5;
+	int main() 42;
 };
-let testClass test = new testClass(1,2,3); in print(test.main());
-
+let
+	testClass test = new testClass(1,2,3); 
+in 
+	print(test.main());

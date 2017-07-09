@@ -8,7 +8,9 @@ class filler (bool k) {
     void maina() print(44);
 }
 class finalClass implements testClass(int a) {
-    void x() print(55);
+    void x() print(42);
 };
-let finalClass test = new finalClass(1, 42, 3); in test.x();
-
+let 
+    finalClass test = new finalClass(1, 42, 3);
+in 
+    test.x();

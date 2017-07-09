@@ -4,4 +4,4 @@ class testClass (int a) {
 class finalClass (testClass x) {
     void main() print(x.hello());
 };
-let finalClass tette = new finalClass(new testClass(42)); in tette.main();
+let finalClass tt = new finalClass(new testClass(42)); in tt.main();
