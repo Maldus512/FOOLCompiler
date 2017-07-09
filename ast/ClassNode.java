@@ -239,7 +239,7 @@ public class ClassNode implements Node {
 
 		//if we have no superclass this step is useless
 		Node[] orderedMethods = new Node[methodsByOffset.size()];
-		
+
 		for (Integer key : methodsByOffset.keySet()) {
 			orderedMethods[key] = methodsByOffset.get(key);
 		}
@@ -258,7 +258,6 @@ public class ClassNode implements Node {
 
 		//Nesting level should ALWAYS be 0 here. We refer to it as env.getNestLevel()
 		//for coherence purposes.
-		//TODO: Gestire bene gli offset.
 		env.getST().get(env.getNestLevel()).put(id, new STentry(env.getNestLevel(), constructor, env.getClassOffset()));
 
 		return res;

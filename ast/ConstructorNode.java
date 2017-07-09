@@ -55,7 +55,6 @@ public class ConstructorNode extends CallNode {
 	//valore di ritorno non utilizzato
 	@Override
 	public TypeNode typeCheck(Environment env) {
-		//TODO controlla se il metodo della superclasse va bene
 		return super.typeCheck(env);
 	}
 
