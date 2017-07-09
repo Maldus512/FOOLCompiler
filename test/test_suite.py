@@ -25,7 +25,7 @@ def main():
 
     comp = res
 
-    if "Fcc" in comp:
+    if "Fjc" in comp:
         compiling = True
     else:
         compiling = False

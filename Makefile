@@ -7,7 +7,7 @@ JAVA = java -classpath $(CP)
 GRUN = java -cp ./lib/antlr-4.7-complete.jar org.antlr.v4.gui.TestRig
 
 
-SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard util/*.java) Fcc.java Fool.java
+SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard util/*.java) Fjc.java Fool.java
 CLASSES = $(SOURCES:.java=.class)
 
 
@@ -28,10 +28,10 @@ clean:
 	$(MAKE) clean -C parser
 
 run: classes
-	 java -classpath $(CP) Fcc -f $(f) -d
+	 java -classpath $(CP) Fjc -f $(f) -d
 
 test: classes
-	cd test && python test_suite.py "$(JAVA) Fcc"
+	cd test && python test_suite.py "$(JAVA) Fjc"
 	cd test && python test_suite.py "$(JAVA) Fool"
 
 go:
@@ -41,4 +41,4 @@ go:
 	$(MAKE) run $(f)
 
 debug:
-	jdb -classpath $(CP) Fcc
+	jdb -classpath $(CP) Fjc

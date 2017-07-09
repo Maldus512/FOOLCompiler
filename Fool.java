@@ -45,19 +45,23 @@ public class Fool {
 		CharStream inputASM = CharStreams.fromStream(isASM);
 		SVMLexer lexerASM = new SVMLexer(inputASM);
 		CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
+		SyntaxErrorListener errorListener = new SyntaxErrorListener();
 		SVMParser parserASM = new SVMParser(tokensASM);
+		parserASM.removeErrorListeners();
+		parserASM.addErrorListener(errorListener);
 
 		parserASM.assembly();
 
-		System.out.println("You had: " + lexerASM.lexicalErrors + " lexical error(s) and "
-				+ parserASM.getNumberOfSyntaxErrors() + " syntax error(s).");
-		if (lexerASM.lexicalErrors > 0 || parserASM.getNumberOfSyntaxErrors() > 0)
-			System.exit(1);
 
-		System.out.println("Starting Virtual Machine...");
+		if (errorListener.errors > 0) {
+			System.out.println("The program was not in the right format. Exiting the compilation process now");
+			System.exit(1);
+		}
+
 		int flags = 0;
 		if (commandArgs.verbose) {
 			flags = 1;
+			System.out.println("Starting Virtual Machine...");
 		}
 		ExecuteVM vm = new ExecuteVM(parserASM.code, flags);
 		vm.cpu();
