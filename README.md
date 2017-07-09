@@ -2,7 +2,6 @@
 
 A simple Object Oriented language compiler made with ANTLR4.
 
-------
 
 ### Build
 `$ make`
@@ -22,7 +21,7 @@ It is possibile to specify the following parameters:
 
 - `-v`, `--version` : compiler version
 
-Once compiled, a "prog.fool.asm" file will be produced. Such file can be executed by running the assembly code interpreter with `$ ./fool -f prog.fool.asm`. The interpreter has similar flags.
+Once compiled, a `prog.fool.asm` file will be produced. Such file can be executed by running the assembly code interpreter with `$ ./fool -f prog.fool.asm`. The interpreter has similar flags.
 
 The `test/` folder contains some examples of Fool programs. It is possible to compile and execute all of them by running `$ make test`.
 
