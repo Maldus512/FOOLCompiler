@@ -48,7 +48,7 @@ public class MethodCallNode implements Node {
 		}
 
 		if (!(varNode.getType() instanceof ClassTypeNode)) {
-			res.add(new SemanticError("Var id '" + varNode.getId() + "' is not an object."));
+			res.add(new SemanticError("Var id '" + varNode.getId() + "' is not an object; cannot invoke method " + id + "."));
 			return res;
 		}
 
@@ -67,7 +67,7 @@ public class MethodCallNode implements Node {
 		}
 
 		if (methodTmp == null) {
-			res.add(new SemanticError("Method id '" + id + "' has not been declared for class " + ownerClass + "."));
+			res.add(new SemanticError("Method '" + id + "' has not been declared for class " + ownerClass + "."));
 			return res;
 		} else if (!(methodTmp.getType() instanceof ArrowTypeNode)) {
 			res.add(new SemanticError("Id '" + id + "' is not a method for class " + ownerClass + "."));

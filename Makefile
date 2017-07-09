@@ -24,7 +24,7 @@ generated:
 	$(MAKE) -C parser
 
 clean:
-	$(RM)  $(CLASSES) ./test/*.asm *.class
+	$(RM)  $(CLASSES) ./test/*.asm *.class ./util/*.class
 	$(MAKE) clean -C parser
 
 run: classes

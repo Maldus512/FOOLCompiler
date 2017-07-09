@@ -65,7 +65,9 @@ public class VarNode implements Node {
 		TypeNode expType = exp.typeCheck(env);
 
 		if (!(FOOLlib.isSubtype(expType, type))) {
-			System.out.println("incompatible value for variable " + id);
+			System.out.println("incompatible value for variable " + id +"; expected\n" +
+								type.toPrint("    ") + "Found\n" + 
+								expType.toPrint("    "));
 			return new BottomTypeNode();
 		}
 

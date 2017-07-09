@@ -48,10 +48,10 @@ public class CallNode implements Node {
             tmp = (env.getST().get(j--)).get(id);
 
         if (tmp == null) {
-            res.add(new SemanticError("Id '" + id + "' not declared."));
+            res.add(new SemanticError("Symbol '" + id + "' was not previously declared."));
             return res;
         } else if (!(tmp.getType() instanceof ArrowTypeNode)) {
-            res.add(new SemanticError("Id '" + id + "' is not a function."));
+            res.add(new SemanticError("Symbol '" + id + "' is not a function."));
             return res;
         }
 
@@ -75,13 +75,16 @@ public class CallNode implements Node {
 
         ArrayList<TypeNode> p = t.getParList();
         if (!(p.size() == parList.size())) {
-            System.out.println("Wrong number of parameters in the invocation of " + id + ".");
+            System.out.println("Wrong number of parameters in the invocation of " + id + 
+                "; found "+parList.size() + " paramenters, " + p.size() + " expected.");
             return new BottomTypeNode();
         }
 
         for (int i = 0; i < parList.size(); i++) {
             if (!(FOOLlib.isSubtype((parList.get(i)).typeCheck(env), p.get(i)))) {
-                System.out.println("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + id + ".");
+                System.out.println("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + id + 
+                    "; found\n" + parList.get(i).toPrint("    ") + "Needed \n" +
+                    p.get(i).toPrint("    "));
                 return new BottomTypeNode();
             }
         }
@@ -97,7 +100,7 @@ public class CallNode implements Node {
         for (int i = 0; i < nestingLevel - entry.getNestLevel(); i++)
             getAR += "lw\n";
 
-        return "lfp\n" + //Load frame pointer on stack - needed to go back
+        return "lfp\n" + //Load frame pointer on stack - expected to go back
                          //CL 
                 parCode + //generate all the parameters
                 "lfp\n" + getAR + // load words from stack (starting from the current 
@@ -105,15 +108,12 @@ public class CallNode implements Node {
                                   //the function. Works in the same way of a normal
                                   //variable. Jumps from frame pointer to frame pointer
                                   //over the linking chain.
-                                  //setto AL risalendo la catena statica (put AL on the stack)
-                                  // ora recupero l'indirizzo a cui saltare e lo metto sullo stack
-                                  // Mettere questo AL serve? nella funzione poi ne fa il pop senza usarlo.
-                                  // Probabilmente serve a fare riferimenti  di variabili.
+                                  //(put AL on the stack)
                 "push " + entry.getOffset() + "\n" + //pushing the offset on the stack
                 // to add it to the frame pointer obtained following
                 // the linking chain.
-                "lfp\n" + getAR + //risalgo la catena statica
-                "add\n" + "lw\n" + //carico sullo stack il valore all'indirizzo ottenuto
+                "lfp\n" + getAR + 
+                "add\n" + "lw\n" + 
                 "js\n";
     }
     //NOTE: AL = Access Link; CL = Control Link

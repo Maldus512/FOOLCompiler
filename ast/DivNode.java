@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import javax.lang.model.element.TypeElement;
+
 import util.Environment;
 import util.SemanticError;
 import lib.FOOLlib;
@@ -36,9 +38,13 @@ public class DivNode implements Node {
 	}
 
 	public TypeNode typeCheck(Environment env) {
-		if (!(FOOLlib.isSubtype(left.typeCheck(env), new IntTypeNode())
-				&& FOOLlib.isSubtype(right.typeCheck(env), new IntTypeNode()))) {
-			System.out.println("Non integers in division.");
+		TypeNode leftType = left.typeCheck(env);
+		TypeNode rightType = left.typeCheck(env);
+		if (!(FOOLlib.isSubtype(leftType, new IntTypeNode())
+				&& FOOLlib.isSubtype(rightType, new IntTypeNode()))) {
+			System.out.println("Non integers in division:\n" +
+								leftType.toPrint("    ") +
+								rightType.toPrint("    "));
 			return new BottomTypeNode();
 		}
 		return new IntTypeNode();

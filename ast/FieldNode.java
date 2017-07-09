@@ -44,7 +44,7 @@ public class FieldNode implements Node {
 			boolean field = type.isField();
 
 			if (fullClassType == null) {
-				res.add(new SemanticError("Class " + classId + " has not been defined; field is not accessible."));
+				res.add(new SemanticError("Class " + classId + " has not been defined; field "+ id +" is not accessible."));
 				return res;
 			}
 			type = new ClassTypeNode(fullClassType);

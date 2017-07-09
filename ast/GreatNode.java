@@ -39,7 +39,9 @@ public class GreatNode implements Node {
         TypeNode l = left.typeCheck(env);
         TypeNode r = right.typeCheck(env);
         if (!(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l))) {
-            System.out.println("Incompatible types for '>' operand.");
+            System.out.println("Incompatible types for '>' operand:\n"+
+                                l.toPrint("    ") +
+                                r.toPrint("    "));
             return new BottomTypeNode();
         }
         return new BoolTypeNode();

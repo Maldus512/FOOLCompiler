@@ -44,10 +44,10 @@ public class IdNode implements Node {
 			tmp = (env.getST().get(j--)).get(id);
 
 		if (tmp == null) {
-			res.add(new SemanticError("Id " + id + " not declared."));
+			res.add(new SemanticError("Symbol " + id + " has not been declared."));
 			return res;
 		} else if (tmp.getType() instanceof ArrowTypeNode) {
-			res.add(new SemanticError("Id " + id + " is a function."));
+			res.add(new SemanticError("Symbol " + id + " is a function."));
 			return res;
 		}
 

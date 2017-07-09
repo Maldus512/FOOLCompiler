@@ -57,7 +57,7 @@ public class FunNode implements Node {
 		STentry entry = new STentry(env.getNestLevel(), env.decOffset());
 
 		if (hm.put(id, entry) != null) {
-			res.add(new SemanticError("Function name '" + id + "' has already been used."));
+			res.add(new SemanticError("Symbol '" + id + "' has already been used."));
 			return res;
 		}
 
@@ -165,9 +165,11 @@ public class FunNode implements Node {
 				}
 			}
 		}
-
-		if (!(FOOLlib.isSubtype(body.typeCheck(env), type))) {
-			System.out.println("Wrong return type for function " + id);
+		TypeNode bodyType = body.typeCheck(env);
+		if (!(FOOLlib.isSubtype(bodyType, type))) {
+			System.out.println("Wrong return type for function " + id +": expected \n" +
+								type.toPrint("    ") + "Found \n"+
+								bodyType.toPrint("    "));
 			return new BottomTypeNode();
 		}
 		return new VoidTypeNode();
