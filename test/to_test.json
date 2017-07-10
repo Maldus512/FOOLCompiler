@@ -84,7 +84,7 @@
         "output": "42"
     },
     {
-        "name": "test_special_4_blocks.fool",
-        "output": ""
+        "name": "test_special_4_turing.fool",
+        "output": "42"
     }
 ]

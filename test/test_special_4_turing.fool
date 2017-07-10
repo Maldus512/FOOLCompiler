@@ -1,0 +1,25 @@
+let
+    int zero()
+        0;
+    int succ(int x)
+        x + 1;
+    int pred(int x)
+        x - 1;
+    int ident(int x)
+        x;
+    int projecthird(int one, int two, int three)
+        pred(three);
+    int recsub(int counter, int input)
+        if counter == 0 then {
+            ident(input)
+        } else {
+            projecthird(counter - 1, input, recsub(counter - 1, input))
+        };
+    int minim(int input, int check)
+        if recsub(input, check) == 0 then {
+            check
+        } else {
+            minim(input, succ(check))
+        };
+in
+    print(minim(42,0));
