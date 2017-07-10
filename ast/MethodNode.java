@@ -18,8 +18,6 @@ public class MethodNode implements Node {
 	private ArrayList<Node> decList;
 	private Node body;
 	private String ownerClass;
-	// private ClassNode ownerClass;	// class node where this method is first defined
-	// private int curMethodOffset;		// offset in callerClass
 
 	public MethodNode(String i, TypeNode t, String o) {
 		id = i;
@@ -57,8 +55,6 @@ public class MethodNode implements Node {
 		return body;
 	}
 
-	// public int getOffset() { return curMethodOffset; }
-
 	public void addDecBody(ArrayList<Node> d, Node b) {
 		decList = d;
 		body = b;
@@ -87,7 +83,6 @@ public class MethodNode implements Node {
 	}
 
 	public ArrayList<SemanticError> checkSemantics(Environment env, int offset) {
-		// curMethodOffset = offset + 1;
 
 		ArrayList<SemanticError> res = new ArrayList<SemanticError>();
 
@@ -107,10 +102,9 @@ public class MethodNode implements Node {
 		env.getST().add(hmn);
 
 		ArrayList<TypeNode> parTypes = new ArrayList<TypeNode>();
-		/** paroffset starts from 2 to leave room for "this" reference */
+		// paroffset starts from 2 to leave room for "this" reference
 		int paroffset = 2;
 
-		//check args
 		for (Node n : parList) {
 			ParNode par = (ParNode) n;
 			parTypes.add(par.getType());
