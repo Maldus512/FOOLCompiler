@@ -1,7 +1,6 @@
 package util;
 
 import ast.types.*;
-import ast.*;
 
 public class STentry {
 

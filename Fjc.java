@@ -9,11 +9,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.IOException;
-import parser.ExecuteVM;
 import parser.FOOLLexer;
 import parser.FOOLParser;
-import parser.SVMLexer;
-import parser.SVMParser;
 import util.Environment;
 import util.SemanticError;
 import util.SyntaxErrorListener;
