@@ -3,8 +3,6 @@ package ast.types;
 import java.util.ArrayList;
 
 import ast.Node;
-import util.Environment;
-import util.SemanticError;
 
 /* node for a function type */
 public class ArrowTypeNode extends TypeNode {

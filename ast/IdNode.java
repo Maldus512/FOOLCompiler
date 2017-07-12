@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import util.Environment;
 import util.SemanticError;
 import util.STentry;
-import java.util.HashMap;
 
 import ast.types.*;
 

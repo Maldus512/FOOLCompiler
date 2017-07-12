@@ -1,24 +1,13 @@
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.io.IOException;
 import parser.ExecuteVM;
-import parser.FOOLLexer;
-import parser.FOOLParser;
 import parser.SVMLexer;
 import parser.SVMParser;
-import util.Environment;
-import util.SemanticError;
 import util.SyntaxErrorListener;
-import ast.FoolVisitorImpl;
-import ast.Node;
 
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;

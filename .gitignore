@@ -8,8 +8,10 @@ parser/*
 !parser/*.g4
 .DS_Store
 TEMP
-.classpath
-.project
+# .classpath
+# .project
+# .externalToolBuilders
+# .settings
 .swn
 .vscode
 .swo
