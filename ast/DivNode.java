@@ -2,8 +2,6 @@ package ast;
 
 import java.util.ArrayList;
 
-import javax.lang.model.element.TypeElement;
-
 import util.Environment;
 import util.SemanticError;
 import util.FOOLlib;

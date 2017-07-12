@@ -1,8 +1,6 @@
 package ast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import ast.types.*;
 
@@ -28,8 +26,6 @@ import parser.FOOLParser.TypeContext;
 import parser.FOOLParser.VarExpContext;
 import parser.FOOLParser.VarasmContext;
 import parser.FOOLParser.VardecContext;
-
-import util.SemanticError;
 
 /* By implementing the FOOLBaseVisitor each method is a callback executed when
    the corrisponding node is found while parsing the tree*/

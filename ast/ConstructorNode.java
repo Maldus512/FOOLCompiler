@@ -1,12 +1,10 @@
 package ast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import util.Environment;
 import util.SemanticError;
 import util.STentry;
-import util.FOOLlib;
 import ast.types.*;
 
 public class ConstructorNode extends CallNode {
