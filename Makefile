@@ -7,7 +7,7 @@ JAVA = java -classpath $(CP)
 GRUN = java -cp ./lib/antlr-4.7-complete.jar org.antlr.v4.gui.TestRig
 
 
-SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard util/*.java) Fjc.java Fool.java
+SOURCES = $(wildcard ast/*.java) $(wildcard ast/types/*.java) $(wildcard util/*.java) Fjc.java Fool.java FoolProject.java
 CLASSES = $(SOURCES:.java=.class)
 
 
